@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.user import User
 from app.models.workbench import WorkflowArtifact
-from app.auth.dependencies import require_ai_access, get_current_user
+from app.auth.dependencies import require_ai_user, get_current_user
 from app.services.ratelimit import ai_limiter
 from app.services.workbench import engine
 from app.services.workbench.workflows import visible_workflows, get_workflow
@@ -49,7 +49,7 @@ class AnswersIn(BaseModel):
 
 @router.post("/sessions", status_code=201)
 def create_session(body: SessionCreate, db: Session = Depends(get_db),
-                   user: User = Depends(require_ai_access)):
+                   user: User = Depends(require_ai_user)):
     s = _run(engine.create_session, db, user, body.workflow_type, body.matter_id,
              body.upload_ids, body.citation_tids)
     return engine.session_payload(db, s)
@@ -74,7 +74,7 @@ def submit_answers(session_id: int, body: AnswersIn, db: Session = Depends(get_d
 
 @router.post("/sessions/{session_id}/generate", dependencies=[Depends(ai_limiter)])
 def generate(session_id: int, db: Session = Depends(get_db),
-             user: User = Depends(require_ai_access)):
+             user: User = Depends(require_ai_user)):
     s = _run(engine.get_owned_session, db, session_id, user.tenant_id)
     artifact = _run(engine.generate, db, user, s)
     return _artifact_payload(db, artifact)
@@ -137,7 +137,7 @@ def _upload_payload(u) -> dict:
 
 @router.post("/uploads", status_code=201)
 async def upload_file(file: UploadFile = File(...), session_id: int | None = Form(None),
-                      db: Session = Depends(get_db), user: User = Depends(require_ai_access)):
+                      db: Session = Depends(get_db), user: User = Depends(require_ai_user)):
     data = await file.read()
     if not data:
         raise HTTPException(400, "Empty file.")
@@ -151,7 +151,7 @@ class KanoonPick(BaseModel):
 
 @router.post("/uploads/from-kanoon", status_code=201)
 def upload_from_kanoon(body: KanoonPick, db: Session = Depends(get_db),
-                       user: User = Depends(require_ai_access)):
+                       user: User = Depends(require_ai_user)):
     """WB-05: materialise an Indian Kanoon judgment as an upload (same retention,
     same anchors) so the Judgment Analyzer can source from a picked case."""
     u = _run_up(up_svc.save_kanoon_judgment, db, user, body.tid)
@@ -173,7 +173,7 @@ class FileQuestion(BaseModel):
 
 @router.post("/uploads/{upload_id}/chat", dependencies=[Depends(ai_limiter)])
 def chat_with_file(upload_id: int, body: FileQuestion, db: Session = Depends(get_db),
-                   user: User = Depends(require_ai_access)):
+                   user: User = Depends(require_ai_user)):
     """FILE-grounded Q&A: answers only from the uploaded document, page-anchored.
     A question the file can't answer refuses deterministically — and costs nothing."""
     u = _run_up(up_svc.get_owned_upload, db, upload_id, user.tenant_id)

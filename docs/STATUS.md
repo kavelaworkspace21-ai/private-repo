@@ -5,6 +5,63 @@
 > `docs/governance/` AIRA/Firoz-Brain/soul constitution + LSAI-SKILL package was RETIRED and
 > DELETED by the owner on 2026-07-21 and is no longer authority.)
 
+## VISION-ALIGNMENT PROGRAM — Phase 0 + Phase 1 (owner-directed 2026-07-24)
+
+Source: `JURISCITE_VISION_ALIGNMENT_PROMPT_2026-07-22.md` (Downloads). Phase 0 explicitly
+authorised establishing version control, closing the long-standing owner decision.
+
+- **THE PROJECT IS NOW A GIT REPO.** Baseline commit `1b7e99b` — 437 files, 105,399 insertions.
+  Secret-scanned **before** committing: 51 findings across 38 files, each inspected individually
+  and recorded in `.secrets.baseline` as audited false positives (placeholder templates,
+  ephemeral CI/compose values, integrity hashes, literal test fixtures). The Sprint-0 baseline
+  had recorded **0** findings — stale, so the hook would have blocked on all 38. Verified absent
+  from the commit: `.env`, `*.pem`, `jtoken.tmp`, `*.db`, `chroma_db/`, `data/uploads/`,
+  `data/source_pdfs/`, `venv/`. `.gitignore` rewritten (8 lines → full policy); the fingerprinted
+  corpus `app/legal_corpus/fulltext/*.json` IS versioned (it is the source of truth).
+- **Release identity now carries the commit.** `RELEASE.json.commit`, plus `commit`/`branch`/
+  `tree_dirty` in `live_status()` → `/api/admin/status`. Preflight gained two fail-closed gates:
+  dirty working tree, and tree ≠ pinned commit (one exception: commits differing only in
+  RELEASE.json, since `freeze()` stamps HEAD and committing that stamp advances HEAD).
+  Degrades to no-ops without `.git` (tarball deploy). **Self-corrected:** my first version
+  asserted `commit == HEAD` in the unit suite, which reds the suite after every ordinary commit
+  until re-frozen — a check that is red by default is one people learn to ignore. The strict pin
+  now lives only in preflight, at deploy time.
+- **22 July audit re-adjudicated** → `docs/AUDIT_CLAIM_VERIFICATION_2026-07-24.md`. Two claims
+  **CONTRADICTED**, both against my own report: (1) the "citation **hard-gate**" only appends a
+  warning and returns the answer — it is a flag, not a gate (`app/ai/safety.py:189`); (2) 13
+  pages were marked ✅ VERIFIED when only 6 were browser-verified. One claim I doubted **held**:
+  cross-tenant isolation really does cover hearings/drafts/fees/diary (in
+  `test_tenant_rbac_deep.py`, not `test_idor_sweep.py`). Fixed a stale migration head in
+  RELEASE_MANIFEST.md (`ea94773ec007` → `81665ba86789`).
+- **PAID KANOON CALL CLOSED** (the cost note flagged in the 22 July entry below). New
+  `KANOON_ENABLED` (default **off**); enablement now needs the flag **AND** a key — a key alone
+  no longer spends. `is_enabled()` is the single gate; all five billed paths route through it.
+  The dashboard asks the free `/api/research/status` first, so with the default nothing is
+  billed. **Browser-verified on a running app:** dashboard load issues `GET /api/research/status`
+  only, no `/latest-judgments`, zero console errors, all requests 200.
+- **CONSENT IS NOW ENFORCED AT THE AI BOUNDARY** — closes the G6 gap recorded on 22 July.
+  `require_ai_user` = `require_ai_consent` (unconditional, no off-switch) + `require_ai_access`
+  (verification, flag-gated). `has_current_consent()` in `privacy.py` is the single source of
+  truth for both the blocking gate and `/api/auth/needs-consent`, so banner and enforcement
+  cannot drift. Applied to 13 handlers: chat, transcription, drafting generate/edit/review,
+  workbench sessions/generate/uploads/from-kanoon/file-chat, library AI summary, case summary,
+  case search. Real-world effect: **firm-invited members** (admin-created, never asked to accept)
+  could previously use every AI feature having consented to nothing. Non-AI practice management
+  stays open — locking someone out of their own matters, and out of `/consent`, would be worse.
+  `docs/AI_DATA_BOUNDARY.md` records the boundary and five honest limitations (broad not
+  purpose-specific consent; no per-request receipt; advocate consents but the *client* is not a
+  party; withdrawal not implemented; sent data cannot be recalled).
+- **Test-quality catch:** the first Kanoon test used a raising stub to prove "no billed call".
+  Every network path in `case_law.py` is wrapped in `except Exception`, so the raise was
+  swallowed and the test would have passed even if a call HAD been made. Replaced with a call
+  counter plus `test_the_recorder_actually_catches_calls`, which proves the recorder fires when
+  the gate is open. Same reasoning drove
+  `test_no_external_payload_is_built_or_sent_without_consent`: a 403 is not proof, so it asserts
+  the LLM client is never even constructed.
+- **Still open in Phase 1** (not done, not claimed): purpose-specific consent separate from the
+  privacy policy; consent withdrawal + `purpose`/`scope` fields + audit events on grant/withdraw;
+  Kanoon daily/tenant quota, cost telemetry and audit events; timeout/provider-error tests.
+
 ## DASHBOARD CUBE + BUG HUNT (owner-directed 2026-07-22)
 - **3D cube fixed → Juriscite logo.** The hero cube showed a `§` placeholder on all 6 faces. New
   `app/static/logo-mark.svg` (the gold "J" mark from the favicon, no dark bg); index.html faces

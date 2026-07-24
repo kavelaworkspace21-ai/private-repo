@@ -54,6 +54,41 @@ def require_founder(x_admin_token: str | None = Header(default=None)) -> bool:
     return True
 
 
+def require_ai_consent(current_user: User = Depends(get_current_user),
+                       db: Session = Depends(get_db)) -> User:
+    """Consent gate at the AI boundary (DPDP Act 2023).
+
+    Sending a matter to the model means client data leaves this system for a third-party
+    LLM. That is exactly the processing consent exists to authorise, so it is enforced
+    here rather than merely recorded. UNCONDITIONAL and fail-closed: there is no env flag
+    to switch it off, because "consent enforcement, but disabled in production" is not
+    consent.
+
+    In practice this blocks firm-INVITED members who have never accepted — an admin
+    created their account, so nothing was granted on their behalf. Self-registered users
+    consent at registration and are unaffected. The 403 is actionable: accept at /consent.
+
+    Compose it with require_ai_access (verification) via require_ai_user below.
+    """
+    from app.services.privacy import has_current_consent
+    if not has_current_consent(db, current_user.id):
+        raise HTTPException(
+            status_code=403,
+            detail="AI features need your consent to the current privacy policy. "
+                   "Review and accept it at /consent, then try again.")
+    return current_user
+
+
+def require_ai_user(current_user: User = Depends(require_ai_consent),
+                    db: Session = Depends(get_db)) -> User:
+    """The full AI boundary: consent (always) + tenant verification (flag-gated).
+
+    Every endpoint that sends tenant data to an LLM depends on THIS, so a new AI route
+    cannot pick up one check and silently miss the other.
+    """
+    return require_ai_access(current_user, db)
+
+
 def require_ai_access(current_user: User = Depends(get_current_user),
                       db: Session = Depends(get_db)) -> User:
     """AI access gate (LSAI-LEGAL-07). When AI_REQUIRES_VERIFICATION=1, AI legal research/drafting

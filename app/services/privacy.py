@@ -46,6 +46,24 @@ def purge_old_read_notifications(db, days: int = READ_NOTIFICATION_RETENTION_DAY
     return n
 
 
+def has_current_consent(db: Session, user_id: int) -> bool:
+    """Has this user granted privacy consent at the CURRENT policy version?
+
+    Single source of truth — both `/api/auth/needs-consent` (what the UI shows) and the
+    AI-boundary gate (what actually blocks) call this, so the banner and the enforcement
+    can never drift apart. Bumping PRIVACY_VERSION invalidates prior consent by design.
+
+    Self-registered users get consent recorded at registration. Firm-INVITED members do
+    not — an admin created their account, so they have granted nothing until they accept.
+    """
+    return db.query(ConsentRecord).filter(
+        ConsentRecord.user_id == user_id,
+        ConsentRecord.consent_type == "privacy_policy",
+        ConsentRecord.policy_version == PRIVACY_VERSION,
+        ConsentRecord.granted == True,          # noqa: E712 — SQL boolean, not Python
+    ).first() is not None
+
+
 def record_consents(db: Session, *, tenant_id: int, user_id: int, source_ip: str | None,
                     granted: bool = True, user_agent: str | None = None,
                     acceptance_source: str = "registration") -> None:

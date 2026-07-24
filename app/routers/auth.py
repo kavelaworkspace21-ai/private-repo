@@ -89,13 +89,12 @@ def my_consents(current_user: User = Depends(get_current_user), db: Session = De
 def needs_consent(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """True if the user has not granted consent at the CURRENT privacy version.
     Invited members (created by an admin) have none until they accept on first login."""
-    from app.services.privacy import PRIVACY_VERSION, TERMS_VERSION, NOTICE_VERSION
-    has = (db.query(ConsentRecord)
-           .filter(ConsentRecord.user_id == current_user.id,
-                   ConsentRecord.consent_type == "privacy_policy",
-                   ConsentRecord.policy_version == PRIVACY_VERSION,
-                   ConsentRecord.granted == True).first())
-    return {"needs": has is None, "terms_version": TERMS_VERSION,
+    from app.services.privacy import (NOTICE_VERSION, PRIVACY_VERSION, TERMS_VERSION,
+                                      has_current_consent)
+    # Same helper the AI-boundary gate uses, so what the UI prompts for and what actually
+    # blocks can never disagree.
+    return {"needs": not has_current_consent(db, current_user.id),
+            "terms_version": TERMS_VERSION,
             "privacy_version": PRIVACY_VERSION, "notice_version": NOTICE_VERSION}
 
 

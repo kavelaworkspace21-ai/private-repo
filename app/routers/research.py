@@ -8,7 +8,7 @@ results rather than fabricating anything.
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import get_current_user, require_ai_user
 from app.models.user import User
 from app.ai import case_law
 from app.services import mapping
@@ -55,13 +55,17 @@ class CaseSummary(BaseModel):
 
 
 @router.get("/cases", response_model=list[CaseCard])
-def search_cases(q: str = Query(..., min_length=2), _: User = Depends(get_current_user)):
-    """At-a-glance case cards with verifiable links (live from Indian Kanoon)."""
+def search_cases(q: str = Query(..., min_length=2), _: User = Depends(require_ai_user)):
+    """At-a-glance case cards with verifiable links (live from Indian Kanoon).
+
+    Consent-gated: the query is advocate-authored and can carry matter details, so it is an
+    external transfer even though the response is public judgments.
+    """
     return case_law.search_cases(q)
 
 
 @router.get("/cases/{tid}/summary", response_model=CaseSummary)
-def case_summary(tid: str, _: User = Depends(get_current_user)):
+def case_summary(tid: str, _: User = Depends(require_ai_user)):
     """Brief, source-grounded summary of one judgment + verifiable link."""
     result = case_law.summarize_case(tid)
     if not result:

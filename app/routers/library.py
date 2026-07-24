@@ -9,7 +9,7 @@ import os
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
-from app.auth.dependencies import get_current_user, require_founder
+from app.auth.dependencies import get_current_user, require_ai_user, require_founder
 from app.models.user import User
 from app.services import library
 
@@ -73,7 +73,10 @@ def search(q: str = Query(..., min_length=2), _: User = Depends(get_current_user
 
 
 @router.get("/acts/{act_id}/sections/{num}/summary")
-def summarize_section(act_id: str, num: str, _: User = Depends(get_current_user)):
+def summarize_section(act_id: str, num: str, _: User = Depends(require_ai_user)):
+    # Sends statute text (public, not client data) to the LLM — but it is still an external
+    # AI call made on the user's behalf, so it sits behind the same consent boundary.
+    # Browsing and verbatim section text above stay open: those are local and deterministic.
     sec = library.get_section(act_id, num)
     if not sec:
         raise HTTPException(404, "Section not found")

@@ -17,7 +17,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.auth.dependencies import get_current_user, require_ai_access
+from app.auth.dependencies import get_current_user, require_ai_user
 from app.services.ratelimit import ai_limiter
 from app.services.tenancy import write_audit
 from app.models.user import User
@@ -464,7 +464,7 @@ class EditRequest(BaseModel):
 
 
 @router.post("/edit", dependencies=[Depends(ai_limiter)])
-def edit_selection(body: EditRequest, user: User = Depends(require_ai_access),
+def edit_selection(body: EditRequest, user: User = Depends(require_ai_user),
                    db: Session = Depends(get_db)):
     """Editor actions (pack WB-07): transform ONLY the selection. Pure transform — the
     caller applies it; saving still goes through /api/drafts (review status + versions).
@@ -501,7 +501,7 @@ class ReviewOwnDraft(BaseModel):
 
 
 @router.post("/review-draft", dependencies=[Depends(ai_limiter)])
-def review_own_draft(body: ReviewOwnDraft, user: User = Depends(require_ai_access),
+def review_own_draft(body: ReviewOwnDraft, user: User = Depends(require_ai_user),
                      db: Session = Depends(get_db)):
     """Upload-your-own-draft Review mode (pack WB-07): ADVISORY, cited flags — issues,
     missing averments, limitation/jurisdiction — grounded on retrieved statute only.
@@ -584,7 +584,7 @@ from app.services.ratelimit import ai_limiter
 @router.post("/generate", dependencies=[Depends(ai_limiter)])
 def generate_document(
     body: DraftRequest,
-    current_user: User = Depends(require_ai_access),   # verification gate (LEGAL-07; flag-gated)
+    current_user: User = Depends(require_ai_user),   # verification gate (LEGAL-07; flag-gated)
     db: Session = Depends(get_db),
 ):
     # Entitlements (spec 3.4) — refuse over-quota BEFORE any model work. The paths below

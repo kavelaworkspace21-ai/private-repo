@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.services.tenancy import write_audit
-from app.auth.dependencies import get_current_user, require_ai_access
+from app.auth.dependencies import get_current_user, require_ai_user
 from app.models.user import User
 from app.models.ai_chat import Conversation, AiMessage
 from app.schemas.ai_chat import ChatRequest, ConversationOut, ConversationWithMessages
@@ -23,7 +23,7 @@ router = APIRouter()
 async def transcribe_audio(
     audio: UploadFile = File(...),
     language: str | None = Form(None),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_ai_user),   # audio leaves the system → consent
 ):
     """Transcribe an uploaded audio clip to text (any Indian language) for voice input.
     Uses a Whisper-capable OpenAI-compatible endpoint (free option: Groq). Degrades gracefully
@@ -117,7 +117,7 @@ from app.services.ratelimit import ai_limiter
 @router.post("/chat", dependencies=[Depends(ai_limiter)])
 def chat(
     body: ChatRequest,
-    current_user: User = Depends(require_ai_access),   # verification gate (LEGAL-07; flag-gated)
+    current_user: User = Depends(require_ai_user),   # verification gate (LEGAL-07; flag-gated)
     db: Session = Depends(get_db),
 ):
     # THE SOUL — attempting to use Juriscite against the law ejects the user from the ecosystem.
