@@ -49,6 +49,25 @@ Both checks degrade to no-ops when git is unavailable (a production tarball depl
 `.git`), where the pinned corpus/migration/version fields carry the guarantee instead.
 `git status` failing yields `None`, never `False` — unknown is not treated as clean.
 
+### Cutting a release (what the commit pin implies)
+
+Ordinary development commits move HEAD past the pinned commit, so **preflight starts failing
+as soon as you commit anything after a freeze**. That is intended — it means "this tree is no
+longer the audited release", and it is the whole point of the pin. To cut a release:
+
+```bash
+git commit ...                     # land the work
+python -m app.ops.release freeze   # re-pin identity to the new HEAD
+git commit RELEASE.json            # the stamp commit (tolerated by _commit_matches)
+python -m app.ops.release preflight # must exit 0 before deploying
+```
+
+The **test suite deliberately does not** assert `commit == HEAD`. It asserts only that
+`RELEASE.json` pins a real revision reachable from HEAD. Enforcing the exact pin in unit tests
+would red the suite on every ordinary commit until someone re-froze — which trains people to
+ignore the check that actually matters. The strict pin lives in preflight, at deploy time,
+where acting on it is the correct response.
+
 Regenerate after any corpus/migration change: `python -m app.ops.release freeze`
 (the test `test_release_ops.py::test_release_json_matches_actual_corpus_and_migrations`
 fails if RELEASE.json drifts from the repo, so it can't go stale silently).

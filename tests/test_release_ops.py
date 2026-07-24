@@ -133,15 +133,23 @@ def test_source_identity_checks_degrade_when_git_is_unavailable(monkeypatch):
     assert rel.preflight(live=live, release=r) == []
 
 
-def test_release_json_pins_the_commit_it_was_frozen_from():
+def test_release_json_pins_a_real_commit_in_this_history():
+    """RELEASE.json must pin an actual reachable revision.
+
+    Deliberately NOT asserting commit == HEAD. That is a *deploy* gate (preflight
+    enforces it, and re-freezing is part of cutting a release), not a development
+    gate — asserting it here would red the suite on every ordinary commit until
+    someone re-froze, training people to ignore the check that matters.
+    """
     r = rel.load_release()
     live = rel.live_status()
     if live["commit"] is None:
         return  # not a git checkout (tarball / CI export) — nothing to pin against
     assert r.get("commit"), (
         "RELEASE.json has no commit — run `python -m app.ops.release freeze`")
-    assert rel._commit_matches(r["commit"], live["commit"]), (
-        f"RELEASE.json pins {r['commit']} but HEAD is {live['commit']} — re-freeze")
+    assert rel._git("merge-base", "--is-ancestor", r["commit"], "HEAD") is not None, (
+        f"RELEASE.json pins {r['commit']}, which is not an ancestor of HEAD — the pin "
+        "refers to a commit that isn't in this history")
 
 
 # ── CLI ─────────────────────────────────────────────────────────────────────────
