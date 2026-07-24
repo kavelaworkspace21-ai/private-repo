@@ -349,6 +349,34 @@ async function sendMessage() {
             scrollBottom();
           }
 
+          /* Citation gate replaced the answer (Phase 2 — fail-closed).
+             Everything streamed above was PROVISIONAL. The server validated the finished
+             answer against the retrieved sources and either removed the passages carrying
+             unverifiable citations, or withheld the answer entirely. We REPLACE the
+             streamed text rather than appending a warning to it — leaving unverified legal
+             content on screen with a note underneath is what this change exists to stop. */
+          if (payload.final_answer !== undefined) {
+            accText = payload.final_answer;
+            if (!aiBubble) {
+              thinkEl.remove();
+              aiMsgEl  = buildMsgEl("ai", "");
+              aiBubble = aiMsgEl.querySelector(".msg-bubble");
+              area.appendChild(aiMsgEl);
+            }
+            aiBubble.innerHTML = renderMarkdown(stripConfidence(accText));
+            const st = (payload.answer_replaced || {}).status;
+            if (confBadge && st === "withheld") {
+              confBadge.textContent = "ANSWER WITHHELD";
+              confBadge.style.color = "#DC4C64";
+              confBadge.style.background = "#DC4C641a";
+            } else if (confBadge && st === "repaired") {
+              confBadge.textContent = "PARTIALLY WITHHELD";
+              confBadge.style.color = "#F59E0B";
+              confBadge.style.background = "#F59E0B1a";
+            }
+            scrollBottom();
+          }
+
           // Error
           if (payload.error) {
             thinkEl.remove();

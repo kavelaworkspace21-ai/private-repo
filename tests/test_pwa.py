@@ -48,5 +48,5 @@ def test_dashboard_cube_shows_juriscite_logo(client):
 def test_service_worker_version_is_current(client):
     """SW cache version must be bumped when static assets change, or PWA users get stale CSS/JS."""
     sw = client.get("/service-worker.js").text
-    assert "juriscite-v10" in sw
+    assert "juriscite-v11" in sw
     assert "/static/logo-mark.svg" in sw                                    # logo precached in the shell

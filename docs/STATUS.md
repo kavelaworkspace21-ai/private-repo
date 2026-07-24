@@ -5,6 +5,44 @@
 > `docs/governance/` AIRA/Firoz-Brain/soul constitution + LSAI-SKILL package was RETIRED and
 > DELETED by the owner on 2026-07-21 and is no longer authority.)
 
+## VISION-ALIGNMENT PROGRAM — Phase 2: the citation gate now WITHHOLDS (2026-07-24)
+
+Closes the CONTRADICTED claim from this morning's re-adjudication: the "citation hard-gate"
+only appended a warning and returned the answer.
+
+- **`app/ai/answer_gate.py` — repair-or-withhold.** `validate_answer()` returns an
+  `AnswerVerdict` with one of three statuses: `ok` (every citation resolves), `repaired`
+  (sentences carrying unverified citations are REMOVED, the grounded remainder is shown), or
+  `withheld` (too little survived — a refusal is shown instead of the answer). Deliberately
+  conservative: it removes content rather than trusting it. The cost of withholding a good
+  answer is the advocate asking again; the cost of showing a bad citation is a filing citing a
+  provision that does not exist.
+- **Streaming no longer presents unvalidated content as final.** Content chunks were streamed
+  to the browser as they arrived and the check only ran at `done` — the fabricated section was
+  already on screen. The server now emits `final_answer` + `answer_replaced` and
+  `assistant.js` **replaces** the provisional text rather than appending a warning under it.
+  The PERSISTED message is the validated text, never the raw generation. SW bumped v10→v11
+  (assistant.js changed — cache-first SW would otherwise serve the old file).
+- **Design question my own test surfaced:** the repair notice names the rejected citation,
+  which puts "Section 999" back into visible text. Kept naming it — an advocate is entitled to
+  know what was dropped and may want to check it — but reworded so it can never read as law
+  ("could not be found… may be misnumbered or may not exist at all"), and added
+  `AnswerVerdict.body` so the safety property is testable precisely: the rejected citation must
+  not appear in the ANSWER, only in the notice below the separator.
+- **REAL BUG FOUND (pre-existing, not from this work):** `/api/ai/chat`'s streaming generator
+  called `next(get_db())` directly. That **bypasses FastAPI's `dependency_overrides`**, so every
+  test hitting the endpoint wrote assistant messages into the *configured* database — 3 rows
+  from this session were sitting in the dev DB (removed). The generator legitimately needs its
+  own session (request-scoped deps are torn down before it runs), so it now resolves it via
+  `request.app.dependency_overrides.get(get_db, get_db)`: identical in production, correct
+  under test. Test isolation for this endpoint never actually worked before.
+- Tests: `test_answer_gate.py` (12) + `test_chat_stream_gate.py` (3, driving a real request
+  with a stubbed model — asserts the stream replaces, the persisted message is gated, and a
+  fully grounded answer is NOT touched, since over-blocking is its own failure).
+- **Still open in Phase 2:** the structured answer schema (claims/spans/refusal-reason) and
+  claim-to-source **entailment** for material propositions. This gate validates CITATIONS
+  against retrieved context; it does not verify that the reasoning follows from the sources.
+
 ## VISION-ALIGNMENT PROGRAM — Phase 0 + Phase 1 (owner-directed 2026-07-24)
 
 Source: `JURISCITE_VISION_ALIGNMENT_PROMPT_2026-07-22.md` (Downloads). Phase 0 explicitly

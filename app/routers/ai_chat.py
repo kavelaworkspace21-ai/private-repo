@@ -3,7 +3,7 @@ AI Legal Assistant router — powered by the Universal Legal Agent.
 Streaming chat via Server-Sent Events (SSE) + conversation persistence.
 """
 import json
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, File, Form
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
@@ -117,6 +117,7 @@ from app.services.ratelimit import ai_limiter
 @router.post("/chat", dependencies=[Depends(ai_limiter)])
 def chat(
     body: ChatRequest,
+    request: Request,
     current_user: User = Depends(require_ai_user),   # verification gate (LEGAL-07; flag-gated)
     db: Session = Depends(get_db),
 ):
@@ -187,6 +188,13 @@ def chat(
     conv_id = conv.id
     message = body.message
 
+    # The generator below runs AFTER request-scoped dependencies are torn down, so it must
+    # open its own session. Resolve it through the app's configured dependency rather than
+    # calling get_db() directly: a direct call ignores dependency_overrides, which meant
+    # every test hitting this endpoint wrote assistant messages into the REAL configured
+    # database instead of its own. Same object in production; correct one under test.
+    _db_factory = request.app.dependency_overrides.get(get_db, get_db)
+
     async def stream_generator():
         from app.ai.agent import stream_agent_response
         full_response = ""
@@ -215,7 +223,7 @@ def chat(
                 yield f"data: {sse_chunk}\n\n"
             elif payload.get("done"):
                 if full_response:
-                    from app.ai.safety import sanitize_answer, enforce_citations
+                    from app.ai.safety import sanitize_answer
                     # Gate ONLY the model's prose — not the auto-generated "Sources consulted"
                     # footer, which is built from real retrieved data (its section numbers are
                     # inherently verified and must not be re-flagged as unverified).
@@ -226,14 +234,24 @@ def chat(
                     else:
                         answer_part, footer_part = full_response, ""
                     answer_part = sanitize_answer(answer_part)
-                    # Citation hard-gate (§2.2): flag any section the ANSWER cites that is
-                    # not in the retrieved sources, so an unverified claim can't slip through.
+                    # FAIL-CLOSED citation gate (Phase 2). This used to append a warning and
+                    # return the answer — so a fabricated section reached the advocate, and
+                    # streaming meant it was already on screen before the check ran. Now the
+                    # gate DECIDES: ok / repaired (offending passages removed) / withheld.
+                    # Everything streamed above was provisional; this is the final answer.
+                    from app.ai.answer_gate import validate_answer
                     context_for_gate = "\n".join(f"Section {c}" for c in available_citations)
-                    answer_part, unverified = enforce_citations(answer_part, context_for_gate)
-                    if unverified:
-                        warn = chr(10) + chr(10) + '---' + chr(10) + '⚠ Citation check: ' + ', '.join('Section ' + u for u in unverified) + ' could not be verified against the retrieved sources.'
-                        yield f"data: {json.dumps({'content': warn})}\n\n"
-                        answer_part = answer_part + warn
+                    verdict = validate_answer(answer_part, context_for_gate)
+                    if verdict.blocked:
+                        # Tell the client to REPLACE what it streamed. The provisional text
+                        # must not stand as the answer.
+                        yield f"data: {json.dumps({'answer_replaced': verdict.to_event(), 'final_answer': verdict.text})}\n\n"
+                        import logging
+                        logging.getLogger(__name__).warning(
+                            "Citation gate %s: unverified=%s removed=%d",
+                            verdict.status, verdict.unverified, len(verdict.removed_sentences))
+                    answer_part = verdict.text
+                    # Persist the VALIDATED answer, never the raw generation.
                     full_response = answer_part + footer_part
 
                     # Additive corpus-integrity signal (Phase 4). The gate above checks the answer
@@ -256,7 +274,7 @@ def chat(
                     except Exception:
                         pass  # integrity telemetry must never break the answer stream
 
-                    new_db = next(get_db())
+                    new_db = next(_db_factory())
                     try:
                         ai_msg = AiMessage(
                             conversation_id=conv_id,
