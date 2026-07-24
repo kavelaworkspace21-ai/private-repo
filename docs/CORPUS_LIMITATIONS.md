@@ -12,6 +12,51 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
+## ⛔ P0 — SILENT PARSER DROPS (found 2026-07-24, NOT yet fixed)
+
+**The parser silently omits provisions that are plainly present in the source PDFs.** Found
+while authoring the Phase 3 evaluation set; each was confirmed by extracting the PDF text and
+comparing it against the parsed corpus.
+
+| Act | Provision | What it is | In PDF | In corpus |
+|---|---|---|---|---|
+| Indian Contract Act 1872 | **s.73** | Compensation for loss or damage caused by breach of contract | ✅ | ❌ |
+| Specific Relief Act 1963 | **s.10** | Specific performance of contract | ✅ | ❌ |
+| Transfer of Property Act 1882 | **s.53A** | Part performance | ✅ | ❌ |
+
+These are not obscure provisions. **s.73 is the basis of most contract damages claims in
+India**; s.53A is heavily litigated in property matters. The Contract Act shows only **98 of
+238** sections parsed.
+
+**Why existing safeguards did not catch it.** All three acts carry `source_verified: True` and
+passed landmark **content** verification — because the landmarks checked were *different
+sections*. Content verification only ever proves what it samples. The corpus fingerprint is
+also no protection: it hashes what WAS parsed, so a consistent omission fingerprints as
+perfectly stable.
+
+**Product impact.** A question about damages for breach retrieves no authoritative s.73. It
+falls through to semantic search over neighbouring sections, so the answer is either weaker
+than it should be or grounds on the wrong provision. Since 2026-07-24 the fail-closed citation
+gate withholds an answer citing s.73 (it cannot be resolved), which is correct behaviour but
+means the gap now surfaces as a *refusal* rather than a wrong answer.
+
+**Guarded by** `tests/test_corpus_coverage.py`: 14 landmark provisions asserted present, and
+the three confirmed gaps asserted to *still* be missing so the defect list cannot outlive the
+bug — when the parser is fixed and the acts are re-ingested, that test fails and tells you to
+remove the entry.
+
+**Not fixed here.** The fix is parser work followed by the full corpus discipline — re-ingest,
+landmark re-verification, full reseed, retrieval probes, full suite, and a NEW fingerprint
+(so `RELEASE.json` must be re-frozen). That is a deliberate, self-contained piece of work, not
+a patch to slip into an unrelated change.
+
+**A coverage census across all 50 acts is a signal, not a verdict.** CPC 1908 looked like an
+82% gap but ss. 9, 100 and 151 are all present — its numbering includes Orders/Rules, which the
+heuristic miscounts. Only PDF-vs-corpus comparison establishes a real defect. Suspect acts not
+yet probed: `cgst_2017`, `mediation_2023`, `ndps_1985`, `companies_2013`, `indian_succession_1925`.
+
+---
+
 ## 1. IPC 354E — duplicate section number (two distinct provisions) · `PENDING_LEGAL_REVIEW`
 
 - **What:** the source carries **two different provisions numbered 354E** — "Sextortion" and
