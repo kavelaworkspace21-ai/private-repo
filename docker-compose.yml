@@ -1,0 +1,42 @@
+# Juriscite — local/staging stack: API + PostgreSQL + Redis.
+# Usage: copy .env.example -> .env, then `docker compose up --build`.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: juriscite
+      POSTGRES_PASSWORD: juriscite
+      POSTGRES_DB: juriscite
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U juriscite"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      # Compose overrides the DB to the in-network Postgres (ignores .env DATABASE_URL).
+      DATABASE_URL: postgresql+psycopg://juriscite:juriscite@db:5432/juriscite
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata: {}

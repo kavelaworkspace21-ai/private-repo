@@ -1,0 +1,28 @@
+# Juriscite — tooling config.
+# Kept intentionally lean: this is a lint/format/typing surface, not a packaging manifest
+# (the app is deployed from source, not pip-installed).
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+# Generated / vendored / migration code is not hand-maintained — don't lint it.
+extend-exclude = ["venv", "alembic/versions", "migrations", "app/static/*.min.js", "mobile/www"]
+
+[tool.ruff.lint]
+# S0.1 regression guard: flake8-datetimez (DTZ) makes the deprecated datetime.utcnow()
+# and other tz-naive datetime *instant* constructors a lint error, so the utcnow() sweep
+# can't silently regress. Scoped to DTZ (not the full default set) so this gate stays about
+# datetime correctness and doesn't fail on unrelated pre-existing style debt.
+select = ["DTZ"]
+
+# DTZ011/DTZ012 (date.today / date.fromtimestamp) are about CALENDAR dates, not instants.
+# The diary, reminders, court cause-lists and notifications intentionally use the local
+# calendar date — for an India-only practice tool that is IST "today", and rewriting it to
+# UTC .date() would shift dates by a day near midnight (wrong hearings). Correctly fixing
+# these means introducing an explicit app timezone (Asia/Kolkata); that is a deliberate
+# future change, NOT part of the utcnow deprecation sweep. Tracked in docs/OWNER_QUEUE.md.
+ignore = ["DTZ011", "DTZ012"]
+
+[tool.ruff.lint.per-file-ignores]
+# The helper is the ONE sanctioned place that constructs a UTC value from scratch.
+"app/util/time.py" = ["DTZ"]

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Court Diary &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    /* ── Diary-specific ── */
+    .diary-hero {
+      background: linear-gradient(135deg, #0F0F1A 0%, #13131F 100%);
+      border-bottom: 1px solid rgba(200,169,106,.12);
+      padding: 1.5rem 2rem;
+    }
+    .diary-hero-inner { max-width: 1340px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .diary-hero-title { font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -.02em; }
+    .diary-hero-date { color: rgba(255,255,255,.35); font-size: .8rem; margin-top: .2rem; }
+    .diary-hero-stats { display: flex; gap: 1.5rem; }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 1.6rem; font-weight: 800; color: var(--gold); letter-spacing: -.04em; line-height: 1; }
+    .hero-stat .num.red { color: #DC4C64; }
+    .hero-stat .lbl { font-size: .7rem; color: rgba(255,255,255,.35); margin-top: .2rem; }
+
+    /* Calendar strip */
+    .cal-strip { display: flex; gap: .5rem; margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 2px; }
+    .cal-day {
+      flex: 1; min-width: 52px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: .65rem .4rem; text-align: center; cursor: default; transition: .15s;
+    }
+    .cal-day.today { background: rgba(200,169,106,.08); border-color: rgba(200,169,106,.4); }
+    .cal-day .wd { font-size: .64rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; }
+    .cal-day .dd { font-size: 1.1rem; font-weight: 800; color: var(--text-1); margin-top: .15rem; line-height: 1; }
+    .cal-day.today .dd { color: var(--gold-dark); }
+    .cal-dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; margin: .3rem auto 0; }
+
+    /* Diary entry cards */
+    .diary-card {
+      padding: .95rem 1.1rem; border: 1px solid var(--border); border-left: 3px solid var(--gold);
+      border-radius: 0 10px 10px 0; margin-bottom: .7rem; transition: .15s; background: var(--surface);
+    }
+    .diary-card:hover { border-color: var(--gold); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+    .diary-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+    .diary-card-title { font-size: .88rem; font-weight: 700; color: var(--text-1); }
+    .diary-card-meta { font-size: .76rem; color: var(--text-3); margin-top: .2rem; }
+    .diary-card-next { font-size: .74rem; color: var(--text-3); margin-top: .4rem; }
+    .diary-card-next strong { color: var(--gold-dark); }
+
+    /* Task cards with priority */
+    .task-card {
+      display: flex; align-items: flex-start; gap: .9rem;
+      padding: .85rem 1rem; border: 1px solid var(--border);
+      border-radius: 10px; margin-bottom: .6rem; transition: .15s; background: var(--surface);
+    }
+    .task-card:hover { border-color: var(--gold); }
+    .task-card.done { opacity: .5; }
+    .task-cb { margin-top: .1rem; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; accent-color: var(--gold-dark); }
+    .task-body { flex: 1; min-width: 0; }
+    .task-title { font-size: .87rem; font-weight: 600; color: var(--text-1); }
+    .task-card.done .task-title { text-decoration: line-through; color: var(--text-3); }
+    .task-meta { font-size: .74rem; color: var(--text-3); margin-top: .2rem; }
+    .task-overdue { color: #DC4C64 !important; font-weight: 600; }
+
+    /* Priority chips */
+    .priority-chip {
+      display: inline-flex; align-items: center; gap: .2rem;
+      padding: .15rem .5rem; border-radius: 20px;
+      font-size: .68rem; font-weight: 700; letter-spacing: .02em; flex-shrink: 0;
+    }
+    .priority-high   { background: rgba(220,76,100,.1);  color: #dc2626; }
+    .priority-medium { background: rgba(245,158,11,.1); color: #d97706; }
+    .priority-low    { background: rgba(16,185,129,.1); color: #059669; }
+
+    /* Deadline cards */
+    .deadline-card {
+      display: flex; align-items: center; gap: 1rem;
+      padding: .85rem 1rem; border: 1px solid var(--border);
+      border-radius: 10px; margin-bottom: .6rem; transition: .15s; background: var(--surface);
+    }
+    .deadline-card.overdue { border-color: rgba(220,76,100,.3); }
+    .deadline-card:hover { border-color: var(--gold); }
+    .deadline-date-block {
+      text-align: center; flex-shrink: 0; background: var(--surface-2, #f8f9fc);
+      border: 1px solid var(--border); border-radius: 8px; padding: .4rem .65rem; min-width: 52px;
+    }
+    .deadline-date-block.overdue { background: rgba(220,76,100,.08); border-color: rgba(220,76,100,.3); }
+    .deadline-date-block .day { font-size: 1.2rem; font-weight: 800; color: var(--text-1); line-height: 1; }
+    .deadline-date-block .mon { font-size: .65rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; margin-top: .1rem; }
+    .deadline-date-block.overdue .day { color: #dc2626; }
+    .deadline-body { flex: 1; min-width: 0; }
+    .deadline-title { font-size: .87rem; font-weight: 600; color: var(--text-1); }
+    .deadline-meta { font-size: .74rem; color: var(--text-3); margin-top: .2rem; }
+    .deadline-overdue-badge {
+      background: rgba(220,76,100,.1); color: #dc2626;
+      padding: .15rem .55rem; border-radius: 20px; font-size: .68rem; font-weight: 700; flex-shrink: 0;
+    }
+    .filed-badge {
+      background: rgba(16,185,129,.1); color: #059669;
+      padding: .15rem .55rem; border-radius: 20px; font-size: .68rem; font-weight: 700; flex-shrink: 0;
+    }
+
+    .empty-state { padding: 2.5rem 1rem; text-align: center; color: var(--text-3); font-size: .85rem; font-style: italic; }
+
+    @media (max-width: 700px) {
+      .diary-hero { padding: 1.2rem 1rem; }
+      .diary-hero-stats { gap: 1rem; }
+      .hero-stat .num { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary" class="active">Court Diary</a>
+    <a href="/library">Legal Library</a>
+    <a href="/assistant">AI Assistant</a>
+    <a href="/drafting">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<!-- ── Diary Hero ── -->
+<div class="diary-hero">
+  <div class="diary-hero-inner">
+    <div>
+      <div class="diary-hero-title">Court Diary</div>
+      <div class="diary-hero-date" id="hero-date"></div>
+    </div>
+    <div class="diary-hero-stats">
+      <div class="hero-stat"><div class="num" id="hero-today">&mdash;</div><div class="lbl">Today</div></div>
+      <div class="hero-stat"><div class="num" id="hero-week">&mdash;</div><div class="lbl">This Week</div></div>
+      <div class="hero-stat"><div class="num" id="hero-tasks">&mdash;</div><div class="lbl">Open Tasks</div></div>
+      <div class="hero-stat"><div class="num red" id="hero-overdue">&mdash;</div><div class="lbl">Overdue</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- 7-day calendar strip -->
+  <div class="cal-strip" id="cal-strip"></div>
+
+  <!-- Integration toolbar -->
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin:0 0 1rem">
+    <button class="btn btn-ghost btn-sm" onclick="addDiaryToCalendar()" title="Download .ics for Google / Apple / Outlook calendar">
+      &#x1F4C5; Add to device calendar
+    </button>
+    <button class="btn btn-ghost btn-sm" onclick="openEcourtsModal()" title="Import hearing dates from eCourts by CNR">
+      &#x2696;&#xFE0F; Import from eCourts
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="diary-tabs">
+    <button class="tab-btn active" data-tab="tab-today">Today</button>
+    <button class="tab-btn" data-tab="tab-entries">All Entries</button>
+    <button class="tab-btn" data-tab="tab-tasks">Tasks</button>
+    <button class="tab-btn" data-tab="tab-deadlines">Filing Deadlines</button>
+  </div>
+
+  <!-- TODAY -->
+  <div class="tab-panel active animate-in" id="tab-today">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Today&#39;s Hearings</span>
+          <button class="btn btn-primary btn-sm" onclick="openModal('entry-modal')">+ Add Entry</button>
+        </div>
+        <div id="today-hearing-list"><div class="empty-state">No hearings today.</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Upcoming This Week</span>
+        </div>
+        <div id="week-hearing-list"><div class="empty-state">No upcoming hearings.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALL ENTRIES -->
+  <div class="tab-panel" id="tab-entries">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All Diary Entries</span>
+        <div style="display:flex;gap:.65rem;align-items:center">
+          <select id="filter-case-entries" style="width:200px"><option value="">All Cases</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('entry-modal')">+ Add Entry</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Case</th>
+              <th>Court</th>
+              <th>Stage</th>
+              <th>Outcome</th>
+              <th>Next Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="entries-tbody">
+            <tr><td colspan="7" style="padding:1.2rem .75rem"><div class="skeleton" style="height:14px;margin:.45rem 0;width:88%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:70%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:79%">&nbsp;</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKS -->
+  <div class="tab-panel" id="tab-tasks">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Case Tasks</span>
+        <div style="display:flex;gap:.65rem;align-items:center;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:500;color:var(--text-3)">
+            <input type="checkbox" id="pending-only" checked style="width:auto;accent-color:var(--gold-dark)"/> Pending only
+          </label>
+          <select id="filter-case-tasks" style="width:180px"><option value="">All Cases</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('task-modal')">+ Add Task</button>
+        </div>
+      </div>
+
+      <!-- Priority legend -->
+      <div style="display:flex;gap:.65rem;margin-bottom:1rem;flex-wrap:wrap">
+        <span style="font-size:.73rem;color:var(--text-3);font-weight:500;">Priority:</span>
+        <span class="priority-chip priority-high">&#x25CF; High</span>
+        <span class="priority-chip priority-medium">&#x25CF; Medium</span>
+        <span class="priority-chip priority-low">&#x25CF; Low</span>
+      </div>
+
+      <div id="tasks-list"></div>
+    </div>
+  </div>
+
+  <!-- DEADLINES -->
+  <div class="tab-panel" id="tab-deadlines">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Filing Deadlines</span>
+        <div style="display:flex;gap:.65rem;align-items:center;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:500;color:var(--text-3)">
+            <input type="checkbox" id="unfiled-only" checked style="width:auto;accent-color:var(--gold-dark)"/> Unfiled only
+          </label>
+          <select id="filter-case-deadlines" style="width:180px"><option value="">All Cases</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('deadline-modal')">+ Add Deadline</button>
+        </div>
+      </div>
+      <div id="deadlines-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- Add Diary Entry -->
+<div class="modal-overlay" id="entry-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>New Diary Entry</h2>
+      <button class="modal-close" onclick="closeModal('entry-modal')">&times;</button>
+    </div>
+    <form id="entry-form">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Case *</label>
+          <select name="case_id" id="entry-case-select" required><option value="">&mdash; Select case &mdash;</option></select>
+        </div>
+        <div class="form-group"><label>Hearing Date *</label><input name="hearing_date" type="date" required/></div>
+        <div class="form-group"><label>Hearing Time</label><input name="hearing_time" type="time"/></div>
+        <div class="form-group full"><label>Court Name *</label><input name="court_name" required/></div>
+        <div class="form-group"><label>Court Room</label><input name="court_room"/></div>
+        <div class="form-group">
+          <label>Stage</label>
+          <select name="stage">
+            <option value="first_hearing">First Hearing</option>
+            <option value="arguments">Arguments</option>
+            <option value="final_arguments">Final Arguments</option>
+            <option value="judgment">Judgment</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Outcome</label>
+          <select name="outcome">
+            <option value="pending">Pending</option>
+            <option value="heard">Heard</option>
+            <option value="adjourned">Adjourned</option>
+            <option value="part_heard">Part Heard</option>
+            <option value="decided">Decided</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Next Date</label><input name="next_date" type="date"/></div>
+        <div class="form-group full"><label>Adjournment Reason</label><input name="adjournment_reason"/></div>
+        <div class="form-group full"><label>Order Notes</label><textarea name="order_notes"></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Entry</button>
+        <button type="button" class="btn btn-ghost" onclick="closeModal('entry-modal')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Task -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>New Task</h2>
+      <button class="modal-close" onclick="closeModal('task-modal')">&times;</button>
+    </div>
+    <form id="task-form">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Case *</label>
+          <select name="case_id" id="task-case-select" required><option value="">&mdash; Select case &mdash;</option></select>
+        </div>
+        <div class="form-group full"><label>Task Title *</label><input name="title" required/></div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select name="priority">
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Due Date</label><input name="due_date" type="date"/></div>
+        <div class="form-group full"><label>Description</label><textarea name="description"></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Task</button>
+        <button type="button" class="btn btn-ghost" onclick="closeModal('task-modal')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Deadline -->
+<div class="modal-overlay" id="deadline-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>New Filing Deadline</h2>
+      <button class="modal-close" onclick="closeModal('deadline-modal')">&times;</button>
+    </div>
+    <form id="deadline-form">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Case *</label>
+          <select name="case_id" id="deadline-case-select" required><option value="">&mdash; Select case &mdash;</option></select>
+        </div>
+        <div class="form-group full"><label>Deadline Title *</label><input name="title" required/></div>
+        <div class="form-group"><label>Deadline Date *</label><input name="deadline_date" type="date" required/></div>
+        <div class="form-group full"><label>Notes</label><textarea name="notes"></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Deadline</button>
+        <button type="button" class="btn btn-ghost" onclick="closeModal('deadline-modal')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- eCourts import modal -->
+<div class="modal-overlay" id="ecourts-modal">
+  <div class="modal">
+    <div class="modal-header"><span>Import from eCourts</span>
+      <button class="modal-close" onclick="closeModal('ecourts-modal')">&times;</button></div>
+    <div class="modal-body">
+      <p style="font-size:.82rem;color:var(--text-3);margin-bottom:1rem">
+        Enter the case&#39;s <b>CNR number</b> (16-character Case Number Record). Hearing dates
+        are pulled read-only from the official eCourts API into the selected case.</p>
+      <div class="form-group" style="margin-bottom:.9rem">
+        <label>Case</label>
+        <select id="ec-case" class="input"></select>
+      </div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label>CNR Number</label>
+        <input id="ec-cnr" class="input" placeholder="e.g. DLHC01-001234-2024" maxlength="20"/>
+      </div>
+      <div id="ec-status" style="font-size:.8rem;color:var(--text-3);margin-bottom:.8rem"></div>
+      <button class="btn btn-gold" style="width:100%" onclick="doEcourtsImport()" id="ec-go">Import hearings</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>requireAuth();</script>
+<script src="/static/diary.js"></script>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0B0F14"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Dashboard &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <!-- Chart.js vendored locally: the CDN copy broke the ENTIRE dashboard when unreachable
+       (offline PWA / blocked network), because "Chart is not defined" aborted loadDashboard(). -->
+  <script src="/static/chart.umd.min.js"></script>
+  <style>
+    /* ── Dashboard-specific ── */
+    .dash-hero {
+      background: linear-gradient(135deg, #0F0F1A 0%, #13131F 100%);
+      border-bottom: 1px solid rgba(200,169,106,.12);
+      padding: 1.75rem 2rem 1.5rem;
+    }
+    .dash-hero-inner { max-width: 1340px; margin: 0 auto; }
+    .hero-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 1.4rem;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .hero-greeting { font-size: 1.3rem; font-weight: 800; color: #fff; letter-spacing: -.025em; }
+    .hero-date { color: rgba(255,255,255,.35); font-size: .82rem; margin-top: .2rem; }
+    .hero-actions { display: flex; gap: .65rem; }
+
+    .stat-row {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+      margin-bottom: 1.4rem;
+    }
+    .hero-stat-card {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 12px; padding: 1rem 1.2rem; text-align: center;
+      transition: border-color .2s;
+    }
+    .hero-stat-card:hover { border-color: rgba(200,169,106,.3); }
+    .hero-stat-card.danger { border-color: rgba(220,76,100,.2); }
+    .hero-stat-num { font-size: 2.1rem; font-weight: 800; color: var(--gold); letter-spacing: -.05em; line-height: 1; }
+    .hero-stat-card.danger .hero-stat-num { color: #DC4C64; }
+    .hero-stat-lbl { font-size: .72rem; color: rgba(255,255,255,.35); margin-top: .3rem; }
+
+    /* Calendar strip */
+    .cal-strip { display: flex; gap: .5rem; margin-bottom: 1.2rem; }
+    .cal-day {
+      flex: 1; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px; padding: .65rem .4rem; text-align: center;
+      min-width: 0; cursor: default; transition: .15s;
+    }
+    .cal-day.today {
+      background: rgba(200,169,106,.1); border-color: rgba(200,169,106,.4);
+    }
+    .cal-day .wd { font-size: .66rem; font-weight: 700; color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: .05em; }
+    .cal-day .dd { font-size: 1.1rem; font-weight: 800; color: #fff; margin-top: .15rem; line-height: 1; }
+    .cal-day.today .dd { color: var(--gold); }
+    .cal-dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; margin: .3rem auto 0; }
+
+    /* Quick-view cards */
+    .qv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+    .qv-card {
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06);
+      border-radius: 12px; padding: 1rem 1.2rem;
+    }
+    .qv-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gold); margin-bottom: .8rem; }
+    .qv-item { padding: .45rem 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+    .qv-item:last-child { border-bottom: none; }
+    .qv-item-title { color: #fff; font-size: .84rem; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .qv-item-sub { color: rgba(255,255,255,.32); font-size: .74rem; margin-top: .1rem; }
+    .qv-empty { color: rgba(255,255,255,.28); font-size: .8rem; font-style: italic; }
+
+    /* Main content area */
+    .dash-body { max-width: 1340px; margin: 0 auto; padding: 2rem; }
+
+    /* Cases overview */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem; }
+    .section-title { font-size: 1rem; font-weight: 800; letter-spacing: -.02em; }
+    .section-sub { font-size: .78rem; color: var(--text-3); margin-top: .1rem; }
+
+    .stats-row-light {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .stat-pill {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: .9rem 1.1rem; text-align: center;
+    }
+    .stat-pill .num { font-size: 1.8rem; font-weight: 800; color: var(--navy); letter-spacing: -.04em; line-height: 1; }
+    .stat-pill .lbl { font-size: .72rem; color: var(--text-3); margin-top: .25rem; font-weight: 500; }
+    .stat-pill.gold .num { color: var(--gold-dark); }
+    .stat-pill.blue .num { color: #3b82f6; }
+    .stat-pill.green .num { color: var(--success); }
+
+    /* Two-col layout: chart + modules */
+    .dash-two-col { display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; align-items: start; }
+
+    /* Module tiles */
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: 1rem; }
+    .module-tile {
+      display: flex; align-items: center; gap: 1rem;
+      text-decoration: none; padding: 1rem 1.1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; transition: .15s; cursor: pointer;
+    }
+    .module-tile:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.09); }
+    .module-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; flex-shrink: 0;
+    }
+    .module-tile-text .t { font-weight: 700; font-size: .88rem; letter-spacing: -.01em; color: var(--text-1); }
+    .module-tile-text .s { font-size: .76rem; color: var(--text-3); margin-top: .1rem; }
+
+    /* Recent cases inline table */
+    .mini-table { width: 100%; border-collapse: collapse; }
+    .mini-table th { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-3); padding: .55rem .75rem; border-bottom: 1px solid var(--border); text-align: left; }
+    .mini-table td { font-size: .83rem; padding: .65rem .75rem; border-bottom: 1px solid var(--border-light,#f1f1f4); vertical-align: middle; }
+    .mini-table tr:last-child td { border-bottom: none; }
+    .mini-table tr:hover td { background: var(--surface); }
+
+    /* AI modules section */
+    .ai-section { margin-top: 2rem; }
+    .ai-module-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 1.2rem; }
+    .ai-module-card {
+      border: 1px solid var(--border); border-radius: 16px; padding: 1.4rem 1.5rem;
+      text-decoration: none; display: block; position: relative; overflow: hidden;
+      transition: .2s; background: var(--surface);
+    }
+    .ai-module-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+    }
+    .ai-module-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,.1); }
+    .ai-card-title { font-size: .95rem; font-weight: 800; letter-spacing: -.02em; color: var(--text-1); margin-bottom: .4rem; }
+    .ai-card-desc { font-size: .82rem; color: var(--text-3); line-height: 1.5; }
+    .ai-card-badge {
+      display: inline-block; margin-top: .8rem;
+      background: rgba(200,169,106,.12); color: var(--gold-dark);
+      border: 1px solid rgba(200,169,106,.3); border-radius: 20px;
+      padding: .2rem .65rem; font-size: .72rem; font-weight: 700; letter-spacing: .03em;
+    }
+    .ai-icon { font-size: 2rem; margin-bottom: .8rem; }
+
+    @media (max-width: 900px) {
+      .stat-row, .stats-row-light { grid-template-columns: repeat(2,1fr); }
+      .qv-grid { grid-template-columns: 1fr; }
+      .dash-two-col { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .dash-hero { padding: 1.2rem 1rem; }
+      .dash-body { padding: 1.2rem 1rem; }
+      .stat-row { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="nav-links">
+    <a href="/" class="active">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary">Court Diary</a>
+    <a href="/library">Legal Library</a>
+    <a href="/assistant">AI Assistant</a>
+    <a href="/drafting">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<!-- ── Hero Banner ── -->
+<div class="dash-hero">
+  <div class="dash-hero-inner">
+
+    <div class="hero-top">
+      <div style="display:flex;align-items:center;gap:1.15rem">
+        <div class="hero-3d" aria-hidden="true">
+          <div class="cube">
+            <div class="f f1"></div><div class="f f2"></div>
+            <div class="f f3"></div><div class="f f4"></div>
+            <div class="f f5"></div><div class="f f6"></div>
+          </div>
+        </div>
+        <div>
+          <div class="hero-greeting">Good day &mdash; <span id="user-name">Advocate</span></div>
+          <div class="hero-date" id="hero-date"></div>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="/assistant" class="btn btn-gold btn-sm">AI Assistant &rarr;</a>
+        <a href="/diary" class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,.2)">Court Diary &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row stagger-children">
+      <div class="hero-stat-card">
+        <div class="hero-stat-num" id="stat-today">&mdash;</div>
+        <div class="hero-stat-lbl">Today&#39;s Hearings</div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="hero-stat-num" id="stat-week">&mdash;</div>
+        <div class="hero-stat-lbl">This Week</div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="hero-stat-num" id="stat-tasks">&mdash;</div>
+        <div class="hero-stat-lbl">Pending Tasks</div>
+      </div>
+      <div class="hero-stat-card danger">
+        <div class="hero-stat-num" id="stat-overdue">&mdash;</div>
+        <div class="hero-stat-lbl">Overdue Deadlines</div>
+      </div>
+    </div>
+
+    <!-- 7-day calendar strip -->
+    <div class="cal-strip" id="cal-strip"></div>
+
+    <!-- Quick-view: 3 cols -->
+    <div class="qv-grid">
+      <div class="qv-card">
+        <div class="qv-label">Today&#39;s Hearings</div>
+        <div id="qs-today"><div class="skeleton" style="height:14px;margin:.45rem 0;width:88%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:70%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:79%">&nbsp;</div></div>
+      </div>
+      <div class="qv-card">
+        <div class="qv-label">Open Tasks</div>
+        <div id="qs-tasks"><div class="skeleton" style="height:14px;margin:.45rem 0;width:88%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:70%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:79%">&nbsp;</div></div>
+      </div>
+      <div class="qv-card">
+        <div class="qv-label">Upcoming Deadlines</div>
+        <div id="qs-deadlines"><div class="skeleton" style="height:14px;margin:.45rem 0;width:88%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:70%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:79%">&nbsp;</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Main Body ── -->
+<div class="dash-body">
+
+  <div id="dash-top"></div>
+
+  <!-- Cases Overview -->
+  <div class="section-header">
+    <div>
+      <div class="section-title">Cases Overview</div>
+      <div class="section-sub">All active and closed matters</div>
+    </div>
+    <a href="/cases" class="btn btn-primary btn-sm">Manage Cases &rarr;</a>
+  </div>
+
+  <div class="stats-row-light animate-in">
+    <div class="stat-pill">
+      <div class="num" id="c-total">&mdash;</div>
+      <div class="lbl">Total Cases</div>
+    </div>
+    <div class="stat-pill gold">
+      <div class="num" id="c-open">&mdash;</div>
+      <div class="lbl">Open</div>
+    </div>
+    <div class="stat-pill blue">
+      <div class="num" id="c-progress">&mdash;</div>
+      <div class="lbl">In Progress</div>
+    </div>
+    <div class="stat-pill green">
+      <div class="num" id="c-closed">&mdash;</div>
+      <div class="lbl">Closed</div>
+    </div>
+  </div>
+
+  <div class="dash-two-col animate-up" style="animation-delay:.08s">
+    <!-- Doughnut chart -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">By Status</span></div>
+      <canvas id="status-chart" height="220"></canvas>
+    </div>
+
+    <!-- Recent cases table -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Recent Cases</span>
+        <a href="/cases" class="btn btn-ghost btn-sm">View all &rarr;</a>
+      </div>
+      <div class="table-wrap" style="margin-top:0">
+        <table class="mini-table">
+          <thead>
+            <tr>
+              <th>Case Title</th>
+              <th>Client</th>
+              <th>Status</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody id="recent-cases-tbody">
+            <tr><td colspan="4" style="padding:1.2rem .75rem"><div class="skeleton" style="height:14px;margin:.45rem 0;width:88%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:70%">&nbsp;</div><div class="skeleton" style="height:14px;margin:.45rem 0;width:79%">&nbsp;</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly hearings bar chart -->
+  <div class="card animate-up" style="animation-delay:.1s;margin-top:1.5rem">
+    <div class="card-header"><span class="card-title">Hearings &mdash; last 6 months</span></div>
+    <canvas id="monthly-hearings-chart" height="200"></canvas>
+  </div>
+
+  <!-- Module tiles -->
+  <div style="margin-top:2rem">
+    <div class="section-header" style="margin-bottom:1rem">
+      <div>
+        <div class="section-title">Platform Modules</div>
+        <div class="section-sub">Everything you need to manage your practice</div>
+      </div>
+    </div>
+    <div class="module-grid animate-in" style="animation-delay:.12s">
+      <a href="/cases" class="module-tile">
+        <div class="module-icon" style="background:rgba(200,169,106,.10);color:var(--gold)"><svg class="lc lc-lg" aria-hidden="true"><use href="/static/lucide.svg#lc-scale"/></svg></div>
+        <div class="module-tile-text">
+          <div class="t">Cases</div>
+          <div class="s">Clients, hearings &amp; fees</div>
+        </div>
+      </a>
+      <a href="/diary" class="module-tile">
+        <div class="module-icon" style="background:rgba(59,130,246,.10);color:var(--ai)"><svg class="lc lc-lg" aria-hidden="true"><use href="/static/lucide.svg#lc-calendar-days"/></svg></div>
+        <div class="module-tile-text">
+          <div class="t">Court Diary</div>
+          <div class="s">Hearings, tasks &amp; deadlines</div>
+        </div>
+      </a>
+      <a href="/assistant" class="module-tile">
+        <div class="module-icon" style="background:rgba(59,130,246,.10);color:var(--ai)"><svg class="lc lc-lg" aria-hidden="true"><use href="/static/lucide.svg#lc-sparkles"/></svg></div>
+        <div class="module-tile-text">
+          <div class="t">AI Legal Assistant</div>
+          <div class="s">22 languages &middot; all Indian laws</div>
+        </div>
+      </a>
+      <a href="/drafting" class="module-tile">
+        <div class="module-icon" style="background:rgba(16,185,129,.10);color:var(--success)"><svg class="lc lc-lg" aria-hidden="true"><use href="/static/lucide.svg#lc-file-text"/></svg></div>
+        <div class="module-tile-text">
+          <div class="t">Drafting Engine</div>
+          <div class="s">Legal notices &amp; documents</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- AI Modules highlight -->
+  <div class="ai-section animate-up" style="animation-delay:.18s">
+    <div class="section-header" style="margin-bottom:1.1rem">
+      <div>
+        <div class="section-title">AI-Powered Modules</div>
+        <div class="section-sub">India&#39;s first complete legal intelligence platform</div>
+      </div>
+    </div>
+    <div class="ai-module-grid">
+      <a href="/assistant" class="ai-module-card">
+        <div class="ai-icon" style="color:var(--ai)"><svg class="lc lc-lg" aria-hidden="true"><use href="/static/lucide.svg#lc-sparkles"/></svg></div>
+        <div class="ai-card-title">Universal AI Legal Assistant</div>
+        <div class="ai-card-desc">
+          Expert on all Indian laws from Constitution to BNSS 2023.
+          Responds in all 22 scheduled Indian languages.
+          Zero hallucination &mdash; every answer cites the actual provision.
+        </div>
+        <span class="ai-card-badge">Source-grounded &middot; Live</span>
+      </a>
+      <a href="/drafting" class="ai-module-card">
+        <div class="ai-icon" style="color:var(--ai)"><svg class="lc lc-lg" aria-hidden="true"><use href="/static/lucide.svg#lc-file-text"/></svg></div>
+        <div class="ai-card-title">AI Drafting Engine</div>
+        <div class="ai-card-desc">
+          Generate Legal Notices, Bail Applications, RTI Applications,
+          Consumer Complaints, Vakalatnamas and more in seconds.
+          Streaming output with download &amp; edit support.
+        </div>
+        <span class="ai-card-badge">10 Templates + Custom &middot; Live</span>
+      </a>
+      <a href="/library" class="ai-module-card">
+        <div class="ai-icon">&#x1F4DA;</div>
+        <div class="ai-card-title">Legal Library &amp; Case Law</div>
+        <div class="ai-card-desc">
+          Browse verbatim statute text (BNS, BNSS, BSA, IPC, CrPC, Evidence,
+          Contract, Constitution &amp; more) with official sources, plus live
+          Indian Kanoon judgment search.
+        </div>
+        <span class="ai-card-badge">Source-linked &middot; Live</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>requireAuth();</script>
+<script src="/static/app.js"></script>
+<script>
+/* First-run onboarding checklist — tracks REAL progress; auto-hides when done/dismissed. */
+(async function onboarding() {
+  if (localStorage.getItem('jc_onboarding_dismissed')) return;
+  let me = {}, clients = [], cases = [], drafts = [], convos = [];
+  try {
+    [me, clients, cases, drafts, convos] = await Promise.all([
+      api.get('/api/auth/me').catch(() => ({})),
+      api.get('/api/clients/').catch(() => []),
+      api.get('/api/cases/').catch(() => []),
+      api.get('/api/drafts/').catch(() => []),
+      api.get('/api/ai/conversations').catch(() => []),
+    ]);
+  } catch (_) { return; }
+  const steps = [
+    { done: !!me.is_2fa_enabled, label: 'Secure your account with 2FA', href: '/setup-2fa' },
+    { done: clients.length > 0, label: 'Add your first client', href: '/cases' },
+    { done: cases.length > 0, label: 'Create your first matter', href: '/cases' },
+    { done: (convos && convos.length > 0), label: 'Ask a cited legal-research question', href: '/assistant' },
+    { done: drafts.length > 0, label: 'Generate your first draft (advocate-reviewed)', href: '/drafting' },
+  ];
+  const doneN = steps.filter(s => s.done).length;
+  if (doneN === steps.length) return;          // fully onboarded → don't show
+  const pct = Math.round(doneN / steps.length * 100);
+  const card = document.createElement('div');
+  card.className = 'card animate-in';
+  card.style.cssText = 'margin-bottom:1.5rem;border:1px solid var(--gold-border,rgba(200,169,106,.35))';
+  card.innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">' +
+      '<div><div class="section-title">Getting started</div>' +
+      '<div class="section-sub">' + doneN + ' of ' + steps.length + ' done — finish setting up your workspace</div></div>' +
+      '<button class="btn btn-ghost btn-sm" id="ob-dismiss">Dismiss</button></div>' +
+    '<div style="height:8px;background:var(--surface-2,#eee);border-radius:8px;margin:.9rem 0;overflow:hidden">' +
+      '<div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--gold),var(--gold-dark,#C8A96A));border-radius:8px"></div></div>' +
+    '<div style="display:grid;gap:.35rem">' +
+      steps.map(s =>
+        '<a href="' + s.href + '" style="display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text-1);padding:.5rem .6rem;border-radius:8px;' + (s.done ? 'opacity:.55' : '') + '">' +
+          '<span style="width:20px;height:20px;border-radius:50%;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;' +
+            (s.done ? 'background:var(--success,#059669);color:#fff' : 'background:var(--surface-2,#eee);color:var(--text-3)') + '">' + (s.done ? '✓' : '') + '</span>' +
+          '<span style="font-size:.86rem;font-weight:600;' + (s.done ? 'text-decoration:line-through' : '') + '">' + s.label + '</span>' +
+          (s.done ? '' : '<span style="margin-left:auto;color:var(--gold);font-size:.8rem">Start &rarr;</span>') +
+        '</a>'
+      ).join('') + '</div>';
+  const top = document.querySelector('#dash-top') || document.querySelector('.dash-body');
+  if (top) top.appendChild(card);
+  const dz = document.getElementById('ob-dismiss');
+  if (dz) dz.onclick = () => { localStorage.setItem('jc_onboarding_dismissed', '1'); card.remove(); };
+})();
+</script>
+<script>
+/* Latest from the courts — recent judgments (live via Indian Kanoon, cached). Hidden if unavailable. */
+(async function latestFromCourts() {
+  let items = [];
+  try { items = await api.get('/api/research/latest-judgments'); } catch (_) { return; }
+  if (!items || !items.length) return;          // no key / no results → don't show an empty box
+  const card = document.createElement('div');
+  card.className = 'card animate-in';
+  card.style.cssText = 'margin-bottom:1.5rem';
+  card.innerHTML =
+    '<div class="section-header" style="margin-bottom:.7rem"><div>' +
+      '<div class="section-title"><svg class="lc" aria-hidden="true" style="color:var(--gold)"><use href="/static/lucide.svg#lc-newspaper"/></svg> Latest from the courts</div>' +
+      '<div class="section-sub">Recent judgments — live via Indian Kanoon · good-law status unverified, verify before relying</div>' +
+    '</div><a href="/assistant" class="btn btn-ghost btn-sm">Research &rarr;</a></div>' +
+    '<div style="display:grid;gap:.1rem">' +
+    items.map(c => {
+      const meta = [c.court, c.date].filter(Boolean).join(' · ');
+      return '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" ' +
+        'style="display:block;padding:.55rem .55rem;border-radius:8px;text-decoration:none;color:var(--text-1);border-bottom:1px solid var(--border-light,#f1f1f4)">' +
+        '<div style="font-size:.86rem;font-weight:600;line-height:1.3">' + esc(c.title || 'Untitled') + '</div>' +
+        (meta ? '<div style="font-size:.74rem;color:var(--text-3);margin-top:.15rem">' + esc(meta) + '</div>' : '') +
+        '</a>';
+    }).join('') + '</div>';
+  const top = document.querySelector('#dash-top') || document.querySelector('.dash-body');
+  if (top) top.insertBefore(card, top.firstChild);   // above the onboarding card → first glance
+})();
+</script>
+</body>
+</html>

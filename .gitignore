@@ -1,0 +1,80 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Juriscite .gitignore
+# Rule: version SOURCE, MIGRATIONS, TESTS, DOCS and the deterministic CORPUS
+# RECORDS (app/legal_corpus/fulltext/*.json — the fingerprinted source of truth).
+# NEVER version secrets, client data, local databases, or heavy derived artifacts.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Secrets & credentials (NEVER commit) ──
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+jtoken.tmp
+*token*.tmp
+
+# ── Client / tenant data (NEVER commit) ──
+data/uploads/
+uploads/
+exports/
+
+# ── Local databases (may contain demo/client rows) ──
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ── Derived / regenerable heavy artifacts ──
+# chroma_db is DERIVED from app/legal_corpus/fulltext via reseed(); never versioned.
+chroma_db/
+# Official source PDFs (~153 MB). Re-downloadable; their SHA-256 + URL are recorded
+# in the versioned fulltext provenance, so integrity stays verifiable without the blobs.
+data/source_pdfs/
+artifacts/
+demo_shots/
+backups/
+*.bak
+
+# ── Python environment & caches ──
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# ── Node / mobile build output ──
+node_modules/
+mobile/www/
+mobile/android/
+mobile/ios/
+
+# ── Local tooling / machine-specific config ──
+.claude/settings.local.json
+.claude/settings.local.json.*
+.claude/scheduled_tasks.lock
+
+# ── Logs & temp ──
+*.log
+logs/
+tmp/
+temp/
+
+# ── OS / editor ──
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp

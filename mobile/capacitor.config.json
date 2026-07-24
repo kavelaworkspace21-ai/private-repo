@@ -1,0 +1,18 @@
+{
+  "appId": "in.juriscite.app",
+  "appName": "Juriscite",
+  "webDir": "www",
+  "server": {
+    "url": "https://app.juriscite.in",
+    "cleartext": false
+  },
+  "backgroundColor": "#09090B",
+  "android": {
+    "backgroundColor": "#09090B",
+    "allowMixedContent": false
+  },
+  "ios": {
+    "backgroundColor": "#09090B",
+    "contentInset": "always"
+  }
+}

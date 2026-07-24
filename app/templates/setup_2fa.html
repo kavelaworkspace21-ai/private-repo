@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Setup 2FA â€” Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    body { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; background:var(--navy); padding:2rem 1rem; }
+    .auth-card { background:#fff; border-radius:16px; padding:2.5rem 2.25rem; width:95%; max-width:460px; box-shadow:0 20px 60px rgba(0,0,0,0.35); }
+    .auth-brand { text-align:center; margin-bottom:2rem; }
+    .auth-brand .name { font-size:1.4rem; font-weight:800; color:var(--navy); }
+    .auth-brand .ai   { font-size:1.4rem; font-weight:800; color:var(--gold); }
+    .step { display:flex; align-items:flex-start; gap:0.9rem; margin-bottom:1.1rem; }
+    .step-num { background:var(--navy); color:#fff; font-size:0.75rem; font-weight:700; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+    .step-body strong { display:block; font-size:0.9rem; margin-bottom:0.15rem; }
+    .step-body p { font-size:0.82rem; color:var(--text-3); line-height:1.45; }
+    .qr-wrap { text-align:center; margin:1.5rem 0; }
+    .qr-wrap img { border:6px solid #fff; box-shadow:var(--shadow); border-radius:8px; max-width:180px; }
+    .secret-box { background:#f8f9fc; border:1px solid var(--border); border-radius:8px; padding:0.65rem 1rem; font-family:monospace; font-size:0.9rem; letter-spacing:.08em; text-align:center; word-break:break-all; margin-bottom:1.25rem; color:var(--navy); }
+    .otp-input { font-size:1.6rem; text-align:center; letter-spacing:0.45em; font-weight:700; }
+    .apps { display:flex; justify-content:center; gap:1.5rem; margin:0.75rem 0 1.5rem; font-size:0.78rem; color:var(--text-3); }
+    .apps a { color:var(--navy); text-decoration:none; font-weight:600; }
+  </style>
+</head>
+<body>
+
+<div class="auth-card">
+  <div class="auth-brand">
+    <div><span class="name">Juris</span><span class="ai">cite</span></div>
+    <p style="color:var(--text-3);font-size:0.82rem;margin-top:0.25rem">ðŸ” Set up Two-Factor Authentication</p>
+  </div>
+
+  <!-- Loading state -->
+  <div id="loading" style="text-align:center;padding:2rem;color:var(--text-3)">Loading your QR codeâ€¦</div>
+
+  <!-- Setup UI (shown after API response) -->
+  <div id="setup-ui" style="display:none">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Install an authenticator app</strong>
+        <p>Use any TOTP-compatible app on your phone.</p>
+        <div class="apps">
+          <a href="#">Google Authenticator</a>
+          <a href="#">Microsoft Authenticator</a>
+          <a href="#">Authy</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Scan the QR code</strong>
+        <p>Open your authenticator app and scan the code below.</p>
+      </div>
+    </div>
+
+    <div class="qr-wrap">
+      <img id="qr-img" src="" alt="QR Code"/>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Or enter the key manually</strong>
+        <p>If scanning doesn't work, enter this secret key in your app.</p>
+      </div>
+    </div>
+
+    <div class="secret-box" id="totp-secret"></div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Confirm setup</strong>
+        <p>Enter the 6-digit code shown in your app to activate 2FA.</p>
+      </div>
+    </div>
+
+    <form id="confirm-form">
+      <div class="form-group" style="margin-bottom:1.25rem">
+        <input class="otp-input" name="code" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" required/>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:0.75rem">
+        Activate 2FA
+      </button>
+    </form>
+    <!-- Login used to DEAD-END here for advocates (no way past this page without an
+         authenticator app). 2FA stays strongly encouraged — the dashboard banner keeps
+         nagging until it's enabled — but setup must never block first use of the app. -->
+    <p style="text-align:center;margin-top:1rem">
+      <a href="/" style="color:var(--text-3);font-size:0.85rem">Skip for now — set up later from Account →</a>
+    </p>
+  </div>
+
+  <!-- Success state -->
+  <div id="success-ui" style="display:none;text-align:center;padding:1rem 0">
+    <div style="font-size:3rem;margin-bottom:1rem">âœ…</div>
+    <h2 style="margin-bottom:0.5rem">2FA Activated!</h2>
+    <p style="color:var(--text-3);font-size:0.875rem;margin-bottom:1.5rem">Your account is now protected with two-factor authentication.</p>
+    <a href="/" class="btn btn-primary" style="display:inline-flex">Go to Dashboard â†’</a>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>
+  async function loadSetup() {
+    const token = localStorage.getItem('access_token');
+    if (!token) { window.location.href = '/login'; return; }
+
+    try {
+      const res = await fetch('/api/auth/2fa/setup', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.status === 400) {
+        // 2FA already enabled â€” go home
+        window.location.href = '/'; return;
+      }
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+
+      document.getElementById('qr-img').src = `data:image/png;base64,${data.qr_code_base64}`;
+      document.getElementById('totp-secret').textContent = data.secret;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('setup-ui').style.display = '';
+    } catch {
+      toast('Failed to load 2FA setup. Please log in again.', 'error');
+      setTimeout(() => window.location.href = '/login', 2000);
+    }
+  }
+
+  document.getElementById('confirm-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const code = new FormData(e.target).get('code').trim();
+    const token = localStorage.getItem('access_token');
+    try {
+      const res = await fetch('/api/auth/2fa/enable', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      });
+      if (!res.ok) { toast('Invalid code â€” check your app and try again', 'error'); return; }
+      document.getElementById('setup-ui').style.display = 'none';
+      document.getElementById('success-ui').style.display = '';
+    } catch { toast('Error â€” please try again', 'error'); }
+  });
+
+  loadSetup();
+</script>
+</body>
+</html>
+
+

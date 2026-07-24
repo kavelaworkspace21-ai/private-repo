@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Firm Workspace &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .firm-wrap { max-width: 980px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+    .firm-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+    .firm-head h1 { font-size:1.3rem; font-weight:800; letter-spacing:-.03em; color:var(--text); margin:0; }
+    .mtable { width:100%; border-collapse:collapse; font-size:.84rem; }
+    .mtable th { text-align:left; color:var(--text-3); font-size:.66rem; text-transform:uppercase; letter-spacing:.05em; padding:.5rem .6rem; border-bottom:1px solid var(--border); }
+    .mtable td { padding:.6rem; border-bottom:1px solid rgba(255,255,255,.05); color:var(--text); }
+    .role-pill { font-size:.66rem; font-weight:800; padding:.15rem .55rem; border-radius:20px; background:rgba(200,169,106,.12); color:var(--gold,#C8A96A); }
+    .role-pill.clerk { background:rgba(156,163,175,.13); color:#9ca3af; }
+    .inactive { opacity:.5; }
+    .mbtn { border:1px solid var(--border); background:transparent; color:var(--text-2); border-radius:7px; padding:.3rem .6rem; font-size:.72rem; font-weight:700; cursor:pointer; }
+    .muted { color:var(--text-3); font-size:.85rem; padding:1.5rem 0; }
+    .invite-link { font-size:.72rem; color:var(--gold,#C8A96A); word-break:break-all; }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary">Court Diary</a>
+    <a href="/library">Legal Library</a>
+    <a href="/assistant">AI Assistant</a>
+    <a href="/drafting">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm" class="active">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<div class="firm-wrap">
+  <div class="firm-head">
+    <h1>Firm Workspace</h1>
+    <button class="btn btn-gold btn-sm" onclick="openModal('invite-modal')">+ Invite member</button>
+  </div>
+  <div id="firm-view"><div class="muted">Loading members&hellip;</div></div>
+
+  <!-- Audit log (firm admins only; hidden otherwise) -->
+  <div class="card" id="audit-card" style="margin-top:1.5rem;display:none">
+    <div class="card-header">
+      <span class="card-title">Audit Log</span>
+      <span style="font-size:.74rem;color:var(--text-3)">Who did what in your firm · read-only</span>
+    </div>
+    <div class="table-wrap">
+      <table class="mtable">
+        <thead><tr><th>When</th><th>User</th><th>Action</th><th>Entity</th><th>Detail</th></tr></thead>
+        <tbody id="audit-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Invite modal -->
+<div class="modal-overlay" id="invite-modal">
+  <div class="modal">
+    <div class="modal-header"><span>Invite a member</span>
+      <button class="modal-close" onclick="closeModal('invite-modal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:.8rem"><label>Full name</label>
+        <input id="iv-name" class="input" placeholder="Adv. Junior"/></div>
+      <div class="form-group" style="margin-bottom:.8rem"><label>Email</label>
+        <input id="iv-email" class="input" type="email" placeholder="member@firm.com"/></div>
+      <div class="form-group" style="margin-bottom:1rem"><label>Role</label>
+        <select id="iv-role" class="input">
+          <option value="associate">Associate (can write)</option>
+          <option value="advocate">Advocate (can write)</option>
+          <option value="firm_admin">Firm Admin (full)</option>
+          <option value="clerk">Clerk (read-only)</option>
+        </select></div>
+      <div id="iv-result" style="font-size:.78rem;margin-bottom:.8rem"></div>
+      <button class="btn btn-gold" style="width:100%" onclick="doInvite()" id="iv-go">Send invite</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>requireAuth();</script>
+<script src="/static/firm.js"></script>
+<script>
+(async function loadAudit() {
+  try {
+    const rows = await api.get('/api/audit/?limit=50');   // 403 for non-admins → caught, stays hidden
+    document.getElementById('audit-card').style.display = '';
+    const body = document.getElementById('audit-body');
+    body.innerHTML = rows.length ? rows.map(r => `
+      <tr>
+        <td>${esc((r.created_at || '').slice(0,16).replace('T',' '))}</td>
+        <td>#${r.user_id}</td>
+        <td>${esc(r.action.replace(/_/g,' '))}</td>
+        <td>${esc(r.entity)}${r.entity_id ? (' #' + r.entity_id) : ''}</td>
+        <td style="color:var(--text-3)">${esc(r.detail || '')}</td>
+      </tr>`).join('') : '<tr><td colspan="5" class="muted">No audit entries yet.</td></tr>';
+  } catch (_) { /* non-admin — leave the audit card hidden */ }
+})();
+</script>
+</body>
+</html>

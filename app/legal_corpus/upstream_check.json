@@ -1,0 +1,20 @@
+{
+  "checked_on": "2026-07-17T05:13:50+00:00",
+  "corpus_version": "0a0476695051",
+  "results": {
+    "dpdp_2023": {
+      "status": "unchanged",
+      "detail": ""
+    },
+    "ndps_1985": {
+      "status": "unchanged",
+      "detail": ""
+    }
+  },
+  "summary": {
+    "checked": 2,
+    "updated_upstream": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

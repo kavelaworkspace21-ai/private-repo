@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Offline — Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    body { display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100vh; background:#09090B; text-align:center; padding:2rem; color:#fff;
+      background-image:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(242,201,76,.08) 0%, transparent 70%); }
+    .brand { font-size:1.6rem; font-weight:800; letter-spacing:-.03em; margin-bottom:.5rem; }
+    .brand .ai { color:#F2C94C; }
+    p { color:rgba(255,255,255,.55); max-width:340px; line-height:1.6; font-size:.9rem; }
+    button { margin-top:1.3rem; background:linear-gradient(135deg,#F2C94C,#d4a017); color:#09090B;
+      font-weight:800; border:none; border-radius:10px; padding:.7rem 1.4rem; font-size:.9rem; cursor:pointer; }
+    .icon { width:72px; height:72px; margin-bottom:1rem; opacity:.9; }
+  </style>
+</head>
+<body>
+  <img class="icon" src="/static/icon-192.png" alt="Juriscite"/>
+  <div class="brand"><span>Juris</span><span class="ai">cite</span></div>
+  <p>You're offline. Juriscite needs a connection to load your matters, diary, and cited research
+     securely. Your data is never stored on the device cache.</p>
+  <button onclick="location.reload()">Try again</button>
+</body>
+</html>

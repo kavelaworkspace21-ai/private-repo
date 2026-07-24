@@ -1,0 +1,7 @@
+# Juriscite local model — CPU-pinned variant of llama3.2:3b
+# Pins to CPU (num_gpu 0) so it runs reliably on machines with limited VRAM
+# (e.g. GTX 1650 4GB). Grounded + cited via Juriscite's RAG corpus at runtime.
+FROM llama3.2:3b
+PARAMETER num_gpu 0
+PARAMETER num_ctx 8192
+PARAMETER temperature 0.2

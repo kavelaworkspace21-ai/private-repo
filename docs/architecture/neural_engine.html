@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Juriscite · Neural Engine</title>
+<style>
+  :root{
+    --bg:#0B0F14; --panel:#0F1620; --panel2:#131C28; --border:#223040;
+    --text:#E6EDF3; --muted:#8B98A9; --dim:#5A6675;
+    --gold:#C8A96A; --sapphire:#3B82F6; --teal:#3FB39A; --violet:#B08CD9;
+    --crimson:#E0454C; --slate:#7C93A8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+    font-family:"Inter",-apple-system,"Segoe UI",system-ui,sans-serif;overflow:hidden}
+  #stage{position:fixed;inset:0}
+  canvas{display:block;cursor:grab}
+  canvas:active{cursor:grabbing}
+
+  /* Header */
+  #hdr{position:fixed;top:0;left:0;right:0;padding:14px 20px;z-index:10;
+    background:linear-gradient(180deg,rgba(11,15,20,.92),rgba(11,15,20,0));
+    pointer-events:none}
+  #hdr .title{font-size:18px;font-weight:700;letter-spacing:.02em}
+  #hdr .title b{color:var(--gold)}
+  #hdr .sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+  #hdr .stats{font-size:11px;color:var(--dim);margin-top:6px;font-family:"JetBrains Mono",ui-monospace,monospace}
+  #hdr .stats b{color:var(--teal);font-weight:600}
+
+  /* Flow toolbar */
+  #flows{position:fixed;top:14px;right:20px;z-index:11;display:flex;gap:8px;flex-wrap:wrap;
+    justify-content:flex-end;max-width:56vw}
+  .fbtn{pointer-events:auto;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.01em;
+    padding:6px 11px;border-radius:20px;border:1px solid var(--border);
+    background:var(--panel);color:var(--muted);transition:all .18s}
+  .fbtn:hover{border-color:var(--gold);color:var(--text)}
+  .fbtn.on{background:var(--flowbg,rgba(200,169,106,.16));border-color:var(--flowc,var(--gold));
+    color:var(--text);box-shadow:0 0 14px -4px var(--flowc,var(--gold))}
+
+  /* Detail panel */
+  #detail{position:fixed;right:20px;bottom:96px;width:320px;z-index:11;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:16px 16px 14px;box-shadow:0 20px 50px -20px #000;display:none}
+  #detail.show{display:block}
+  #detail .dtag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;padding:2px 8px;border-radius:5px;margin-bottom:9px}
+  #detail h3{margin:0 0 6px;font-size:15px;font-weight:700}
+  #detail p{margin:0;font-size:12.5px;line-height:1.55;color:var(--muted)}
+  #detail .conn{margin-top:11px;font-size:11px;color:var(--dim);
+    font-family:"JetBrains Mono",ui-monospace,monospace;line-height:1.6;
+    border-top:1px solid var(--border);padding-top:9px}
+  #detail .conn b{color:var(--sapphire);font-weight:600}
+  #detail .flowdesc{font-size:12px;line-height:1.6;color:var(--text)}
+  #detail .flowsteps{margin-top:9px;font-size:11px;color:var(--muted);
+    font-family:"JetBrains Mono",ui-monospace,monospace;line-height:1.75}
+
+  /* Legend */
+  #legend{position:fixed;left:20px;bottom:16px;z-index:10;display:flex;gap:14px;flex-wrap:wrap;
+    align-items:center;font-size:10.5px;color:var(--muted);pointer-events:none;max-width:60vw}
+  #legend .lg{display:flex;align-items:center;gap:5px}
+  #legend .dot{width:9px;height:9px;border-radius:50%}
+  #hint{position:fixed;right:20px;bottom:16px;z-index:10;font-size:10.5px;color:var(--dim);
+    pointer-events:none;font-family:"JetBrains Mono",ui-monospace,monospace}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="c"></canvas></div>
+
+<div id="hdr">
+  <div class="title">JURISCITE · <b>NEURAL ENGINE</b></div>
+  <div class="sub">Live architecture map — frontend ↔ backend ↔ AI ↔ data, with verified interconnections.</div>
+  <div class="stats">
+    <b id="s_nodes">0</b> nodes · <b id="s_edges">0</b> synapses ·
+    <b>21</b> routers · <b>13</b> services · <b>8</b> AI modules ·
+    <b>22</b> tables · <b>6,457</b> corpus chunks · <b>272</b> tests green
+  </div>
+</div>
+
+<div id="flows">
+  <div class="fbtn" data-flow="research">◆ Cited Research</div>
+  <div class="fbtn" data-flow="chatdraft">◆ Chat Draft</div>
+  <div class="fbtn" data-flow="structured">◆ Structured Draft</div>
+  <div class="fbtn" data-flow="mutation">◆ Tenant-safe Write</div>
+  <div class="fbtn" data-flow="soul">◆ Soul Enforcement</div>
+  <div class="fbtn" data-flow="diary">◆ Diary → eCourts</div>
+</div>
+
+<div id="detail"></div>
+
+<div id="legend">
+  <div class="lg"><span class="dot" style="background:var(--slate)"></span>Client / PWA</div>
+  <div class="lg"><span class="dot" style="background:#7C93A8"></span>Pages</div>
+  <div class="lg"><span class="dot" style="background:#5B93C9"></span>Frontend JS</div>
+  <div class="lg"><span class="dot" style="background:var(--gold)"></span>API routers</div>
+  <div class="lg"><span class="dot" style="background:#6EA8FE"></span>Services</div>
+  <div class="lg"><span class="dot" style="background:var(--sapphire)"></span>AI layer</div>
+  <div class="lg"><span class="dot" style="background:var(--teal)"></span>Data stores</div>
+  <div class="lg"><span class="dot" style="background:var(--violet)"></span>External</div>
+  <div class="lg"><span class="dot" style="background:var(--crimson)"></span>The Soul</div>
+</div>
+<div id="hint">drag = pan · wheel = zoom · click node = inspect · click flow = trace</div>
+
+<script>
+const GC = {
+  client:"#7C93A8", page:"#8AA4BC", js:"#5B93C9", core:"#94A3B4",
+  router:"#C8A96A", service:"#6EA8FE", ai:"#3B82F6", data:"#3FB39A",
+  external:"#B08CD9", soul:"#E0454C"
+};
+
+// ── Nodes: id, label, group, layer, detail ──────────────────────────────────
+const N = [
+  // L0 client
+  {id:"browser",label:"Browser / PWA",g:"client",layer:0,d:"Installable PWA (manifest + service worker + icons). Installs on Android/iOS; offline shell via cached pages."},
+  {id:"sw",label:"service-worker.js",g:"client",layer:0,d:"Caches the app shell for offline; serves /offline when network is down."},
+  {id:"manifest",label:"manifest.webmanifest",g:"client",layer:0,d:"PWA manifest — name Juriscite, icons, theme, standalone display."},
+  // L1 pages
+  {id:"p_dash",label:"Dashboard",g:"page",layer:1,d:"index.html — KPIs, today tile, live Kanoon feed, onboarding checklist."},
+  {id:"p_cases",label:"Cases",g:"page",layer:1,d:"cases.html — client & matter CRUD, documents, opposite party."},
+  {id:"p_diary",label:"Court Diary",g:"page",layer:1,d:"diary.html — hearings, tasks, filing deadlines, urgency colours."},
+  {id:"p_asst",label:"AI Assistant",g:"page",layer:1,d:"assistant.html — cited research + single-prompt chat drafting, 22 languages."},
+  {id:"p_draft",label:"Drafting Engine",g:"page",layer:1,d:"drafting.html — 3-pane workspace, matter pre-fill, AI references panel."},
+  {id:"p_drafts",label:"Drafts (Review)",g:"page",layer:1,d:"drafts.html — versioned review queue: diff, approve, revert, export."},
+  {id:"p_lib",label:"Legal Library",g:"page",layer:1,d:"library.html — indexed acts & sections, source viewer."},
+  {id:"p_firm",label:"Firm Workspace",g:"page",layer:1,d:"firm.html — members, roles, verification, firm-wide view."},
+  {id:"p_acct",label:"Account / Data Rights",g:"page",layer:1,d:"account.html — profile, DPDP data-rights requests, consent record."},
+  {id:"p_notif",label:"Notifications",g:"page",layer:1,d:"notifications.html — reminders, deadlines, system alerts."},
+  {id:"p_auth",label:"Login / Register / 2FA",g:"page",layer:1,d:"login·register·setup_2fa·reset — JWT auth, TOTP for privileged roles."},
+  {id:"p_legal",label:"Legal / Consent",g:"page",layer:1,d:"legal.html·consent.html — policy pack, consent gate (DPDP)."},
+  // L2 js
+  {id:"j_utils",label:"utils.js",g:"js",layer:2,d:"API helper: attaches JWT bearer, handles 401 → clears token → redirect /login. Gateway for every fetch."},
+  {id:"j_app",label:"app.js",g:"js",layer:2,d:"Dashboard + shared nav, notifications, account glue."},
+  {id:"j_asst",label:"assistant.js",g:"js",layer:2,d:"Chat SSE stream; renders confidence badge / draft badge + format chip; draft action bar (save, matter-link, DOCX/PDF)."},
+  {id:"j_draft",label:"drafting.js",g:"js",layer:2,d:"3-pane engine; matter pre-fill; loads /provisions + /cases into the AI references panel; streams generation."},
+  {id:"j_diary",label:"diary.js",g:"js",layer:2,d:"Calendar + list; urgency tiers (overdue/tomorrow/week)."},
+  {id:"j_cases",label:"cases.js",g:"js",layer:2,d:"Client & matter forms, document upload."},
+  {id:"j_drafts",label:"drafts_list.js",g:"js",layer:2,d:"Review queue UI: diff view, approve, revert, export."},
+  {id:"j_firm",label:"firm.js",g:"js",layer:2,d:"Firm members & role management."},
+  {id:"j_lib",label:"library.js",g:"js",layer:2,d:"Library browse + source viewer."},
+  {id:"j_style",label:"style.css + lucide.svg",g:"js",layer:2,d:"Midnight Executive design system — slate/champagne/sapphire tokens, Geist/Inter/JetBrains Mono, self-hosted Lucide sprite."},
+  // L3 core
+  {id:"core_main",label:"FastAPI main.py",g:"core",layer:3,d:"App entry — mounts all 21 routers, serves pages, wires middleware & startup jobs."},
+  {id:"core_mw",label:"Middleware",g:"core",layer:3,d:"RequestID · activity tracking · security headers (CSP, HSTS, X-Frame-Options)."},
+  {id:"core_health",label:"/health",g:"core",layer:3,d:"Liveness — re-checks the soul live: {status, version, soul}."},
+  {id:"core_sched",label:"APScheduler",g:"core",layer:3,d:"Background reminders (hearings, deadlines) fired on schedule."},
+  {id:"soul_boot",label:"soul.py — boot guard",g:"soul",layer:3,d:"assert_soul_intact() runs BEFORE the app boots. If the safety doctrine is missing/tampered, the process refuses to start. Fail-closed."},
+  // L4 routers
+  {id:"r_auth",label:"/api/auth",g:"router",layer:4,d:"Register, login (JWT), 2FA (TOTP), refresh, password reset. Every event audited."},
+  {id:"r_clients",label:"/api/clients",g:"router",layer:4,d:"Client CRUD — tenant-scoped, audited."},
+  {id:"r_cases",label:"/api/cases",g:"router",layer:4,d:"Matter CRUD — ownership-checked, audited."},
+  {id:"r_docs",label:"/api/documents",g:"router",layer:4,d:"Upload + versioning; 20MB cap + extension whitelist."},
+  {id:"r_hearings",label:"/api/hearings",g:"router",layer:4,d:"Hearing dates for the diary."},
+  {id:"r_fees",label:"/api/fees",g:"router",layer:4,d:"Fee agreed/received/balance; task tracker — audited."},
+  {id:"r_diary",label:"/api/diary",g:"router",layer:4,d:"Entries, tasks, deadlines, opposing counsel — all mutations audited; feeds reminders."},
+  {id:"r_chat",label:"/api/ai (chat)",g:"router",layer:4,d:"SSE chat. Soul-screens intent → ejects on unlawful use. Streams cited answers OR chat-drafted documents. Rate-limited."},
+  {id:"r_drafting",label:"/api/drafting",g:"router",layer:4,d:"Structured drafting: 13 doc types + universal CrPC/CPC applications. Injects skeleton + retrieved provisions. DOCX/PDF export."},
+  {id:"r_drafts",label:"/api/drafts",g:"router",layer:4,d:"Saved drafts = versioned review queue. DRAFT_FOR_ADVOCATE_REVIEW until explicit approval."},
+  {id:"r_research",label:"/api/research",g:"router",layer:4,d:"Cited research + /provisions structured lookup for the drafting panel."},
+  {id:"r_library",label:"/api/library",g:"router",layer:4,d:"Indexed acts/sections + source viewer."},
+  {id:"r_ecourts",label:"/api (eCourts)",g:"router",layer:4,d:"Read-only eCourts (official API, flagged) + calendar .ics export."},
+  {id:"r_notif",label:"/api/notifications",g:"router",layer:4,d:"Reminders & alerts."},
+  {id:"r_account",label:"/api/account",g:"router",layer:4,d:"Profile + DPDP data rights entry."},
+  {id:"r_datarights",label:"/api/data-rights",g:"router",layer:4,d:"Data-subject request tracker (access/erase/correct)."},
+  {id:"r_misuse",label:"/api/misuse",g:"router",layer:4,d:"Misuse reports intake."},
+  {id:"r_audit",label:"/api/audit",g:"router",layer:4,d:"Tenant-scoped audit log reader (firm_admin)."},
+  {id:"r_firm",label:"/api/firm",g:"router",layer:4,d:"Firm workspace — members, roles, verification."},
+  // L5 services
+  {id:"s_tenancy",label:"tenancy",g:"service",layer:5,d:"The isolation spine: current_tenant_id, get_owned_case (ownership check), RBAC deps, and write_audit → AuditLog. Cross-tenant read = P0 bug."},
+  {id:"s_soul",label:"soul_enforcement",g:"soul",layer:5,d:"eject_user_for_soul_violation — bans a user who tries to use Juriscite against the law. Final, no self-serve return."},
+  {id:"s_storage",label:"storage",g:"service",layer:5,d:"File save with 20MB cap + extension whitelist; tenant-partitioned paths."},
+  {id:"s_libsvc",label:"library service",g:"service",layer:5,d:"Act/section index; dedupe by title+year."},
+  {id:"s_tpl",label:"draft_templates",g:"service",layer:5,d:"28 authentic skeletons + keyword matcher. resolve_format() → (label, skeleton). G8-pending sign-off."},
+  {id:"s_rate",label:"ratelimit",g:"service",layer:5,d:"Login / AI / forgot-password limiters — abuse & cost guard."},
+  {id:"s_priv",label:"privacy / consent",g:"service",layer:5,d:"Consent records, DPDP purpose-limitation, retention, no-training boundary."},
+  {id:"s_map",label:"mapping",g:"service",layer:5,d:"Old↔new law crosswalk (IPC↔BNS, CrPC↔BNSS, Evidence↔BSA)."},
+  {id:"s_backup",label:"backup",g:"service",layer:5,d:"Scheduled backup runs recorded in BackupRun."},
+  {id:"s_cal",label:"calendar_export",g:"service",layer:5,d:"Diary → .ics for the advocate's calendar."},
+  {id:"s_notifsvc",label:"notifications svc",g:"service",layer:5,d:"Builds & persists reminders/alerts."},
+  // L6 AI
+  {id:"ai_agent",label:"agent.py",g:"ai",layer:6,d:"The Universal Legal Agent. Detects language + draft intent, retrieves, builds the grounded prompt, streams. Case law kept OUT of grounding (footer only)."},
+  {id:"ai_rag",label:"rag.py",g:"ai",layer:6,d:"Deterministic retrieval: retrieve_by_section (exact verbatim), retrieve_by_title_keyword, retrieve_structured, semantic retrieve. Act-alias map."},
+  {id:"ai_safety",label:"safety.py — SOUL",g:"soul",layer:6,d:"The living doctrine: no-source-no-answer, citation hard-gate, confidence labels, banned-phrase filter, DRAFT disclaimer, unlawful-intent screen."},
+  {id:"ai_llm",label:"llm_config",g:"ai",layer:6,d:"Provider-agnostic (AI_API_KEY/BASE_URL/MODEL). Currently NVIDIA NIM · Llama 3.3 70B. Free local fallback."},
+  {id:"ai_vstore",label:"vector_store",g:"ai",layer:6,d:"ChromaDB collection handle + local ONNX embeddings; deterministic ordering."},
+  {id:"ai_caselaw",label:"case_law",g:"ai",layer:6,d:"Live judgment lookup (Indian Kanoon) — shown as footer with good-law caveat, never fed to the model as fact."},
+  {id:"ai_activity",label:"activity_tracker",g:"ai",layer:6,d:"Builds per-user activity context; logs chat usage for the dashboard."},
+  {id:"ai_bound",label:"data_boundary",g:"ai",layer:6,d:"Enforces the no-training-on-client-data boundary (DPDP)."},
+  // L7 data
+  {id:"d_db",label:"PostgreSQL / Aurora",g:"data",layer:7,d:"22 tables — Tenant, User, Client, Case, Hearing, Task, GeneratedDraft, DraftVersion, AuditLog, ConsentRecord, … Every business row carries tenant_id. (Aurora = prod; SQLite local.)"},
+  {id:"d_chroma",label:"ChromaDB",g:"data",layer:7,d:"6,457 verbatim chunks of statute text — the ONLY grounding the AI may cite from."},
+  {id:"d_embed",label:"ONNX embeddings",g:"data",layer:7,d:"Local embedding model — no paid API, no data egress for retrieval."},
+  {id:"d_skel",label:"templates/drafts",g:"data",layer:7,d:"28 format skeletons + manifest.json (advocate_approved:false, G8 gate)."},
+  {id:"d_files",label:"File store",g:"data",layer:7,d:"S3-compatible / local object storage for case documents & versions."},
+  // L8 external
+  {id:"x_nvidia",label:"NVIDIA NIM · 70B",g:"external",layer:8,d:"meta/llama-3.3-70b-instruct via OpenAI-compatible endpoint. Only retrieved context is sent; no client data used for training."},
+  {id:"x_ecourts",label:"eCourts API",g:"external",layer:8,d:"Official/authorized read-only API. No scraping, no CAPTCHA bypass. Feature-flagged."},
+  {id:"x_kanoon",label:"Indian Kanoon",g:"external",layer:8,d:"Public judgment references — footer only, good-law status flagged."},
+  {id:"x_groq",label:"Groq (voice)",g:"external",layer:8,d:"Optional Whisper-compatible transcription for voice input. Degrades gracefully if absent."},
+];
+
+// ── Edges: [from, to, kind]  kind: 'mount' faint, default normal ────────────
+const E = [
+  // client
+  ["browser","sw"],["browser","manifest"],["sw","p_dash","mount"],
+  ["browser","p_dash"],["browser","p_cases"],["browser","p_diary"],["browser","p_asst"],
+  ["browser","p_draft"],["browser","p_drafts"],["browser","p_lib"],["browser","p_firm"],
+  ["browser","p_acct"],["browser","p_notif"],["browser","p_auth"],["browser","p_legal"],
+  // pages → js
+  ["p_dash","j_app"],["p_cases","j_cases"],["p_diary","j_diary"],["p_asst","j_asst"],
+  ["p_draft","j_draft"],["p_drafts","j_drafts"],["p_lib","j_lib"],["p_firm","j_firm"],
+  ["p_acct","j_app"],["p_notif","j_app"],["p_auth","j_utils"],["p_legal","j_utils"],
+  ["p_dash","j_utils","mount"],["p_asst","j_utils","mount"],["p_draft","j_utils","mount"],
+  ["p_dash","j_style","mount"],["p_asst","j_style","mount"],["p_draft","j_style","mount"],
+  // js → routers
+  ["j_asst","r_chat"],["j_asst","r_drafts"],["j_asst","r_drafting"],["j_asst","r_cases"],
+  ["j_draft","r_drafting"],["j_draft","r_drafts"],["j_draft","r_cases"],["j_draft","r_research"],
+  ["j_diary","r_diary"],["j_cases","r_cases"],["j_cases","r_clients"],["j_drafts","r_drafts"],
+  ["j_firm","r_firm"],["j_lib","r_library"],["j_app","r_notif"],["j_app","r_account"],
+  ["j_app","r_audit"],["j_app","r_hearings"],["j_app","r_fees"],["j_utils","r_auth"],
+  // mount (main → routers)
+  ["core_main","r_auth","mount"],["core_main","r_clients","mount"],["core_main","r_cases","mount"],
+  ["core_main","r_docs","mount"],["core_main","r_hearings","mount"],["core_main","r_fees","mount"],
+  ["core_main","r_diary","mount"],["core_main","r_chat","mount"],["core_main","r_drafting","mount"],
+  ["core_main","r_drafts","mount"],["core_main","r_research","mount"],["core_main","r_library","mount"],
+  ["core_main","r_ecourts","mount"],["core_main","r_notif","mount"],["core_main","r_account","mount"],
+  ["core_main","r_datarights","mount"],["core_main","r_misuse","mount"],["core_main","r_audit","mount"],
+  ["core_main","r_firm","mount"],
+  ["core_main","core_mw"],["core_main","core_health"],["core_main","core_sched"],
+  ["soul_boot","core_main"],["core_health","soul_boot"],
+  // routers → services / ai / data
+  ["r_chat","ai_agent"],["r_chat","ai_safety"],["r_chat","s_soul"],["r_chat","s_rate"],
+  ["r_chat","d_db"],["r_chat","ai_activity"],["r_chat","ai_agent"],["r_chat","x_groq"],
+  ["r_drafting","s_tpl"],["r_drafting","ai_rag"],["r_drafting","ai_llm"],["r_drafting","ai_safety"],
+  ["r_drafting","s_tenancy"],
+  ["r_drafts","d_db"],["r_drafts","s_tenancy"],
+  ["r_research","ai_rag"],
+  ["r_library","s_libsvc"],["s_libsvc","d_db"],
+  ["r_auth","d_db"],["r_auth","s_tenancy"],["r_auth","s_rate"],
+  ["r_cases","d_db"],["r_cases","s_tenancy"],
+  ["r_clients","d_db"],["r_clients","s_tenancy"],
+  ["r_docs","s_storage"],["r_docs","d_db"],["r_docs","s_tenancy"],["s_storage","d_files"],
+  ["r_hearings","d_db"],["r_hearings","s_tenancy"],
+  ["r_fees","d_db"],["r_fees","s_tenancy"],
+  ["r_diary","d_db"],["r_diary","s_tenancy"],["r_diary","core_sched"],
+  ["r_ecourts","s_cal"],["r_ecourts","x_ecourts"],
+  ["r_notif","s_notifsvc"],["s_notifsvc","d_db"],
+  ["r_account","s_priv"],["r_account","d_db"],["r_account","s_tenancy"],
+  ["r_datarights","s_priv"],["r_datarights","d_db"],
+  ["r_misuse","d_db"],["r_misuse","s_tenancy"],
+  ["r_audit","d_db"],
+  ["r_firm","d_db"],["r_firm","s_tenancy"],
+  // services → data / mapping
+  ["s_tenancy","d_db"],["s_backup","d_db"],["s_backup","d_files"],["s_soul","d_db"],
+  ["s_priv","d_db"],["s_map","d_db"],
+  // AI internal
+  ["ai_agent","ai_rag"],["ai_agent","ai_safety"],["ai_agent","ai_llm"],["ai_agent","ai_caselaw"],
+  ["ai_agent","ai_activity"],["ai_agent","ai_bound"],["ai_agent","s_tpl"],["ai_agent","s_map"],
+  ["ai_rag","ai_vstore"],["ai_vstore","d_chroma"],["ai_vstore","d_embed"],["ai_rag","d_chroma"],
+  ["ai_llm","x_nvidia"],["ai_caselaw","x_kanoon"],["s_tpl","d_skel"],["ai_activity","d_db"],
+  ["ai_bound","ai_llm"],
+  // soul spine
+  ["soul_boot","ai_safety"],["soul_boot","s_soul"],["ai_safety","s_soul"],
+];
+
+// ── Flows: narrated end-to-end journeys ─────────────────────────────────────
+const FLOWS = {
+  research:{title:"Cited Legal Research",color:"#3B82F6",
+    desc:"A legal question returns a source-grounded, citation-checked, confidence-labelled answer — never from the model's memory.",
+    steps:["Assistant → /api/ai/chat","soul screens intent","agent → rag.retrieve_by_section","vector_store → ChromaDB (verbatim)","safety citation gate","llm_config → NVIDIA 70B","stream back + save"],
+    edges:[["browser","p_asst"],["p_asst","j_asst"],["j_asst","r_chat"],["r_chat","ai_safety"],["r_chat","ai_agent"],["ai_agent","ai_rag"],["ai_rag","ai_vstore"],["ai_vstore","d_chroma"],["ai_agent","ai_safety"],["ai_agent","ai_llm"],["ai_llm","x_nvidia"],["r_chat","d_db"],["r_chat","ai_activity"]]},
+  chatdraft:{title:"Chat Draft (single prompt)",color:"#C8A96A",
+    desc:"“Draft a legal notice for…” in chat detects draft intent, matches an authentic skeleton, grounds on statute, streams the document with a review badge, then saves/exports.",
+    steps:["Assistant → /api/ai/chat","agent detects draft intent","draft_templates match skeleton","rag grounding","NVIDIA 70B streams draft","Save → /api/drafts (+audit)","Export → /api/drafting (DOCX/PDF)"],
+    edges:[["browser","p_asst"],["p_asst","j_asst"],["j_asst","r_chat"],["r_chat","ai_agent"],["ai_agent","s_tpl"],["s_tpl","d_skel"],["ai_agent","ai_rag"],["ai_agent","ai_llm"],["ai_llm","x_nvidia"],["j_asst","r_drafts"],["r_drafts","d_db"],["r_drafts","s_tenancy"],["j_asst","r_drafting"]]},
+  structured:{title:"Structured Draft → Review → Export",color:"#6EA8FE",
+    desc:"The 3-pane engine: pick a matter + type, the skeleton + retrieved provisions ground the model, the draft lands in the review queue, then exports.",
+    steps:["Drafting → /api/drafting/generate","draft_templates skeleton","rag → ChromaDB grounding","safety (disclaimer/banned)","NVIDIA 70B streams","Save → review queue","Export DOCX/PDF"],
+    edges:[["browser","p_draft"],["p_draft","j_draft"],["j_draft","r_drafting"],["r_drafting","s_tpl"],["s_tpl","d_skel"],["r_drafting","ai_rag"],["ai_rag","d_chroma"],["r_drafting","ai_safety"],["r_drafting","ai_llm"],["ai_llm","x_nvidia"],["j_draft","r_drafts"],["r_drafts","d_db"],["r_drafts","s_tenancy"]]},
+  mutation:{title:"Tenant-safe Write + Audit",color:"#3FB39A",
+    desc:"Every business write is ownership-checked and audited. A user from one firm can never touch another firm's data.",
+    steps:["Cases → /api/cases","tenancy.get_owned_case (ownership)","write row → DB (tenant_id)","tenancy.write_audit → AuditLog"],
+    edges:[["browser","p_cases"],["p_cases","j_cases"],["j_cases","r_cases"],["r_cases","s_tenancy"],["r_cases","d_db"],["s_tenancy","d_db"]]},
+  soul:{title:"Soul Enforcement",color:"#E0454C",
+    desc:"An attempt to use Juriscite against the law is screened, refused, and the user is ejected from the ecosystem. The doctrine is supreme over everyone.",
+    steps:["Assistant → /api/ai/chat","safety.screen_request_intent","soul_enforcement.eject","ban recorded in DB","boot guard keeps doctrine intact"],
+    edges:[["browser","p_asst"],["p_asst","j_asst"],["j_asst","r_chat"],["r_chat","ai_safety"],["ai_safety","s_soul"],["r_chat","s_soul"],["s_soul","d_db"],["soul_boot","ai_safety"]]},
+  diary:{title:"Court Diary → Reminders / eCourts",color:"#B08CD9",
+    desc:"Hearings and deadlines drive scheduled reminders; the diary exports to the advocate's calendar, and read-only eCourts pulls hearing dates via the official API.",
+    steps:["Diary → /api/diary","persist → DB","APScheduler reminders","eCourts read-only API","calendar .ics export"],
+    edges:[["browser","p_diary"],["p_diary","j_diary"],["j_diary","r_diary"],["r_diary","d_db"],["r_diary","core_sched"],["r_ecourts","x_ecourts"],["r_ecourts","s_cal"]]},
+};
+
+// ── Build graph ─────────────────────────────────────────────────────────────
+const nodeById = {}; N.forEach(n=>nodeById[n.id]=n);
+// validate edges
+E.forEach(e=>{ if(!nodeById[e[0]]||!nodeById[e[1]]) console.warn("bad edge",e); });
+const adj = {}; N.forEach(n=>adj[n.id]=[]);
+E.forEach(([a,b])=>{ adj[a].push(b); adj[b].push(a); });
+document.getElementById("s_nodes").textContent=N.length;
+document.getElementById("s_edges").textContent=E.length;
+
+// layer layout
+const layers = {}; N.forEach(n=>{ (layers[n.layer]=layers[n.layer]||[]).push(n); });
+const maxCount = Math.max(...Object.values(layers).map(a=>a.length));
+const COLGAP=248, WORLDH=Math.max(900, maxCount*84), MARGINX=120;
+Object.keys(layers).forEach(L=>{
+  const arr=layers[L]; const gap=WORLDH/(arr.length+1);
+  arr.forEach((n,i)=>{ n.x=MARGINX+L*COLGAP; n.y=gap*(i+1); });
+});
+const WORLDW=MARGINX+8*COLGAP+MARGINX;
+
+// ── Canvas ──────────────────────────────────────────────────────────────────
+const cv=document.getElementById("c"), ctx=cv.getContext("2d");
+let W,H,DPR;
+function resize(){ DPR=window.devicePixelRatio||1; W=cv.clientWidth=window.innerWidth; H=cv.clientHeight=window.innerHeight;
+  cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); }
+window.addEventListener("resize",resize); resize();
+
+// camera fit
+let scale, panX, panY;
+function fit(){ const pad=90; scale=Math.min((W-pad*2)/WORLDW,(H-200)/WORLDH); scale=Math.min(scale,1.0);
+  panX=(W-WORLDW*scale)/2; panY=(H-WORLDH*scale)/2+20; }
+fit();
+const w2s=(x,y)=>[x*scale+panX,y*scale+panY];
+
+let hoverId=null, selId=null, activeFlow=null, flowEdgeSet=null, flowNodeSet=null;
+let comet={idx:0,t:0};
+
+function edgeKey(a,b){ return a+"|"+b; }
+function setFlow(key){
+  if(activeFlow===key){ activeFlow=null; flowEdgeSet=flowNodeSet=null; }
+  else{
+    activeFlow=key; const f=FLOWS[key];
+    flowEdgeSet=new Set(); flowNodeSet=new Set();
+    f.edges.forEach(([a,b])=>{ flowEdgeSet.add(edgeKey(a,b)); flowEdgeSet.add(edgeKey(b,a)); flowNodeSet.add(a); flowNodeSet.add(b); });
+    comet={idx:0,t:0};
+  }
+  document.querySelectorAll(".fbtn").forEach(b=>{
+    const on=b.dataset.flow===activeFlow; b.classList.toggle("on",on);
+    if(on){ b.style.setProperty("--flowc",FLOWS[key].color); b.style.setProperty("--flowbg",FLOWS[key].color+"28"); }
+  });
+  renderDetail();
+}
+document.querySelectorAll(".fbtn").forEach(b=>b.addEventListener("click",()=>setFlow(b.dataset.flow)));
+
+// ── Detail panel ────────────────────────────────────────────────────────────
+const det=document.getElementById("detail");
+function renderDetail(){
+  if(activeFlow){
+    const f=FLOWS[activeFlow];
+    det.className="show"; det.innerHTML=
+      `<span class="dtag" style="background:${f.color}22;color:${f.color}">LIVE FLOW</span>`+
+      `<h3>${f.title}</h3><p class="flowdesc">${f.desc}</p>`+
+      `<div class="flowsteps">${f.steps.map((s,i)=>`${String(i+1).padStart(2,'0')} · ${s}`).join("<br/>")}</div>`;
+    return;
+  }
+  if(selId){
+    const n=nodeById[selId], c=GC[n.g];
+    const conns=adj[selId].map(id=>nodeById[id].label);
+    det.className="show"; det.innerHTML=
+      `<span class="dtag" style="background:${c}22;color:${c}">${n.g==="soul"?"THE SOUL":n.g.toUpperCase()}</span>`+
+      `<h3>${n.label}</h3><p>${n.d}</p>`+
+      `<div class="conn"><b>connects to →</b><br/>${conns.join(" · ")}</div>`;
+    return;
+  }
+  det.className="";
+}
+
+// ── Interaction ─────────────────────────────────────────────────────────────
+let dragging=false, dragMoved=false, lastX, lastY;
+cv.addEventListener("mousedown",e=>{ dragging=true; dragMoved=false; lastX=e.clientX; lastY=e.clientY; });
+window.addEventListener("mouseup",e=>{
+  if(dragging && !dragMoved){ // click
+    const hit=pick(e.clientX,e.clientY);
+    selId = hit ? hit.id : null;
+    if(hit) activeFlow=null, flowEdgeSet=null, document.querySelectorAll(".fbtn").forEach(b=>b.classList.remove("on"));
+    renderDetail();
+  }
+  dragging=false;
+});
+window.addEventListener("mousemove",e=>{
+  if(dragging){ const dx=e.clientX-lastX, dy=e.clientY-lastY;
+    if(Math.abs(dx)+Math.abs(dy)>3) dragMoved=true;
+    panX+=dx; panY+=dy; lastX=e.clientX; lastY=e.clientY; }
+  else { const hit=pick(e.clientX,e.clientY); hoverId=hit?hit.id:null; cv.style.cursor=hit?"pointer":"grab"; }
+});
+cv.addEventListener("wheel",e=>{ e.preventDefault();
+  const f=e.deltaY<0?1.12:1/1.12; const mx=e.clientX,my=e.clientY;
+  const wx=(mx-panX)/scale, wy=(my-panY)/scale;
+  scale=Math.max(0.25,Math.min(2.4,scale*f)); panX=mx-wx*scale; panY=my-wy*scale;
+},{passive:false});
+function pick(sx,sy){ for(const n of N){ const [x,y]=w2s(n.x,n.y); const r=nodeR(n)+4;
+  if((sx-x)**2+(sy-y)**2<=r*r) return n; } return null; }
+function nodeR(n){ return (n.g==="ai"||n.g==="soul"||n.g==="data")?9:(n.g==="router"?8:7); }
+
+// ── Render loop ─────────────────────────────────────────────────────────────
+let T=0;
+function frame(ts){ T=ts*0.001; ctx.clearRect(0,0,W,H); drawEdges(); drawComet(); drawNodes(); requestAnimationFrame(frame); }
+
+function drawEdges(){
+  for(const e of E){
+    const a=nodeById[e[0]], b=nodeById[e[1]]; const kind=e[2];
+    const [ax,ay]=w2s(a.x,a.y),[bx,by]=w2s(b.x,b.y);
+    const inFlow=flowEdgeSet && flowEdgeSet.has(edgeKey(e[0],e[1]));
+    const nearSel=(hoverId||selId) && (e[0]===(hoverId||selId)||e[1]===(hoverId||selId));
+    let col, alpha, width, pulses, speed;
+    if(inFlow){ col=FLOWS[activeFlow].color; alpha=.85; width=2; pulses=3; speed=.55; }
+    else if(nearSel){ col="#9fb3c9"; alpha=.5; width=1.4; pulses=1; speed=.3; }
+    else if(activeFlow){ col="#223040"; alpha=.06; width=1; pulses=0; speed=0; }
+    else { col=kind==="mount"?"#1b2733":"#2a3a4d"; alpha=kind==="mount"?.16:.28; width=1; pulses=1; speed=.14; }
+    ctx.strokeStyle=hexA(col,alpha); ctx.lineWidth=width;
+    ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke();
+    // pulses
+    for(let p=0;p<pulses;p++){
+      const t=((T*speed + p/pulses + hash(e[0]+e[1])*0.37)%1);
+      const px=ax+(bx-ax)*t, py=ay+(by-ay)*t;
+      const g=inFlow?3.2:2.0;
+      ctx.fillStyle=hexA(col,inFlow?.95:alpha+.15);
+      ctx.beginPath(); ctx.arc(px,py,g,0,7); ctx.fill();
+    }
+  }
+}
+
+function drawComet(){
+  if(!activeFlow) return;
+  const f=FLOWS[activeFlow]; const eds=f.edges;
+  comet.t += 0.016/0.62;
+  if(comet.t>=1){ comet.t=0; comet.idx=(comet.idx+1)%eds.length; }
+  const [a,b]=eds[comet.idx];
+  const na=nodeById[a], nb=nodeById[b];
+  const [ax,ay]=w2s(na.x,na.y),[bx,by]=w2s(nb.x,nb.y);
+  const tt=easeInOut(comet.t);
+  const px=ax+(bx-ax)*tt, py=ay+(by-ay)*tt;
+  // trail
+  for(let i=0;i<6;i++){ const t2=Math.max(0,tt-i*0.05); const tx=ax+(bx-ax)*t2, ty=ay+(by-ay)*t2;
+    ctx.fillStyle=hexA(f.color,0.10*(6-i)); ctx.beginPath(); ctx.arc(tx,ty,7-i*0.7,0,7); ctx.fill(); }
+  ctx.shadowBlur=18; ctx.shadowColor=f.color;
+  ctx.fillStyle=f.color; ctx.beginPath(); ctx.arc(px,py,5.5,0,7); ctx.fill();
+  ctx.shadowBlur=0;
+}
+
+function drawNodes(){
+  ctx.textBaseline="top"; ctx.font="600 11px Inter, sans-serif";
+  for(const n of N){
+    const [x,y]=w2s(n.x,n.y); const c=GC[n.g]; const r=nodeR(n);
+    const active = !activeFlow || (flowNodeSet && flowNodeSet.has(n.id));
+    const focus = (hoverId===n.id||selId===n.id);
+    const baseA = activeFlow ? (active?1:0.14) : ( (hoverId||selId) ? (focus||adj[hoverId||selId].includes(n.id)?1:0.32) : 1 );
+    // glow for ai/soul/data or active
+    if((n.g==="soul"||n.g==="ai"||n.g==="data"||focus||(activeFlow&&active))){
+      ctx.shadowBlur = focus?22:(n.g==="soul"?16:12); ctx.shadowColor=hexA(c,baseA);
+    }
+    ctx.beginPath(); ctx.arc(x,y,r,0,7);
+    ctx.fillStyle=hexA(c,baseA); ctx.fill(); ctx.shadowBlur=0;
+    // ring
+    ctx.lineWidth=focus?2.5:1.2; ctx.strokeStyle=hexA(focus?"#FFFFFF":c, baseA*0.9);
+    ctx.beginPath(); ctx.arc(x,y,r+ (focus?3:1.5),0,7); ctx.stroke();
+    // soul pulse ring
+    if(n.g==="soul"){ const pr=r+4+Math.sin(T*2+hash(n.id)*6)*2; ctx.strokeStyle=hexA(c,baseA*0.35);
+      ctx.lineWidth=1; ctx.beginPath(); ctx.arc(x,y,pr,0,7); ctx.stroke(); }
+    // label
+    const labA = activeFlow ? (active?0.95:0.12) : ( (hoverId||selId) ? (focus?1:(adj[hoverId||selId].includes(n.id)?0.85:0.28)) : 0.72 );
+    ctx.fillStyle=hexA(focus?"#FFFFFF":"#C6D2DF",labA);
+    ctx.font=(focus?"700 ":"600 ")+"11px Inter, sans-serif";
+    ctx.fillText(n.label, x+r+6, y-6);
+  }
+}
+
+// helpers
+function hexA(hex,a){ if(hex.length===4){const r=parseInt(hex[1]+hex[1],16),g=parseInt(hex[2]+hex[2],16),b=parseInt(hex[3]+hex[3],16);return `rgba(${r},${g},${b},${a})`;}
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }
+function hash(s){ let h=0; for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0; return (h%1000)/1000; }
+function easeInOut(t){ return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
+
+requestAnimationFrame(frame);
+// gentle intro: auto-run the research flow after a beat
+setTimeout(()=>{ if(!activeFlow && !selId) setFlow("research"); }, 1400);
+</script>
+</body>
+</html>

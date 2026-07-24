@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0B0F14"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>AI Legal Assistant &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    /* ── Full-height layout ── */
+    html, body { height: 100%; overflow: hidden; }
+    body { display: flex; flex-direction: column; background: var(--bg); }
+
+    /* ── Three-column shell ── */
+    .ai-shell {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* ════════════════════════════════════
+       LEFT SIDEBAR — conversation history
+    ════════════════════════════════════ */
+    .ai-sidebar {
+      width: 268px;
+      flex-shrink: 0;
+      background: #0B0F14;
+      border-right: 1px solid rgba(200,169,106,0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-top {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(200,169,106,0.07);
+      flex-shrink: 0;
+    }
+
+    .new-chat-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #D9BC82 0%, #C8A96A 100%);
+      color: #0B0F14;
+      border: none;
+      border-radius: 8px;
+      padding: 0.68rem 1rem;
+      font-family: inherit;
+      font-size: 0.855rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      letter-spacing: -0.01em;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .new-chat-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+    .new-chat-btn:active { transform: scale(0.97); }
+
+    /* Search */
+    .conv-search-wrap {
+      padding: 0.6rem 1rem 0;
+    }
+    .conv-search {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 7px;
+      padding: 0.42rem 0.75rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.7);
+      outline: none;
+      transition: border-color 0.15s;
+      box-sizing: border-box;
+    }
+    .conv-search::placeholder { color: rgba(255,255,255,0.22); }
+    .conv-search:focus { border-color: rgba(200,169,106,0.25); }
+
+    /* Section labels */
+    .sidebar-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.22);
+      padding: 0.9rem 1rem 0.35rem;
+    }
+
+    /* Conversation list */
+    .conv-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 0.5rem 1rem;
+    }
+    .conv-list::-webkit-scrollbar { width: 3px; }
+    .conv-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+    .conv-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.12s;
+      border: 1px solid transparent;
+      margin-bottom: 1px;
+    }
+    .conv-item:hover  { background: rgba(255,255,255,0.04); }
+    .conv-item.active {
+      background: rgba(200,169,106,0.09);
+      border-color: rgba(200,169,106,0.16);
+    }
+
+    .conv-icon {
+      width: 26px; height: 26px; border-radius: 5px;
+      background: rgba(200,169,106,0.10);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; flex-shrink: 0; margin-top: 1px;
+    }
+    .conv-item.active .conv-icon { background: rgba(200,169,106,0.18); }
+
+    .conv-body { flex: 1; min-width: 0; }
+    .conv-title {
+      font-size: 0.79rem; font-weight: 500;
+      color: rgba(255,255,255,0.58);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .conv-item.active .conv-title { color: #C8A96A; font-weight: 600; }
+    .conv-date {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.22);
+      margin-top: 2px;
+    }
+
+    .conv-del {
+      width: 20px; height: 20px; border-radius: 4px;
+      background: transparent; border: none;
+      color: rgba(255,255,255,0.2); cursor: pointer;
+      font-size: 0.75rem;
+      opacity: 0; transition: opacity 0.1s, background 0.1s, color 0.1s;
+      flex-shrink: 0; margin-top: 3px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .conv-item:hover .conv-del { opacity: 1; }
+    .conv-del:hover { background: rgba(220,76,100,0.15); color: #DC4C64; }
+
+    .conv-empty {
+      padding: 1.75rem 1rem;
+      text-align: center;
+      font-size: 0.79rem;
+      color: rgba(255,255,255,0.22);
+      line-height: 1.6;
+    }
+
+    /* Sidebar footer — corpus status */
+    .sidebar-footer {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+    .corpus-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.28);
+    }
+    .corpus-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 6px rgba(16,185,129,0.6);
+      flex-shrink: 0;
+      animation: corpusPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes corpusPulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+
+    /* ════════════════════════════════════
+       MAIN CHAT AREA
+    ════════════════════════════════════ */
+    .ai-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+      background: var(--bg);
+    }
+
+    /* Chat header */
+    .chat-header {
+      padding: 0.85rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-shrink: 0;
+    }
+    .chat-header-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: linear-gradient(135deg, rgba(200,169,106,0.18) 0%, rgba(200,169,106,0.06) 100%);
+      border: 1px solid rgba(200,169,106,0.22);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; min-width: 0; }
+    .chat-header-title {
+      font-size: 0.92rem; font-weight: 800;
+      letter-spacing: -0.025em; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .chat-header-sub {
+      font-size: 0.72rem; color: var(--text-3); margin-top: 1px;
+    }
+    .header-badges { display: flex; align-items: center; gap: 0.4rem; margin-left: auto; flex-shrink: 0; }
+    .hbadge {
+      font-size: 0.67rem; font-weight: 700;
+      padding: 0.18rem 0.55rem; border-radius: 100px;
+      background: rgba(200,169,106,0.10);
+      color: #C8A96A;
+      border: 1px solid rgba(200,169,106,0.20);
+      white-space: nowrap;
+    }
+    .hbadge.lang { background: rgba(99,102,241,0.12); color: #A5B4FC; border-color: rgba(99,102,241,0.20); }
+    .hbadge.rag  { background: rgba(16,185,129,0.10); color: #10B981; border-color: rgba(16,185,129,0.18); }
+    .hbadge.streaming { background: rgba(251,146,60,0.12); color: #FB923C; border-color: rgba(251,146,60,0.20); animation: streamPulse 1s ease-in-out infinite; }
+    @keyframes streamPulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    /* Mobile sidebar toggle */
+    .sidebar-toggle-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.3rem 0.5rem;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /* Messages area */
+    .messages-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+      min-height: 0;
+    }
+    .messages-area::-webkit-scrollbar { width: 4px; }
+    .messages-area::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+
+    /* ── Welcome screen ── */
+    .welcome {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2rem 1rem; gap: 1.5rem;
+      flex: 1; text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+    .welcome-logo {
+      width: 70px; height: 70px; border-radius: 18px;
+      background: linear-gradient(135deg, rgba(200,169,106,0.18), rgba(200,169,106,0.05));
+      border: 1px solid rgba(200,169,106,0.22);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+    }
+    .welcome h2 {
+      font-size: 1.4rem; font-weight: 900;
+      letter-spacing: -0.035em; color: var(--text);
+      margin: 0;
+    }
+    .welcome-desc {
+      font-size: 0.875rem; color: var(--text-3);
+      max-width: 460px; line-height: 1.65; margin: 0;
+    }
+    .lang-strip {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 0.35rem; max-width: 500px;
+    }
+    .lang-pill {
+      font-size: 0.68rem; font-weight: 600;
+      padding: 0.18rem 0.55rem; border-radius: 100px;
+      background: rgba(200,169,106,0.07);
+      color: rgba(200,169,106,0.7);
+      border: 1px solid rgba(200,169,106,0.14);
+    }
+
+    /* Quick prompt grid — 2x3 */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+      max-width: 640px;
+      width: 100%;
+    }
+    .qp {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 0.9rem;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .qp:hover {
+      border-color: rgba(200,169,106,0.28);
+      box-shadow: 0 2px 18px rgba(200,169,106,0.08);
+      transform: translateY(-1px);
+    }
+    .qp:active { transform: scale(0.97); }
+    .qp-icon  { font-size: 1.25rem; margin-bottom: 0.45rem; }
+    .qp-title { font-size: 0.82rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+    .qp-sub   { font-size: 0.72rem; color: var(--text-3); margin-top: 0.18rem; line-height: 1.4; }
+
+    /* ── Message bubbles ── */
+    .msg {
+      display: flex; gap: 0.75rem;
+      max-width: 100%;
+      animation: msgIn 0.2s ease;
+    }
+    .msg.user  { flex-direction: row-reverse; }
+    @keyframes msgIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: none; } }
+
+    .msg-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 800;
+    }
+    .msg.user .msg-avatar {
+      background: linear-gradient(135deg, #C8A96A, #8A7344);
+      color: #0B0F14;
+    }
+    .msg.ai .msg-avatar {
+      background: #141A23;
+      border: 1px solid rgba(200,169,106,0.20);
+      color: #C8A96A; font-size: 1rem;
+    }
+
+    .msg-right { display: flex; flex-direction: column; max-width: 78%; }
+    .msg.user .msg-right { align-items: flex-end; }
+
+    .msg-bubble {
+      padding: 0.9rem 1.1rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      line-height: 1.7;
+    }
+    .msg.user .msg-bubble {
+      background: linear-gradient(135deg, #C8A96A 0%, #A07010 100%);
+      color: #0B0F14; font-weight: 500;
+      border-bottom-right-radius: 3px;
+    }
+    .msg.ai .msg-bubble {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-left: 3px solid rgba(200,169,106,0.35);
+      border-bottom-left-radius: 3px;
+    }
+
+    /* AI message markdown styling */
+    .msg.ai .msg-bubble h1,
+    .msg.ai .msg-bubble h2,
+    .msg.ai .msg-bubble h3 {
+      color: #C8A96A; font-weight: 800;
+      margin: 0.85rem 0 0.3rem;
+      letter-spacing: -0.02em;
+    }
+    .msg.ai .msg-bubble h1 { font-size: 1rem; }
+    .msg.ai .msg-bubble h2 { font-size: 0.94rem; }
+    .msg.ai .msg-bubble h3 { font-size: 0.875rem; }
+    .msg.ai .msg-bubble strong { font-weight: 700; color: var(--text); }
+    .msg.ai .msg-bubble em { font-style: italic; }
+    .msg.ai .msg-bubble code {
+      background: rgba(200,169,106,0.10);
+      color: #C8A96A;
+      padding: 0.14em 0.42em; border-radius: 3px;
+      font-size: 0.84em;
+      font-family: 'SF Mono', Consolas, monospace;
+    }
+    .msg.ai .msg-bubble pre {
+      background: #0C0C10;
+      border: 1px solid rgba(200,169,106,0.12);
+      border-radius: 7px;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      margin: 0.6rem 0;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.85);
+    }
+    .msg.ai .msg-bubble pre code { background: none; color: inherit; padding: 0; }
+    .msg.ai .msg-bubble ul,
+    .msg.ai .msg-bubble ol { padding-left: 1.5rem; margin: 0.4rem 0; }
+    .msg.ai .msg-bubble li { margin: 0.22rem 0; }
+    .msg.ai .msg-bubble blockquote {
+      border-left: 3px solid #C8A96A;
+      padding: 0.45rem 0.85rem;
+      margin: 0.6rem 0;
+      background: rgba(200,169,106,0.05);
+      border-radius: 0 5px 5px 0;
+      color: var(--text-2); font-style: italic;
+    }
+    .msg.ai .msg-bubble hr {
+      border: none; border-top: 1px solid var(--border); margin: 0.75rem 0;
+    }
+    .msg.ai .msg-bubble table {
+      width: 100%; border-collapse: collapse; margin: 0.6rem 0; font-size: 0.83rem;
+    }
+    .msg.ai .msg-bubble th {
+      background: rgba(200,169,106,0.08);
+      color: #C8A96A; font-weight: 700;
+      padding: 0.4rem 0.7rem; text-align: left;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .msg.ai .msg-bubble td {
+      padding: 0.35rem 0.7rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Legal citation highlight */
+    .legal-cite {
+      background: rgba(200,169,106,0.12);
+      color: #C8A96A;
+      border-radius: 3px;
+      padding: 0.05em 0.3em;
+      font-weight: 600;
+      font-size: 0.87em;
+      cursor: help;
+      border-bottom: 1px dashed rgba(200,169,106,0.4);
+    }
+
+    /* Message action buttons */
+    .msg-actions {
+      display: flex; gap: 0.35rem;
+      margin-top: 0.4rem;
+      opacity: 0; transition: opacity 0.15s;
+    }
+    .msg:hover .msg-actions { opacity: 1; }
+    .msg.user .msg-actions { justify-content: flex-end; }
+    .msg-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 0.22rem 0.6rem;
+      font-size: 0.71rem; font-weight: 600;
+      color: var(--text-3); cursor: pointer;
+      font-family: inherit;
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+    }
+    .msg-btn:hover {
+      background: rgba(200,169,106,0.10);
+      color: #C8A96A;
+      border-color: rgba(200,169,106,0.25);
+    }
+    .msg-btn.gold {
+      background: rgba(200,169,106,0.10);
+      color: #C8A96A;
+      border-color: rgba(200,169,106,0.22);
+    }
+
+    /* Thinking indicator */
+    .thinking {
+      display: flex; gap: 0.75rem; align-items: center;
+      animation: msgIn 0.2s ease;
+    }
+    .thinking-bubble {
+      display: flex; gap: 5px;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid rgba(200,169,106,0.35);
+      border-radius: 12px; border-bottom-left-radius: 3px;
+    }
+    .thinking-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #C8A96A;
+      animation: tdot 1.3s ease-in-out infinite;
+    }
+    .thinking-dot:nth-child(2) { animation-delay: 0.18s; }
+    .thinking-dot:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes tdot { 0%,60%,100%{transform:translateY(0);opacity:.35} 30%{transform:translateY(-7px);opacity:1} }
+
+    /* Retrieved sections panel (appears below AI message) */
+    .citations-panel {
+      margin-top: 0.5rem;
+      background: rgba(200,169,106,0.04);
+      border: 1px solid rgba(200,169,106,0.12);
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 0.78rem;
+    }
+    .citations-header {
+      padding: 0.45rem 0.85rem;
+      background: rgba(200,169,106,0.07);
+      color: rgba(200,169,106,0.8);
+      font-weight: 700;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex; align-items: center; gap: 0.4rem;
+      cursor: pointer;
+    }
+    .citations-header:hover { background: rgba(200,169,106,0.10); }
+    .citations-body {
+      padding: 0.6rem 0.85rem;
+      color: var(--text-3);
+      line-height: 1.6;
+      display: none;
+    }
+    .citations-panel.open .citations-body { display: block; }
+    .citations-panel.open .cite-chevron { transform: rotate(90deg); }
+    .cite-chevron { transition: transform 0.2s; display: inline-block; }
+    .cite-row { padding: 0.2rem 0; }
+    .cite-act { color: rgba(200,169,106,0.7); font-weight: 600; }
+
+    /* ── Input area ── */
+    .input-area {
+      padding: 0.9rem 1.5rem 1.1rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .input-wrap {
+      display: flex; gap: 0.55rem; align-items: flex-end;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border-2);
+      border-radius: 12px;
+      padding: 0.6rem 0.6rem 0.6rem 1rem;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .input-wrap:focus-within {
+      border-color: #C8A96A;
+      box-shadow: 0 0 0 3px rgba(200,169,106,0.10);
+    }
+    #chat-input {
+      flex: 1; background: transparent; border: none; outline: none;
+      font-family: inherit; font-size: 0.9rem; color: var(--text);
+      resize: none; line-height: 1.55;
+      min-height: 24px; max-height: 160px;
+    }
+    #chat-input::placeholder { color: var(--text-4); }
+
+    .send-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: #C8A96A; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: #0B0F14; font-size: 0.95rem; font-weight: 800;
+      transition: opacity 0.12s, transform 0.1s, box-shadow 0.12s;
+    }
+    .send-btn:hover:not(:disabled)  { opacity: 0.88; transform: scale(1.04); box-shadow: 0 2px 12px rgba(200,169,106,0.32); }
+    .send-btn:active:not(:disabled) { transform: scale(0.96); }
+    .send-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .input-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 0.45rem;
+      font-size: 0.71rem; color: var(--text-4);
+    }
+    .input-hint { display: flex; align-items: center; gap: 0.4rem; }
+    .lang-detected {
+      display: none;
+      background: rgba(99,102,241,0.12);
+      color: #A5B4FC;
+      border: 1px solid rgba(99,102,241,0.18);
+      border-radius: 100px;
+      padding: 0.14rem 0.5rem;
+      font-size: 0.67rem; font-weight: 700;
+    }
+    .lang-detected.visible { display: inline-flex; align-items: center; gap: 0.3rem; }
+
+    /* ── Typing cursor ── */
+    .cursor {
+      display: inline-block;
+      animation: blink 0.85s step-start infinite;
+      color: #C8A96A; margin-left: 1px;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ════════════════════════════════════
+       RIGHT PANEL — context (desktop)
+    ════════════════════════════════════ */
+    .context-panel {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .ctx-head {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+    }
+    .ctx-body { flex: 1; overflow-y: auto; padding: 0.75rem; }
+    .ctx-body::-webkit-scrollbar { width: 3px; }
+    .ctx-body::-webkit-scrollbar-thumb { background: var(--border-2); }
+
+    .ctx-section { margin-bottom: 1.25rem; }
+    .ctx-section-title {
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: rgba(200,169,106,0.6); margin-bottom: 0.5rem;
+    }
+    .ctx-acts {
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+    }
+    .ctx-act-chip {
+      font-size: 0.67rem; font-weight: 600;
+      padding: 0.15rem 0.5rem; border-radius: 100px;
+      background: rgba(200,169,106,0.07);
+      color: rgba(200,169,106,0.65);
+      border: 1px solid rgba(200,169,106,0.12);
+    }
+    .ctx-activity-item {
+      font-size: 0.76rem; color: var(--text-3);
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.4;
+    }
+    .ctx-activity-item:last-child { border-bottom: none; }
+    .ctx-empty {
+      font-size: 0.76rem; color: var(--text-4);
+      font-style: italic;
+    }
+    .ctx-lang-list {
+      font-size: 0.72rem; color: var(--text-3); line-height: 1.8;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .context-panel { display: none; }
+    }
+    @media (max-width: 768px) {
+      .ai-sidebar {
+        position: fixed; left: 0; top: 56px; bottom: 0;
+        z-index: 200; transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: none;
+      }
+      .ai-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+      }
+      .sidebar-toggle-btn { display: flex; }
+      .messages-area { padding: 1rem; }
+      .input-area { padding: 0.75rem 1rem 1rem; }
+      .quick-grid { grid-template-columns: repeat(2, 1fr); }
+      .msg-right { max-width: 90%; }
+    }
+    @media (max-width: 480px) {
+      .quick-grid { grid-template-columns: 1fr; }
+      .header-badges .hbadge.rag { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Top Nav ── -->
+<nav class="topnav">
+  <a class="nav-brand" href="/"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary">Court Diary</a>
+    <a href="/library">Legal Library</a>
+    <a href="/assistant" class="active">AI Assistant</a>
+    <a href="/drafting">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right">
+    <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Chat history">&#9776;</button>
+  </div>
+</nav>
+
+<!-- ── Main shell ── -->
+<div class="ai-shell">
+
+  <!-- LEFT: Conversation sidebar -->
+  <aside class="ai-sidebar" id="ai-sidebar">
+    <div class="sidebar-top">
+      <button class="new-chat-btn" onclick="newChat()"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-plus"/></svg>&nbsp; New Conversation</button>
+    </div>
+    <div class="conv-search-wrap">
+      <input class="conv-search" id="conv-search" type="text" placeholder="Search conversations..." oninput="filterConversations(this.value)"/>
+    </div>
+    <div class="sidebar-label">Recent</div>
+    <div class="conv-list" id="conv-list">
+      <div class="conv-empty">No conversations yet.</div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="corpus-badge">
+        <div class="corpus-dot"></div>
+        <span id="corpus-status">Legal corpus ready &mdash; 20 Acts indexed</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CENTER: Chat -->
+  <main class="ai-main">
+
+    <!-- Chat header -->
+    <div class="chat-header">
+      <button class="sidebar-toggle-btn" onclick="toggleSidebar()" style="display:none;margin-right:.25rem;" id="mob-sidebar-btn">&#9776;</button>
+      <div class="chat-header-icon">&#x2696;</div>
+      <div class="chat-header-info">
+        <div class="chat-header-title" id="chat-title">Universal Legal Agent</div>
+        <div class="chat-header-sub">20 Acts &middot; 22 Languages &middot; Zero Hallucination &middot; RAG-Grounded</div>
+      </div>
+      <div class="header-badges">
+        <span class="hbadge rag" id="rag-badge">&#x25CF; RAG Active</span>
+        <span class="hbadge lang" id="lang-badge">EN</span>
+        <span class="hbadge">Cited</span>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-area" id="messages-area">
+      <div class="welcome" id="welcome-screen">
+        <div class="welcome-logo"><svg class="lc lc-lg" aria-hidden="true"><use href="/static/lucide.svg#lc-scale"/></svg></div>
+        <h2>Universal Legal Agent</h2>
+        <p class="welcome-desc">
+          Grounded in 20+ Indian Acts &mdash; from the Constitution of India to BNS 2023.
+          Ask in any of 22 scheduled Indian languages. Zero hallucination: every answer cites real sections.
+        </p>
+        <!-- Language strip -->
+        <div class="lang-strip" id="lang-strip">
+          <span class="lang-pill">&#x0939;&#x093F;&#x0902;&#x0926;&#x0940;</span>
+          <span class="lang-pill">&#x09AC;&#x09BE;&#x0982;&#x09B2;&#x09BE;</span>
+          <span class="lang-pill">&#x0C24;&#x0C46;&#x0C32;&#x0C41;&#x0C17;&#x0C41;</span>
+          <span class="lang-pill">&#x092E;&#x0930;&#x093E;&#x0920;&#x0940;</span>
+          <span class="lang-pill">&#x0BA4;&#x0BAE;&#x0BBF;&#x0BB4;&#x0BCD;</span>
+          <span class="lang-pill">&#x0A97;&#x0AC1;&#x0A9C;&#x0AB0;&#x0ABE;&#x0AA4;&#x0AC0;</span>
+          <span class="lang-pill">&#x0C95;&#x0CA8;&#x0CCD;&#x0CA8;&#x0CA1;</span>
+          <span class="lang-pill">&#x0D2E;&#x0D32;&#x0D2F;&#x0D3E;&#x0D33;&#x0D02;</span>
+          <span class="lang-pill">&#x0B13;&#x0B21;&#x0BC3;&#x0B06;</span>
+          <span class="lang-pill">&#x0A2A;&#x0A70;&#x0A1C;&#x0A3E;&#x0A2C;&#x0A40;</span>
+          <span class="lang-pill">&#x0985;&#x09B8;&#x09AE;&#x09C0;&#x09AF;&#x09BC;&#x09BE;</span>
+          <span class="lang-pill">+ English &amp; 10 more</span>
+        </div>
+        <!-- Quick prompts: 6 cards in 3 columns -->
+        <div class="quick-grid">
+          <button class="qp" onclick="sendQuick('Explain the difference between culpable homicide and murder under BNS 2023 (Section 100 and 101). How does this differ from IPC Sections 299 and 300? Which law applies to a case from June 2024?')">
+            <div class="qp-icon"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-scale"/></svg></div>
+            <div class="qp-title">Criminal Law</div>
+            <div class="qp-sub">BNS, BNSS, BSA &mdash; new vs old law</div>
+          </button>
+          <button class="qp" onclick="sendQuick('What are the Fundamental Rights guaranteed under Part III of the Constitution of India? Explain Articles 19, 21, and 32 in detail with landmark cases.')">
+            <div class="qp-icon"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-landmark"/></svg></div>
+            <div class="qp-title">Constitutional Law</div>
+            <div class="qp-sub">Articles, FRs, DPSPs, writs</div>
+          </button>
+          <button class="qp" onclick="sendQuick('Draft a legal notice under Section 80 CPC for recovery of Rs 8 lakhs from a contractor who abandoned construction work midway. Include all mandatory elements.')">
+            <div class="qp-icon"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-file-text"/></svg></div>
+            <div class="qp-title">Draft Notice</div>
+            <div class="qp-sub">s.80 CPC, s.138 NI Act, demand</div>
+          </button>
+          <button class="qp" onclick="sendQuick('A cheque for Rs 3 lakhs was dishonoured with memo &quot;funds insufficient&quot;. What are the steps and time limits under Section 138 Negotiable Instruments Act? What is the punishment?')">
+            <div class="qp-icon"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-banknote"/></svg></div>
+            <div class="qp-title">Cheque Dishonour</div>
+            <div class="qp-sub">s.138 NI Act &mdash; full procedure</div>
+          </button>
+          <button class="qp" onclick="sendQuick('Explain the grounds for divorce under Hindu Marriage Act 1955 Section 13. What is the procedure for mutual consent divorce under Section 13B including cooling-off period?')">
+            <div class="qp-icon"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-users"/></svg></div>
+            <div class="qp-title">Family Law</div>
+            <div class="qp-sub">HMA, Muslim law, succession</div>
+          </button>
+          <button class="qp" onclick="sendQuick('What are the limitation periods under the Limitation Act 1963 for: (1) breach of contract, (2) money recovery suit, (3) property possession, (4) cheque dishonour complaint, (5) consumer complaint?')">
+            <div class="qp-icon"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-clock"/></svg></div>
+            <div class="qp-title">Limitation Periods</div>
+            <div class="qp-sub">All civil, criminal &amp; consumer</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input area -->
+    <div class="input-area">
+      <div class="input-wrap">
+        <textarea
+          id="chat-input"
+          placeholder="Ask in any Indian language or English... (Enter to send, Shift+Enter for new line)"
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="onInputChange(this)"
+        ></textarea>
+        <button id="mic-btn" onclick="toggleMic()" title="Voice input — speak in any Indian language"
+                style="display:none;background:transparent;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:1.15rem;padding:0 .7rem;margin-right:.4rem"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-mic"/></svg></button>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled title="Send"><svg class="lc" aria-hidden="true"><use href="/static/lucide.svg#lc-send"/></svg></button>
+      </div>
+      <div class="input-footer">
+        <div class="input-hint">
+          <span>Enter to send &nbsp;&middot;&nbsp; Shift+Enter for new line</span>
+          <span class="lang-detected" id="lang-detected"></span>
+        </div>
+        <span id="char-count" style="color:var(--text-4);font-size:.71rem;"></span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT: Context panel -->
+  <aside class="context-panel">
+    <div class="ctx-head">Legal Context</div>
+    <div class="ctx-body">
+
+      <div class="ctx-section">
+        <div class="ctx-section-title">Acts Indexed</div>
+        <div class="ctx-acts">
+          <span class="ctx-act-chip">Constitution</span>
+          <span class="ctx-act-chip">BNS 2023</span>
+          <span class="ctx-act-chip">BNSS 2023</span>
+          <span class="ctx-act-chip">BSA 2023</span>
+          <span class="ctx-act-chip">IPC 1860</span>
+          <span class="ctx-act-chip">CrPC 1973</span>
+          <span class="ctx-act-chip">CPC 1908</span>
+          <span class="ctx-act-chip">Contract Act</span>
+          <span class="ctx-act-chip">TPA 1882</span>
+          <span class="ctx-act-chip">NI Act</span>
+          <span class="ctx-act-chip">RTI Act</span>
+          <span class="ctx-act-chip">Consumer PA</span>
+          <span class="ctx-act-chip">HMA 1955</span>
+          <span class="ctx-act-chip">HSA 1956</span>
+          <span class="ctx-act-chip">Limitation</span>
+          <span class="ctx-act-chip">Specific Relief</span>
+          <span class="ctx-act-chip">RERA 2016</span>
+          <span class="ctx-act-chip">Companies Act</span>
+          <span class="ctx-act-chip">IT Act 2000</span>
+          <span class="ctx-act-chip">POCSO 2012</span>
+          <span class="ctx-act-chip">DV Act 2005</span>
+        </div>
+      </div>
+
+      <div class="ctx-section">
+        <div class="ctx-section-title">Languages Supported</div>
+        <div class="ctx-lang-list" id="ctx-lang-list">
+          Hindi &bull; Bengali &bull; Telugu &bull; Marathi &bull; Tamil &bull;
+          Urdu &bull; Gujarati &bull; Kannada &bull; Malayalam &bull; Odia &bull;
+          Punjabi &bull; Assamese &bull; Maithili &bull; Sanskrit &bull; Bodo &bull;
+          Santali &bull; Dogri &bull; Konkani &bull; Manipuri &bull; Nepali &bull;
+          Sindhi &bull; Kashmiri &bull; English
+        </div>
+      </div>
+
+      <div class="ctx-section">
+        <div class="ctx-section-title">Your Recent Activity</div>
+        <div id="ctx-activity">
+          <div class="ctx-empty">Use the app to see your activity here.</div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+</div><!-- /ai-shell -->
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>requireAuth();</script>
+<script src="/static/assistant.js"></script>
+<script>
+/* Voice input — record audio, transcribe via /api/ai/transcribe (any Indian language), fill the box.
+   The mic only appears when a Whisper-capable provider is configured (graceful otherwise). */
+(async function initMic() {
+  try {
+    const s = await api.get('/api/ai/transcribe/status');
+    if (s && s.enabled && navigator.mediaDevices && window.MediaRecorder) {
+      document.getElementById('mic-btn').style.display = '';
+    }
+  } catch (_) { /* leave mic hidden */ }
+})();
+let _rec = null, _chunks = [], _recording = false;
+async function toggleMic() {
+  const btn = document.getElementById('mic-btn');
+  if (_recording) { if (_rec) _rec.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    _rec = new MediaRecorder(stream); _chunks = [];
+    _rec.ondataavailable = e => { if (e.data && e.data.size) _chunks.push(e.data); };
+    _rec.onstop = async () => {
+      _recording = false; btn.textContent = '🎤'; btn.style.color = '';
+      stream.getTracks().forEach(t => t.stop());
+      const blob = new Blob(_chunks, { type: _rec.mimeType || 'audio/webm' });
+      if (!blob.size) return;
+      btn.disabled = true; btn.textContent = '⏳';
+      try {
+        const fd = new FormData(); fd.append('audio', blob, 'voice.webm');
+        const res = await fetch('/api/ai/transcribe', { method: 'POST', headers: { 'Authorization': 'Bearer ' + auth.getToken() }, body: fd });
+        if (!res.ok) { toast(res.status === 503 ? 'Voice input not configured yet.' : 'Transcription failed.', 'error'); }
+        else {
+          const d = await res.json();
+          const inp = document.getElementById('chat-input');
+          inp.value = (inp.value ? inp.value + ' ' : '') + (d.text || '');
+          if (typeof onInputChange === 'function') onInputChange(inp);
+          inp.focus();
+        }
+      } catch (_) { toast('Transcription failed.', 'error'); }
+      finally { btn.disabled = false; btn.textContent = '🎤'; }
+    };
+    _rec.start(); _recording = true; btn.textContent = '⏹'; btn.style.color = '#DC4C64';
+    toast('Recording… tap the mic again to stop.', '');
+  } catch (_) { toast('Microphone permission denied.', 'error'); }
+}
+</script>
+</body>
+</html>

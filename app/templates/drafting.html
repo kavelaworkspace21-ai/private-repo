@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#10151D"/>
+  <title>AI Drafting Engine - Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    /* Midnight Executive drafting workspace: templates | editor | AI references */
+    .drafting-layout {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: 235px minmax(0, 1fr) 300px;
+      gap: 1.4rem;
+      align-items: start;
+    }
+    .dw-left  { position: sticky; top: 76px; }
+    .dw-right { position: sticky; top: 76px; }
+    .dw-right .dw-panel {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+    }
+    .dw-panel-title {
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--ai, #3B82F6);
+      display: flex; align-items: center; gap: .4rem; margin-bottom: .75rem;
+    }
+    .dw-sec { margin-top: 1rem; }
+    .dw-sec-label { font-size: .68rem; font-weight: 700; text-transform: uppercase;
+                    letter-spacing: .08em; color: var(--text-3); margin-bottom: .5rem; }
+    .dw-ref {
+      border-left: 2px solid var(--gold, #C8A96A);   /* the Gold Intelligence Line */
+      background: var(--surface);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: .5rem .6rem; margin-bottom: .5rem;
+      font-size: .76rem; line-height: 1.35;
+    }
+    .dw-ref b   { color: var(--text); font-weight: 600; display: block; }
+    .dw-ref small { color: var(--text-3); }
+    .dw-ref a   { color: var(--ai, #3B82F6); text-decoration: none; font-size: .72rem; }
+    .dw-empty   { font-size: .76rem; color: var(--text-4); line-height: 1.5; }
+    @media (max-width: 1150px) {
+      .drafting-layout { grid-template-columns: 1fr; }
+      .dw-left, .dw-right { position: static; }
+    }
+
+    .drafting-hero {
+      background: #0B0F14;
+      border-bottom: 1px solid rgba(200,169,106,0.12);
+      padding: 2rem 1.5rem 1.75rem;
+    }
+    .drafting-hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .drafting-hero-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(200,169,106,0.20), rgba(200,169,106,0.06));
+      border: 1px solid rgba(200,169,106,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .drafting-hero h1 {
+      font-size: 1.35rem; font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin: 0 0 0.2rem;
+    }
+    .drafting-hero p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.45);
+      margin: 0;
+    }
+    .drafting-hero-badge {
+      margin-left: auto;
+      background: rgba(200,169,106,0.10);
+      color: var(--gold,#C8A96A);
+      border: 1px solid rgba(200,169,106,0.22);
+      font-size: 0.70rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+      margin: 2rem 0 1rem;
+    }
+
+    .doc-type-grid {
+      display: grid;
+      grid-template-columns: 1fr;      /* vertical template rail (left pane) */
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: .25rem;
+    }
+    @media (max-width: 1150px) {
+      .doc-type-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); max-height: none; }
+    }
+
+    .doc-type-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1rem 0.85rem;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .doc-type-card:hover {
+      border-color: rgba(200,169,106,0.30);
+      box-shadow: 0 2px 16px rgba(200,169,106,0.08);
+      transform: translateY(-1px);
+    }
+    .doc-type-card.selected {
+      border-color: var(--gold,#C8A96A);
+      background: rgba(200,169,106,0.05);
+      box-shadow: 0 0 0 3px rgba(200,169,106,0.10);
+    }
+    .doc-type-card.selected .dtc-icon  { color: var(--gold,#C8A96A); }
+    .doc-type-card.selected .dtc-label { color: var(--gold,#C8A96A); }
+
+    .dtc-icon  { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .dtc-label { font-size: 0.835rem; font-weight: 700; color: var(--text); line-height: 1.35; }
+    .dtc-sub   { font-size: 0.72rem; color: var(--text-3); margin-top: 0.2rem; }
+
+    .draft-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .draft-form.visible { display: block; animation: fadeIn 0.2s ease; }
+
+    .form-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin: 0 0 0.35rem;
+    }
+    .form-sub {
+      font-size: 0.80rem;
+      color: var(--text-3);
+      margin: 0 0 1.25rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group.span-2 { grid-column: span 2; }
+
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: var(--surface-2);
+      border: 1.5px solid var(--border-2);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.85rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--gold,#C8A96A);
+      box-shadow: 0 0 0 3px rgba(200,169,106,0.10);
+    }
+    .form-group textarea { min-height: 80px; }
+
+    .generate-btn {
+      margin-top: 1.25rem;
+      background: linear-gradient(135deg, var(--gold-bright,#F2D47A) 0%, var(--gold,#C8A96A) 60%);
+      color: #0B0F14;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 2rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: -0.01em;
+      transition: opacity 0.15s, transform 0.12s, box-shadow 0.15s;
+    }
+    .generate-btn:hover:not(:disabled)  { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(200,169,106,0.30); }
+    .generate-btn:active:not(:disabled) { transform: scale(0.97); }
+    .generate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .draft-output {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: none;
+    }
+    .draft-output.visible { display: block; animation: slideUp 0.25s ease; }
+
+    .output-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--surface-2);
+    }
+    .output-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+    .output-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      background: rgba(200,169,106,0.10);
+      color: var(--gold,#C8A96A);
+      border: 1px solid rgba(200,169,106,0.20);
+    }
+    .output-actions { display: flex; gap: 0.5rem; }
+    .out-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.32rem 0.75rem;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-3);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .out-btn:hover { color: var(--gold,#C8A96A); border-color: rgba(200,169,106,0.30); background: rgba(200,169,106,0.06); }
+
+    .output-body {
+      padding: 1.5rem 1.75rem;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre-wrap;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      min-height: 200px;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .output-body::-webkit-scrollbar { width: 5px; }
+    .output-body::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+
+    .out-cursor {
+      display: inline-block;
+      animation: blink 0.9s step-start infinite;
+      color: var(--gold,#C8A96A);
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .generating-indicator {
+      display: none;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--text-3);
+      background: var(--surface-2);
+    }
+    .generating-indicator.visible { display: flex; }
+    .gen-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold,#C8A96A);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .gen-dot:nth-child(2) { animation-delay: 0.2s; }
+    .gen-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
+
+    @media (max-width: 768px) {
+      .drafting-layout { padding: 1.5rem 1rem 3rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.span-2 { grid-column: span 1; }
+      .doc-type-grid { grid-template-columns: repeat(2, 1fr); }
+      .drafting-hero { padding: 1.5rem 1rem; }
+      .drafting-hero-badge { display: none; }
+      .output-body { max-height: 400px; }
+      .output-actions .out-btn:last-child { display: none; }
+    }
+    @media (max-width: 480px) {
+      .doc-type-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary">Court Diary</a>
+    <a href="/library">Legal Library</a>
+    <a href="/assistant">AI Assistant</a>
+    <a href="/drafting" class="active">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<div class="drafting-hero">
+  <div class="drafting-hero-inner">
+    <div class="drafting-hero-icon"><svg class="lc lc-lg" aria-hidden="true" style="color:var(--gold)"><use href="/static/lucide.svg#lc-file-text"/></svg></div>
+    <div>
+      <h1>AI Drafting Engine</h1>
+      <p>Generate court-ready Indian legal documents in seconds &mdash; every draft for advocate review</p>
+    </div>
+    <div class="drafting-hero-badge">10 Templates + Custom &middot; AI-assisted</div>
+  </div>
+</div>
+
+<div class="drafting-layout">
+
+  <!-- LEFT: template rail -->
+  <div class="dw-left">
+    <div class="section-label" style="margin-top:0;">Draft from matter</div>
+    <select id="matter-select" onchange="onMatterChange()"
+            style="width:100%;margin-bottom:1.1rem;background:var(--surface-2);border:1.5px solid var(--border-2);border-radius:var(--radius-sm);padding:.5rem .6rem;font-family:inherit;font-size:.8rem;color:var(--text);outline:none;">
+      <option value="">— None (start blank) —</option>
+    </select>
+    <div class="section-label">Templates</div>
+    <div class="doc-type-grid" id="doc-type-grid"></div>
+    <div class="section-label">Other ways in</div>
+    <div style="display:flex;flex-direction:column;gap:.45rem;">
+      <button class="out-btn" style="justify-content:flex-start;" onclick="startBlankDocument()">✎ Blank document</button>
+      <button class="out-btn" style="justify-content:flex-start;" onclick="openReviewMode()">🩺 Review my own draft</button>
+    </div>
+  </div>
+
+  <!-- CENTER: form + editor -->
+  <div class="dw-center">
+    <!-- WB-07: Review-your-own-draft mode (advisory, statute-grounded) -->
+    <div class="draft-form" id="review-panel" style="display:none;">
+      <div class="form-title">Review my own draft
+        <span class="muted" style="font-size:.7rem;font-weight:400;"> — advisory flags, cited from verified statute; counts as 1 research query</span>
+      </div>
+      <textarea id="review-input" rows="12" placeholder="Paste your draft here (min. 50 characters)…"
+                style="width:100%;background:var(--surface-2);border:1.5px solid var(--border-2);
+                       border-radius:8px;padding:.7rem .9rem;color:var(--text);font-size:.82rem;
+                       line-height:1.65;font-family:var(--font-mono,monospace);resize:vertical;"></textarea>
+      <div style="margin-top:.8rem;display:flex;gap:.6rem;">
+        <button class="btn btn-gold btn-sm" id="review-run" onclick="runOwnDraftReview()">Run review</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeReviewMode()">Back to templates</button>
+      </div>
+      <div id="review-result" style="display:none;margin-top:1rem;">
+        <div style="display:inline-flex;font-size:.66rem;font-weight:700;letter-spacing:.04em;
+             padding:.15rem .5rem;border-radius:20px;color:#F59E0B;background:rgba(245,158,11,.12);
+             margin-bottom:.6rem;">ADVISORY — FOR ADVOCATE</div>
+        <span id="review-cites" class="format-chip" style="display:inline-block;margin-left:.5rem;"></span>
+        <div id="review-body" style="font-size:.84rem;line-height:1.7;white-space:pre-wrap;
+             background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+             padding:1rem 1.2rem;"></div>
+        <button class="btn btn-gold btn-sm" style="margin-top:.7rem;" onclick="saveReviewToQueue()">💾 Save review to queue</button>
+      </div>
+    </div>
+    <div class="draft-form" id="draft-form">
+      <div class="form-title" id="form-title">Document Details</div>
+      <div class="form-sub">Fill in all fields below for an accurate, court-ready draft.</div>
+      <div class="form-grid" id="form-fields"></div>
+      <button class="generate-btn" id="generate-btn" onclick="generateDocument()" disabled>
+        &#x2726; Generate Document
+      </button>
+    </div>
+
+    <div class="draft-output" id="draft-output">
+      <div class="output-header">
+        <div class="output-title" id="output-title">Generated Document</div>
+        <div class="output-badge" id="output-badge">Draft</div>
+        <div class="output-actions">
+          <button class="out-btn" onclick="enterEditMode()" id="btn-edit" style="display:none;">✎ Edit</button>
+          <button class="out-btn" onclick="saveForReview()" id="btn-save">Save for review</button>
+          <button class="out-btn" onclick="copyDocument()">Copy</button>
+          <button class="out-btn" onclick="exportDocument('pdf')" id="btn-pdf">Export PDF</button>
+          <button class="out-btn" onclick="exportDocument('docx')" id="btn-docx">Export DOCX</button>
+          <button class="out-btn" onclick="downloadDocument()">.txt</button>
+          <button class="out-btn" onclick="sendToChat()">Open in Chat &#x2197;</button>
+        </div>
+      </div>
+      <!-- WB-07: edit-mode toolbar (selection-based actions → /api/drafting/edit) -->
+      <div id="edit-toolbar" style="display:none;gap:.45rem;flex-wrap:wrap;align-items:center;
+           padding:.5rem .9rem;border-bottom:1px solid var(--border);">
+        <span style="font-size:.68rem;color:var(--text-4);font-weight:600;">SELECTION:</span>
+        <button class="out-btn" onclick="applyEdit('expand')">Expand</button>
+        <button class="out-btn" onclick="applyEdit('shorten')">Shorten</button>
+        <button class="out-btn" onclick="applyEdit('reword')">Reword</button>
+        <button class="out-btn" onclick="applyEdit('tone')">Tone…</button>
+        <button class="out-btn" onclick="applyEdit('add_clause')">Add clause…</button>
+        <span id="edit-hint" class="muted" style="font-size:.68rem;">select text below, then choose an action</span>
+      </div>
+      <div class="output-body" id="output-body"></div>
+      <textarea id="output-editor" style="display:none;width:100%;min-height:420px;background:var(--surface-2);
+                border:none;border-top:1px solid var(--border);padding:1rem 1.2rem;color:var(--text);
+                font-family:var(--font-mono,monospace);font-size:.82rem;line-height:1.7;resize:vertical;
+                outline:none;"></textarea>
+      <div class="generating-indicator" id="gen-indicator">
+        <div class="gen-dot"></div><div class="gen-dot"></div><div class="gen-dot"></div>
+        <span>AI is drafting your document&hellip;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: AI references (provisions + judgments, retrieved not generated) -->
+  <div class="dw-right">
+    <div class="dw-panel">
+      <div class="dw-panel-title">&#9679; AI References</div>
+      <div class="dw-sec" style="margin-top:0;">
+        <div class="dw-sec-label">&#128209; Provisions</div>
+        <div id="dw-provisions"><div class="dw-empty">Select a template and generate a draft — matching statutory provisions from the verified corpus appear here.</div></div>
+      </div>
+      <div class="dw-sec">
+        <div class="dw-sec-label">&#9878;&#65039; Case references</div>
+        <div id="dw-cases"><div class="dw-empty">Related judgments (with Indian Kanoon links) appear here after generation. Good-law status unverified — confirm before relying.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>requireAuth();</script>
+<script src="/static/drafting.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# pip-audit vulnerability waivers  (Sprint 0 · S0.3)
+#
+# The CI "Dependency audit" step is BLOCKING: an unwaived known CVE in a runtime
+# dependency fails the build. This file is the ONLY sanctioned escape hatch.
+#
+# Format: one PyPI advisory / CVE id per line (e.g. GHSA-xxxx-xxxx-xxxx or PYSEC-2024-123),
+# optionally followed by whitespace and a comment. Blank lines and #-comments are ignored.
+# Every waiver MUST carry a reason and, ideally, a review date — a waiver without a
+# justification is a security hole with a passing build.
+#
+# Prefer fixing (upgrade the dependency) over waiving. Waive only when: the fix is not yet
+# released, OR the vulnerable code path is provably unreachable in Juriscite. Re-review each
+# waiver at every dependency bump.
+#
+# --- active waivers ---
+
+# ecdsa 0.19.2 — Minerva-class timing side-channel in ECDSA signing/verification.
+# No upstream fix (maintainers consider constant-time infeasible in pure Python).
+# NOT REACHABLE in Juriscite: JWTs are signed with HS256 (symmetric — see
+# app/auth/config.py JWT_ALGORITHM default), and the cryptography backend handles any
+# asymmetric work; the pure-Python ecdsa path is unused. Pulled only as a transitive
+# extra of python-jose. Re-review if JWT_ALGORITHM ever changes to ES*.  (added 2026-07-21)
+PYSEC-2026-1325
+
+# chromadb 1.5.9 — no fixed version published yet. Attack surface is limited: the vector
+# store is seeded ONLY from our own source-verified corpus (app/legal_corpus/fulltext),
+# never from untrusted user input — Workbench uploads go through pdfplumber, not chromadb.
+# Waived pending an upstream release; the weekly dependency audit will flag the fix when it
+# lands.  (added 2026-07-21 — re-review by 2026-10-21)
+PYSEC-2026-311

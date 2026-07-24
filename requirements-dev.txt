@@ -1,0 +1,10 @@
+# Juriscite — development & CI toolchain (NOT installed in the runtime/Docker image).
+# Runtime deps live in requirements.txt; this file is the lint/test/security/SBOM tooling.
+# Pinned so CI is reproducible; bump deliberately.
+
+pytest==9.1.0
+ruff==0.15.22            # datetime-zone (DTZ) regression gate — see pyproject.toml
+pip-audit==2.10.1        # blocking dependency vulnerability scan (waivers: security/pip-audit-waivers.txt)
+cyclonedx-bom==7.3.0     # CycloneDX SBOM generation
+detect-secrets==1.5.0    # pre-commit secret scanning (S0.5)
+pre-commit==4.0.1        # git pre-commit hook runner (S0.5)

@@ -1,0 +1,17 @@
+{
+  "_README": "Human currency sign-offs for sources the automated drift check cannot fetch (WAF-protected PDFs, landing-page URLs). A reviewer checks the official source, then records it via corpus_updates.record_manual_verification(act_id, reviewer=...). An entry with last_verified_at=null (or a passed next_review) is treated as UNVERIFIED and is NEVER reported as current. The agent must not fill these in — it cannot verify a WAF-protected page.",
+  "income_tax_2025": {
+    "last_verified_at": null,
+    "reviewer": null,
+    "source_sha256": "",
+    "next_review": null,
+    "note": "Official PDF on incometaxindia.gov.in is WAF-protected; the automated drift check returns 'error'. Requires manual verification."
+  },
+  "income_tax_rules_2026": {
+    "last_verified_at": null,
+    "reviewer": null,
+    "source_sha256": "",
+    "next_review": null,
+    "note": "Source is a Gazette landing page, not a direct PDF; the automated drift check returns 'skipped_no_pdf'. Requires manual verification."
+  }
+}

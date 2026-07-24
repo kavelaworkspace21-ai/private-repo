@@ -1,0 +1,127 @@
+name: CI
+
+# Juriscite CI — full test suite (SQLite + Postgres), datetime-zone lint gate, migration
+# integrity, a BLOCKING dependency audit (with documented waivers), and an SBOM artifact.
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # ── Test suite on SQLite (the default dev/CI database) ─────────────────────────
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      # Deterministic, offline test config (no live AI / no rate limiting).
+      RATELIMIT_ENABLED: "0"
+      OPENAI_API_KEY: ""
+      JWT_SECRET: "ci-test-secret-not-for-prod"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install runtime dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate SBOM (CycloneDX, from the installed runtime environment)
+        run: |
+          pip install cyclonedx-bom==7.3.0
+          cyclonedx-py environment --of JSON --output-reproducible -o sbom.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: sbom.json
+
+      - name: Lint — datetime-zone regression gate (BLOCKING)
+        run: |
+          pip install ruff==0.15.22
+          # pyproject.toml scopes ruff to the DTZ ruleset, so this gate is about datetime
+          # correctness (no naive utcnow/now regressions), not broad style.
+          ruff check . --output-format=github
+
+      - name: Migration integrity (single head + head matches models)
+        run: pytest tests/test_migrations.py -q
+
+      - name: Full test suite (SQLite)
+        run: pytest tests/ -q
+
+  # ── Postgres parity: the Aurora rehearsal (S0.4) ───────────────────────────────
+  test-postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: juriscite
+          POSTGRES_PASSWORD: juriscite
+          POSTGRES_DB: juriscite_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U juriscite"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      RATELIMIT_ENABLED: "0"
+      OPENAI_API_KEY: ""
+      JWT_SECRET: "ci-test-secret-not-for-prod"
+      # The app + Alembic read DATABASE_URL; psycopg v3 driver.
+      DATABASE_URL: "postgresql+psycopg://juriscite:juriscite@localhost:5432/juriscite_ci"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install runtime dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # BLOCKING: applying every migration on real Postgres is the core Aurora rehearsal —
+      # it catches DDL that works on SQLite but not Postgres, the classic deploy-day failure.
+      - name: Alembic upgrade head (real Postgres — surfaces SQLite-only DDL)
+        run: alembic upgrade head
+
+      # ADVISORY (for now): the conftest harness runs the full suite against real Postgres
+      # (not SQLite-in-disguise). Kept non-blocking until a first green run confirms no
+      # further SQLite-only test assumptions remain — then promote to blocking (drop
+      # continue-on-error). See docs/OWNER_QUEUE.md / STATUS.md.
+      - name: Full test suite (Postgres) — advisory until first green
+        continue-on-error: true
+        run: pytest tests/ -q
+
+  # ── Dependency audit: BLOCKING, with documented waivers ────────────────────────
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: pip-audit (fails on any unwaived known CVE in requirements.txt)
+        run: |
+          pip install pip-audit==2.10.1
+          # Waivers are documented, justified vuln ids in security/pip-audit-waivers.txt.
+          IGNORES=$(grep -vE '^\s*#|^\s*$' security/pip-audit-waivers.txt | awk '{print "--ignore-vuln " $1}' | tr '\n' ' ')
+          echo "Applying waivers: $IGNORES"
+          pip-audit -r requirements.txt $IGNORES

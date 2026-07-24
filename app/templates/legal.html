@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Legal &amp; Policies &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .legal-top { background:#10151D; border-bottom:1px solid var(--gold-border); padding:.9rem 1.5rem;
+      display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+    .legal-top .brand .name{color:#fff;font-weight:800} .legal-top .brand .ai{color:var(--gold);font-weight:800}
+    .legal-top .who { font-size:.76rem; color:rgba(255,255,255,.45); }
+    .legal-layout { max-width:1040px; margin:0 auto; padding:1.5rem 1.25rem 4rem; display:grid;
+      grid-template-columns:230px 1fr; gap:1.5rem; align-items:start; }
+    .legal-nav { position:sticky; top:1rem; }
+    .legal-nav a { display:block; padding:.5rem .7rem; border-radius:8px; font-size:.82rem; color:var(--text-2);
+      text-decoration:none; }
+    .legal-nav a:hover { background:var(--surface-2); }
+    .legal-nav a.active { background:var(--gold-dim); color:var(--gold); font-weight:700; }
+    .legal-doc { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.75rem 2rem; }
+    .legal-doc h1 { font-size:1.35rem; margin:.2rem 0 1rem; letter-spacing:-.02em; }
+    .legal-doc h2 { font-size:1.05rem; margin:1.3rem 0 .5rem; color:var(--text); }
+    .legal-doc h3 { font-size:.92rem; margin:1rem 0 .4rem; color:var(--text); }
+    .legal-doc p, .legal-doc li { font-size:.86rem; line-height:1.7; color:var(--text-2); }
+    .legal-doc ul { margin:.3rem 0 .8rem 1.2rem; }
+    .legal-doc table { width:100%; border-collapse:collapse; margin:.6rem 0; font-size:.8rem; }
+    .legal-doc th, .legal-doc td { border:1px solid var(--border); padding:.45rem .6rem; text-align:left; }
+    .legal-doc th { background:var(--surface-2); color:var(--gold); }
+    .legal-doc hr { border:none; border-top:1px solid var(--border); margin:1.2rem 0; }
+    .legal-doc code { background:var(--gold-dim); color:var(--gold); padding:.05rem .35rem; border-radius:4px; }
+    @media (max-width:820px){ .legal-layout{grid-template-columns:1fr} .legal-nav{position:static} }
+  </style>
+</head>
+<body>
+<div class="legal-top">
+  <a class="brand" href="/" style="text-decoration:none"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="who">For advocates &amp; law firms only — not a public legal-advice service.</div>
+  <a href="/" class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,.2)">&larr; Back to app</a>
+</div>
+
+<div class="legal-layout">
+  <nav class="legal-nav" id="legal-nav"></nav>
+  <div class="legal-doc" id="legal-doc"><p>Loading…</p></div>
+</div>
+
+<script src="/static/utils.js"></script>
+<script>
+function mdToHtml(md) {
+  const lines = md.replace(/\r\n/g,'\n').split('\n');
+  let html = '', inUl = false, inTable = false;
+  const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/`([^`]+)`/g,'<code>$1</code>');
+  const closeUl = () => { if (inUl) { html += '</ul>'; inUl = false; } };
+  const closeTable = () => { if (inTable) { html += '</tbody></table>'; inTable = false; } };
+  for (let i=0;i<lines.length;i++) {
+    let ln = lines[i];
+    if (/^\|(.+)\|$/.test(ln.trim())) {
+      const cells = ln.trim().slice(1,-1).split('|').map(c=>c.trim());
+      if (/^[-:\s|]+$/.test(ln.replace(/\|/g,''))) continue; // separator row
+      if (!inTable) { closeUl(); html += '<table><tbody>'; inTable = true; }
+      const tag = i+1 < lines.length && /^\|[-:\s|]+\|$/.test(lines[i+1].trim()) ? 'th' : 'td';
+      html += '<tr>' + cells.map(c=>`<${tag}>${inline(c)}</${tag}>`).join('') + '</tr>';
+      continue;
+    } else closeTable();
+    if (/^### /.test(ln)) { closeUl(); html += `<h3>${inline(ln.slice(4))}</h3>`; }
+    else if (/^## /.test(ln)) { closeUl(); html += `<h2>${inline(ln.slice(3))}</h2>`; }
+    else if (/^# /.test(ln)) { closeUl(); html += `<h1>${inline(ln.slice(2))}</h1>`; }
+    else if (/^---+$/.test(ln.trim())) { closeUl(); html += '<hr/>'; }
+    else if (/^[-*] /.test(ln.trim())) { if (!inUl){html+='<ul>';inUl=true;} html += `<li>${inline(ln.trim().slice(2))}</li>`; }
+    else if (ln.trim() === '') { closeUl(); }
+    else { closeUl(); html += `<p>${inline(ln)}</p>`; }
+  }
+  closeUl(); closeTable();
+  return html;
+}
+
+async function load() {
+  let slug = location.pathname.replace(/^\/legal\/?/,'') || '';
+  let index = [];
+  try { index = await api.get('/api/legal/index'); } catch(_) {}
+  if (!slug) slug = index[0]?.slug || 'terms';
+  document.getElementById('legal-nav').innerHTML = index.map(d =>
+    `<a href="/legal/${d.slug}" class="${d.slug===slug?'active':''}">${esc(d.title)}</a>`).join('');
+  try {
+    const doc = await api.get('/api/legal/doc/' + encodeURIComponent(slug));
+    document.getElementById('legal-doc').innerHTML = mdToHtml(doc.markdown);
+  } catch(_) {
+    document.getElementById('legal-doc').innerHTML = '<p>Policy not found.</p>';
+  }
+}
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    body {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 100vh;
+      background: #0B0F14;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(200,169,106,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 90%, rgba(59,130,246,.05) 0%, transparent 60%);
+      padding: 2rem 1rem;
+    }
+
+    .auth-wrap { width: 95%; max-width: 520px; }
+
+    .auth-brand { text-align: center; margin-bottom: 1.75rem; }
+    .auth-brand-logo { display: inline-flex; align-items: center; gap: .3rem; font-size: 1.55rem; font-weight: 800; letter-spacing: -.03em; }
+    .auth-brand-logo .name { color: #fff; }
+    .auth-brand-logo .ai   { color: var(--gold); }
+    .auth-brand-tagline { color: rgba(255,255,255,.35); font-size: .82rem; margin-top: .35rem; }
+
+    .auth-card {
+      background: #111116; border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px; padding: 2rem 2rem;
+      box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(200,169,106,.04);
+    }
+    .auth-card h2 { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 1.2rem; }
+
+    /* Dark form fields */
+    .auth-card .form-group label { color: rgba(255,255,255,.5); font-size: .76rem; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+    .auth-card input, .auth-card select {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      color: #fff; border-radius: 10px; padding: .65rem .9rem; font-size: .88rem;
+      transition: border-color .2s;
+    }
+    .auth-card select option { background: #1a1a24; color: #fff; }
+    .auth-card input:focus, .auth-card select:focus { outline: none; border-color: rgba(200,169,106,.5); box-shadow: 0 0 0 3px rgba(200,169,106,.08); }
+    .auth-card input::placeholder { color: rgba(255,255,255,.2); }
+
+    /* Role grid */
+    .role-section-label {
+      font-size: .73rem; font-weight: 700; color: rgba(255,255,255,.4);
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: .7rem;
+    }
+    .role-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: .5rem; margin-bottom: 1.1rem; }
+    .role-btn {
+      border: 1.5px solid rgba(255,255,255,.1); border-radius: 10px;
+      padding: .75rem .4rem; text-align: center; cursor: pointer;
+      transition: all .15s; background: rgba(255,255,255,.03);
+    }
+    .role-btn:hover { border-color: rgba(200,169,106,.3); background: rgba(200,169,106,.04); }
+    .role-btn.selected { border-color: var(--gold); background: rgba(200,169,106,.08); }
+    .role-btn .icon { font-size: 1.4rem; display: block; margin-bottom: .3rem; line-height: 1; }
+    .role-btn .lbl  { font-size: .7rem; font-weight: 700; color: rgba(255,255,255,.7); }
+    .role-btn .sub  { font-size: .62rem; color: rgba(255,255,255,.3); margin-top: .1rem; }
+    .role-btn.selected .lbl { color: var(--gold); }
+
+    /* 2FA notice */
+    .tfa-notice {
+      display: none;
+      background: rgba(200,169,106,.06); border: 1px solid rgba(200,169,106,.2);
+      border-radius: 10px; padding: .75rem 1rem; font-size: .8rem;
+      color: rgba(200,169,106,.8); margin-bottom: 1rem; line-height: 1.4;
+    }
+
+    /* Password strength */
+    .strength-bar { height: 3px; border-radius: 2px; margin-top: 5px; background: rgba(255,255,255,.08); overflow: hidden; }
+    .strength-fill { height: 100%; width: 0; transition: width .3s, background .3s; border-radius: 2px; }
+    .strength-hint { font-size: .7rem; color: rgba(255,255,255,.3); margin-top: .3rem; }
+
+    .btn-auth {
+      width: 100%; justify-content: center; padding: .8rem;
+      background: linear-gradient(135deg, var(--gold) 0%, #C8A96A 100%);
+      color: #0B0F14; font-weight: 800; font-size: .93rem; border: none;
+      border-radius: 10px; cursor: pointer; letter-spacing: -.01em;
+      transition: opacity .15s, transform .15s; display: flex; align-items: center; gap: .5rem;
+    }
+    .btn-auth:hover { opacity: .92; transform: translateY(-1px); }
+
+    .auth-footer { text-align: center; margin-top: 1.25rem; font-size: .84rem; color: rgba(255,255,255,.35); }
+    .auth-footer a { color: var(--gold); font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
+
+    #pro-id-row { display: none; }
+
+    @media (max-width: 500px) {
+      .role-grid { grid-template-columns: repeat(3,1fr); }
+      .auth-card { padding: 1.5rem 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-wrap">
+
+  <div class="auth-brand">
+    <div class="auth-brand-logo">
+      <span class="name">Juris</span><span class="ai">cite</span>
+    </div>
+    <div class="auth-brand-tagline">Create your free account</div>
+  </div>
+
+  <div class="auth-card">
+    <h2>Get started</h2>
+
+    <form id="register-form">
+
+      <!-- Role selector -->
+      <div style="margin-bottom:1.1rem">
+        <div class="role-section-label">I am a</div>
+        <div class="role-grid">
+          <div class="role-btn selected" data-role="advocate">
+            <span class="icon">&#x2696;&#xFE0F;</span>
+            <span class="lbl">Advocate</span>
+            <span class="sub">Practice</span>
+          </div>
+          <div class="role-btn" data-role="firm_admin">
+            <span class="icon">&#x1F3E2;</span>
+            <span class="lbl">Law Firm</span>
+            <span class="sub">Team</span>
+          </div>
+        </div>
+        <input type="hidden" name="role" id="role-input" value="advocate"/>
+      </div>
+
+      <!-- 2FA notice -->
+      <div class="tfa-notice" id="tfa-notice">
+        &#x1F512; <strong>2FA required</strong> for your role. After registering you will set up an authenticator app to keep your data secure.
+      </div>
+
+      <!-- Professional ID (shown for non-citizen) -->
+      <div class="form-group" id="pro-id-row" style="margin-bottom:.9rem">
+        <label id="pro-id-label">Professional ID</label>
+        <input name="professional_id" id="pro-id-input" placeholder=""/>
+      </div>
+
+      <div class="form-grid" style="margin-bottom:.9rem">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input name="full_name" required autocomplete="name" placeholder="As on Bar Council"/>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input name="phone" type="tel" placeholder="+91 98765 43210"/>
+        </div>
+        <div class="form-group full">
+          <label>Email *</label>
+          <input name="email" type="email" required autocomplete="email" placeholder="you@example.com"/>
+        </div>
+        <div class="form-group full">
+          <label>Password *</label>
+          <input name="password" type="password" id="password-input" required autocomplete="new-password" placeholder="Minimum 8 characters"/>
+          <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+          <div class="strength-hint" id="strength-hint">Use uppercase, numbers &amp; symbols for a stronger password</div>
+        </div>
+        <div class="form-group full">
+          <label>Confirm Password *</label>
+          <input name="confirm_password" type="password" required autocomplete="new-password" placeholder="Repeat password"/>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-auth">Create Account &rarr;</button>
+
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="/login">Sign in</a>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>
+  const proLabels = {
+    advocate:   { label: 'Bar Council Reg. No. *',       placeholder: 'e.g. MH/1234/2018' },
+    judge:      { label: 'Court-Issued Credential *',    placeholder: 'Official credential ID' },
+    firm_admin: { label: 'Firm GST / Reg. No. *',        placeholder: 'e.g. 27AAPFU0939F1ZV' },
+    business:   { label: 'CIN / GSTIN *',                placeholder: 'e.g. U74999MH2020PTC345678' },
+  };
+  const tfaRoles = ['advocate','judge','firm_admin','business'];
+  let selectedRole = 'advocate';
+
+  document.querySelectorAll('.role-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedRole = btn.dataset.role;
+      document.getElementById('role-input').value = selectedRole;
+
+      const proRow   = document.getElementById('pro-id-row');
+      const tfaNote  = document.getElementById('tfa-notice');
+
+      if (proLabels[selectedRole]) {
+        proRow.style.display = '';
+        document.getElementById('pro-id-label').textContent = proLabels[selectedRole].label;
+        document.getElementById('pro-id-input').placeholder = proLabels[selectedRole].placeholder;
+        document.getElementById('pro-id-input').required    = true;
+      } else {
+        proRow.style.display = 'none';
+        document.getElementById('pro-id-input').required = false;
+      }
+      tfaNote.style.display = tfaRoles.includes(selectedRole) ? '' : 'none';
+    });
+  });
+
+  /* Password strength meter */
+  document.getElementById('password-input').addEventListener('input', e => {
+    const v = e.target.value;
+    const fill = document.getElementById('strength-fill');
+    const hint = document.getElementById('strength-hint');
+    let score = 0;
+    if (v.length >= 8)        score++;
+    if (/[A-Z]/.test(v))     score++;
+    if (/[0-9]/.test(v))     score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    const colors = ['#DC4C64','#f59e0b','#f0a500','#10B981'];
+    const labels = ['Weak','Fair','Good','Strong'];
+    fill.style.width     = (score * 25) + '%';
+    fill.style.background = colors[score - 1] || 'transparent';
+    hint.textContent     = score ? labels[score - 1] : 'Use uppercase, numbers & symbols for a stronger password';
+    hint.style.color     = score ? colors[score - 1] : 'rgba(255,255,255,.3)';
+  });
+
+  document.getElementById('register-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const fd   = new FormData(e.target);
+    const data = Object.fromEntries(fd.entries());
+    const btn  = e.target.querySelector('button[type=submit]');
+
+    if (data.password !== data.confirm_password) { toast('Passwords do not match', 'error'); return; }
+    if (data.password.length < 8)               { toast('Password must be at least 8 characters', 'error'); return; }
+
+    btn.textContent = 'Creating account…'; btn.disabled = true;
+
+    const body = { full_name: data.full_name, email: data.email, password: data.password, role: data.role };
+    if (data.phone)           body.phone = data.phone;
+    if (data.professional_id) body.professional_id = data.professional_id;
+
+    try {
+      await api.post('/api/auth/register', body);
+      toast('Account created! Signing you in…', 'success');
+      const tokens = await api.post('/api/auth/login', { email: data.email, password: data.password });
+      localStorage.setItem('access_token', tokens.access_token);
+      localStorage.setItem('refresh_token', tokens.refresh_token);
+      setTimeout(() => { window.location.href = tokens.requires_2fa_setup ? '/setup-2fa' : '/'; }, 800);
+    } catch (err) {
+      const msg = (err.message || '').toLowerCase().includes('already') ? 'Email already registered' : 'Registration failed — please try again';
+      toast(msg, 'error');
+      btn.textContent = 'Create Account →'; btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

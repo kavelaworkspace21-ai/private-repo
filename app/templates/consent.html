@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accept Terms &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    body { display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100vh; background:#0B0F14;
+      background-image:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(200,169,106,.08) 0%, transparent 70%);
+      padding:2rem 1rem; }
+    .wrap { width:95%; max-width:440px; }
+    .brand { text-align:center; font-size:1.5rem; font-weight:800; letter-spacing:-.03em; color:#fff; margin-bottom:1.25rem; }
+    .brand span { color:var(--gold,#C8A96A); }
+    .card { background:#111116; border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:1.75rem; }
+    .card h2 { font-size:1.05rem; font-weight:700; color:#fff; margin:0 0 .6rem; }
+    .card p { font-size:.85rem; color:rgba(255,255,255,.55); line-height:1.6; margin:0 0 1rem; }
+    .points { font-size:.8rem; color:rgba(255,255,255,.6); line-height:1.7; margin:0 0 1.2rem; padding-left:1.1rem; }
+    .chk { display:flex; gap:.6rem; align-items:flex-start; font-size:.84rem; color:#fff; margin-bottom:1.2rem; }
+    .chk input { margin-top:.2rem; width:16px; height:16px; accent-color:var(--gold,#C8A96A); }
+    .btn-go { width:100%; background:linear-gradient(135deg,var(--gold,#C8A96A),#C8A96A); color:#0B0F14;
+      font-weight:800; border:none; border-radius:10px; padding:.8rem; font-size:.92rem; cursor:pointer; }
+    .btn-go:disabled { opacity:.4; cursor:not-allowed; }
+    .foot { text-align:center; margin-top:1rem; font-size:.78rem; }
+    .foot a { color:rgba(255,255,255,.4); text-decoration:none; }
+    .chk a { color:var(--gold,#C8A96A); text-decoration:underline; }
+    .ver { font-size:.72rem; color:rgba(255,255,255,.35); text-align:center; margin-top:.7rem; }
+    details.purposes { margin:0 0 1.1rem; }
+    details.purposes summary { font-size:.78rem; color:var(--gold,#C8A96A); cursor:pointer; }
+    details.purposes ul { font-size:.76rem; color:rgba(255,255,255,.55); line-height:1.7; margin:.5rem 0 0 1.1rem; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Juris<span>cite</span></div>
+  <div class="card">
+    <h2>Before you continue</h2>
+    <p>To use your firm workspace, please review and accept how we handle data
+       (aligned with the DPDP Act, 2023):</p>
+    <ul class="points">
+      <li>Your client &amp; matter data is used only to serve your firm.</li>
+      <li>It is <b>never</b> used to train AI models, and never shared across firms.</li>
+      <li>AI output is advisory — a human advocate reviews everything before filing.</li>
+      <li>You can export or delete your data at any time (Account → Data rights).</li>
+    </ul>
+    <details class="purposes">
+      <summary>What we process &amp; why</summary>
+      <ul>
+        <li>Account authentication &amp; your firm workspace</li>
+        <li>Matter/client management &amp; document storage/versioning</li>
+        <li>Cited legal research &amp; drafting</li>
+        <li>Reminders/notifications, security, audit &amp; support</li>
+      </ul>
+    </details>
+    <label class="chk"><input type="checkbox" id="agree"/>
+      <span>I have read and accept the
+        <a href="/legal/terms" target="_blank" rel="noopener">Terms of Service</a> and
+        <a href="/legal/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
+    <button class="btn-go" id="go" disabled onclick="accept()">Accept &amp; continue</button>
+    <div class="ver" id="ver"></div>
+    <div class="foot"><a href="#" onclick="auth.logout();return false">Sign out instead</a></div>
+  </div>
+</div>
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>
+  requireAuth();
+  const cb = document.getElementById("agree"), go = document.getElementById("go");
+  cb.addEventListener("change", () => { go.disabled = !cb.checked; });
+  // Show the policy versions being accepted (provable consent).
+  api.get("/api/auth/needs-consent").then(v => {
+    document.getElementById("ver").textContent =
+      `Terms v${v.terms_version} · Privacy v${v.privacy_version} · Notice v${v.notice_version}`;
+  }).catch(() => {});
+  async function accept() {
+    go.disabled = true; go.textContent = "Saving…";
+    try { await api.post("/api/auth/consent", {}); location.href = "/"; }
+    catch { toast("Could not save. Try again.", "error"); go.disabled = false; go.textContent = "Accept & continue"; }
+  }
+</script>
+</body>
+</html>

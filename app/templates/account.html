@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Account &amp; Settings &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .acct-wrap { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .acct-card { margin-bottom: 1.5rem; }
+    .acct-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 1rem; }
+    .ro-field { display:flex; flex-direction:column; gap:.3rem; }
+    .ro-field .k { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-3); }
+    .ro-field .v { font-size:.9rem; color:var(--text); font-weight:600; }
+    .pill { display:inline-flex; align-items:center; gap:.35rem; padding:.18rem .6rem; border-radius:20px;
+      font-size:.72rem; font-weight:700; }
+    .pill.on  { background:var(--success-bg); color:var(--success); }
+    .pill.off { background:var(--warning-bg); color:var(--warning); }
+    .retention-list { list-style:none; margin:.5rem 0 0; padding:0; }
+    .retention-list li { padding:.5rem 0; border-bottom:1px solid var(--border); font-size:.83rem; color:var(--text-2); }
+    .retention-list li:last-child { border-bottom:none; }
+    .retention-list b { color:var(--text); }
+    .danger-zone { border:1px solid var(--danger); border-radius:var(--radius); padding:1.1rem 1.25rem; background:var(--danger-bg); }
+    .danger-zone h3 { color:var(--danger); font-size:.95rem; margin-bottom:.4rem; }
+    .danger-zone p { font-size:.82rem; color:var(--text-2); margin-bottom:.8rem; }
+    .row-actions { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary">Court Diary</a>
+    <a href="/library">Legal Library</a>
+    <a href="/assistant">AI Assistant</a>
+    <a href="/drafting">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<div class="acct-wrap">
+  <div class="page-header">
+    <div>
+      <h1>Account &amp; Settings</h1>
+      <div class="sub">Manage your profile, security, and data rights</div>
+    </div>
+  </div>
+
+  <!-- Profile -->
+  <div class="card acct-card">
+    <div class="card-header"><span class="card-title">Profile</span></div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Full name</label>
+        <input id="f-name" type="text" placeholder="Your name"/>
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input id="f-phone" type="text" placeholder="+91 …"/>
+      </div>
+    </div>
+    <div class="acct-grid" style="margin-top:1.1rem">
+      <div class="ro-field"><span class="k">Email</span><span class="v" id="v-email">—</span></div>
+      <div class="ro-field"><span class="k">Role</span><span class="v" id="v-role">—</span></div>
+      <div class="ro-field"><span class="k">Professional ID</span><span class="v" id="v-proid">—</span></div>
+      <div class="ro-field"><span class="k">Member since</span><span class="v" id="v-since">—</span></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-gold btn-sm" id="btn-save" onclick="saveProfile()">Save changes</button>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="card acct-card">
+    <div class="card-header"><span class="card-title">Security</span></div>
+    <div class="row-actions" style="justify-content:space-between">
+      <div>
+        <div style="font-size:.88rem;font-weight:600;color:var(--text)">Two-factor authentication (2FA)</div>
+        <div style="font-size:.8rem;color:var(--text-3);margin-top:.2rem">
+          Status: <span id="twofa-pill" class="pill off">Not enabled</span>
+        </div>
+      </div>
+      <div class="row-actions">
+        <a href="/setup-2fa" class="btn btn-ghost btn-sm" id="twofa-btn">Set up 2FA</a>
+        <a href="/reset-password" class="btn btn-ghost btn-sm">Change password</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy & Data Rights -->
+  <div class="card acct-card">
+    <div class="card-header"><span class="card-title">Privacy &amp; Data Rights (DPDP)</span></div>
+    <p style="font-size:.84rem;color:var(--text-2);line-height:1.6" id="no-training">Loading privacy statement…</p>
+    <div class="gold-divider">Data retention</div>
+    <ul class="retention-list" id="retention"></ul>
+    <div class="form-actions">
+      <button class="btn btn-ghost-gold btn-sm" onclick="exportData()" id="btn-export">⬇ Download my data (JSON)</button>
+    </div>
+  </div>
+
+  <!-- Data Rights Requests (DPDP tracker) -->
+  <div class="card acct-card">
+    <div class="card-header"><span class="card-title">Request correction or raise a grievance</span></div>
+    <p style="font-size:.82rem;color:var(--text-3);line-height:1.6">
+      File a data-rights request (DPDP). We track it with a status and target response date.</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Request type</label>
+        <select id="dr-type">
+          <option value="correction">Correction / update</option>
+          <option value="access">Access my data</option>
+          <option value="grievance">Grievance / complaint</option>
+          <option value="withdrawal">Withdraw consent</option>
+          <option value="erasure">Erasure / deletion</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Details</label>
+      <textarea id="dr-details" rows="2" placeholder="Describe your request…"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-gold btn-sm" id="btn-dr" onclick="submitDataRight()">Submit request</button>
+    </div>
+    <div class="gold-divider">My requests</div>
+    <ul class="retention-list" id="dr-list"><li style="color:var(--text-3)">No requests yet.</li></ul>
+  </div>
+
+  <!-- Misuse / abuse reporting -->
+  <div class="card acct-card">
+    <div class="card-header"><span class="card-title">Report misuse or abuse</span></div>
+    <p style="font-size:.82rem;color:var(--text-3);line-height:1.6">
+      Report abuse, a security concern, objectionable content, or impersonation. We triage every report.</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="mr-cat">
+          <option value="abuse">Abuse</option>
+          <option value="security">Security concern</option>
+          <option value="objectionable_content">Objectionable content</option>
+          <option value="impersonation">Impersonation</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input id="mr-subject" type="text" placeholder="Short summary"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Details</label>
+      <textarea id="mr-details" rows="2" placeholder="What happened?"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost-gold btn-sm" id="btn-mr" onclick="submitMisuse()">Submit report</button>
+    </div>
+    <div class="gold-divider">My reports</div>
+    <ul class="retention-list" id="mr-list"><li style="color:var(--text-3)">No reports yet.</li></ul>
+  </div>
+
+  <!-- Danger zone -->
+  <div class="danger-zone">
+    <h3>Delete account &amp; all data</h3>
+    <p>This permanently erases your account and <b>all</b> clients, matters, hearings, fees, documents
+       and drafts for your firm. This cannot be undone (DPDP right to erasure). Type
+       <b>DELETE</b> to confirm.</p>
+    <div class="row-actions">
+      <input id="del-confirm" type="text" placeholder="Type DELETE" style="max-width:180px" oninput="toggleDelete()"/>
+      <button class="btn btn-danger btn-sm" id="btn-delete" onclick="deleteAccount()" disabled>Delete my account</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>requireAuth();</script>
+<script>
+async function loadAccount() {
+  try {
+    const me = await api.get('/api/auth/me');
+    document.getElementById('f-name').value = me.full_name || '';
+    document.getElementById('f-phone').value = me.phone || '';
+    document.getElementById('v-email').textContent = me.email || '—';
+    document.getElementById('v-role').textContent = (me.role || '').replace('_',' ');
+    document.getElementById('v-proid').textContent = me.professional_id || '—';
+    document.getElementById('v-since').textContent = me.created_at ? me.created_at.slice(0,10) : '—';
+    const pill = document.getElementById('twofa-pill');
+    if (me.is_2fa_enabled) { pill.className = 'pill on'; pill.textContent = '🔐 Enabled';
+      document.getElementById('twofa-btn').style.display = 'none'; }
+    else { pill.className = 'pill off'; pill.textContent = 'Not enabled'; }
+  } catch (_) {}
+  try {
+    const p = await api.get('/api/account/privacy');
+    document.getElementById('no-training').textContent = p.no_training || '';
+    const ul = document.getElementById('retention');
+    ul.innerHTML = Object.entries(p.retention || {}).map(
+      ([k,v]) => `<li><b>${esc(k.replace(/_/g,' '))}:</b> ${esc(v)}</li>`).join('');
+  } catch (_) {}
+}
+
+async function saveProfile() {
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Saving…';
+  try {
+    await api.patch('/api/account/profile', {
+      full_name: document.getElementById('f-name').value,
+      phone: document.getElementById('f-phone').value,
+    });
+    localStorage.removeItem('current_user');   // refresh the nav chip next load
+    toast('Profile updated.', 'success');
+  } catch (_) { toast('Could not update profile.', 'error'); }
+  finally { btn.disabled = false; btn.textContent = orig; }
+}
+
+async function exportData() {
+  const btn = document.getElementById('btn-export'); const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Preparing…';
+  try {
+    const data = await api.get('/api/account/export');
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'legalserver-my-data.json'; a.click();
+    URL.revokeObjectURL(url);
+    toast('Your data has been downloaded.', 'success');
+  } catch (_) { toast('Export failed.', 'error'); }
+  finally { btn.disabled = false; btn.textContent = orig; }
+}
+
+function toggleDelete() {
+  document.getElementById('btn-delete').disabled =
+    document.getElementById('del-confirm').value.trim() !== 'DELETE';
+}
+
+async function deleteAccount() {
+  if (!confirm('Permanently delete your account and ALL firm data? This cannot be undone.')) return;
+  try {
+    const res = await fetch('/api/account/', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + auth.getToken() },
+      body: JSON.stringify({ confirm: true }),
+    });
+    if (!res.ok) { toast('Could not delete account.', 'error'); return; }
+    auth.clear();
+    alert('Your account and all data were permanently deleted.');
+    window.location.href = '/login';
+  } catch (_) { toast('Delete failed.', 'error'); }
+}
+
+async function loadDataRights() {
+  try {
+    const rows = await api.get('/api/data-rights/mine');
+    const ul = document.getElementById('dr-list');
+    if (!rows.length) { ul.innerHTML = '<li style="color:var(--text-3)">No requests yet.</li>'; return; }
+    ul.innerHTML = rows.map(r =>
+      `<li><b>${esc(r.request_type)}</b> — <span style="color:var(--gold)">${esc(r.status)}</span>
+        ${r.created_at ? '· ' + esc(String(r.created_at).slice(0,10)) : ''}
+        ${r.details ? '<br><span style="color:var(--text-3)">' + esc(r.details) + '</span>' : ''}</li>`).join('');
+  } catch (_) {}
+}
+
+async function submitDataRight() {
+  const btn = document.getElementById('btn-dr'); const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Submitting…';
+  try {
+    await api.post('/api/data-rights/', {
+      request_type: document.getElementById('dr-type').value,
+      details: document.getElementById('dr-details').value,
+    });
+    document.getElementById('dr-details').value = '';
+    toast('Request submitted.', 'success');
+    loadDataRights();
+  } catch (_) { toast('Could not submit request.', 'error'); }
+  finally { btn.disabled = false; btn.textContent = orig; }
+}
+
+async function loadMisuse() {
+  try {
+    const rows = await api.get('/api/misuse/mine');
+    const ul = document.getElementById('mr-list');
+    if (!rows.length) { ul.innerHTML = '<li style="color:var(--text-3)">No reports yet.</li>'; return; }
+    ul.innerHTML = rows.map(r =>
+      `<li><b>${esc(r.category.replace(/_/g,' '))}</b> — <span style="color:var(--gold)">${esc(r.status)}</span>
+        ${r.created_at ? '· ' + esc(String(r.created_at).slice(0,10)) : ''}
+        <br><span style="color:var(--text-3)">${esc(r.subject)}</span></li>`).join('');
+  } catch (_) {}
+}
+
+async function submitMisuse() {
+  const btn = document.getElementById('btn-mr'); const orig = btn.textContent;
+  const subject = document.getElementById('mr-subject').value.trim();
+  if (!subject) { toast('Please add a subject.', 'error'); return; }
+  btn.disabled = true; btn.textContent = 'Submitting…';
+  try {
+    await api.post('/api/misuse/', {
+      category: document.getElementById('mr-cat').value,
+      subject,
+      details: document.getElementById('mr-details').value,
+    });
+    document.getElementById('mr-subject').value = '';
+    document.getElementById('mr-details').value = '';
+    toast('Report submitted.', 'success');
+    loadMisuse();
+  } catch (_) { toast('Could not submit report.', 'error'); }
+  finally { btn.disabled = false; btn.textContent = orig; }
+}
+
+loadAccount();
+loadDataRights();
+loadMisuse();
+</script>
+</body>
+</html>

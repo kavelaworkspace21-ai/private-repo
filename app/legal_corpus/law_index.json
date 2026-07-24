@@ -1,0 +1,2833 @@
+{
+  "version": "1.0",
+  "last_updated": "2024-01-01",
+  "acts": [
+    {
+      "id": "constitution_1950",
+      "title": "The Constitution of India",
+      "year": 1950,
+      "status": "in_force",
+      "type": "constitutional",
+      "indiacode_id": "00001",
+      "chapters": [
+        {
+          "num": "I",
+          "title": "The Union and its Territory",
+          "sections": "1-4"
+        },
+        {
+          "num": "II",
+          "title": "Citizenship",
+          "sections": "5-11"
+        },
+        {
+          "num": "III",
+          "title": "Fundamental Rights",
+          "sections": "12-35"
+        },
+        {
+          "num": "IV",
+          "title": "Directive Principles of State Policy",
+          "sections": "36-51"
+        },
+        {
+          "num": "IVA",
+          "title": "Fundamental Duties",
+          "sections": "51A"
+        },
+        {
+          "num": "V",
+          "title": "The Union",
+          "sections": "52-151"
+        },
+        {
+          "num": "VI",
+          "title": "The States",
+          "sections": "152-237"
+        },
+        {
+          "num": "XI",
+          "title": "Relations between the Union and the States",
+          "sections": "245-263"
+        },
+        {
+          "num": "XIV",
+          "title": "Services under the Union and the States",
+          "sections": "308-323"
+        },
+        {
+          "num": "XV",
+          "title": "Elections",
+          "sections": "324-329"
+        }
+      ],
+      "key_sections": [
+        {
+          "num": "12",
+          "title": "Definition of State for Part III"
+        },
+        {
+          "num": "13",
+          "title": "Laws inconsistent with or in derogation of the Fundamental Rights"
+        },
+        {
+          "num": "14",
+          "title": "Equality before law"
+        },
+        {
+          "num": "15",
+          "title": "Prohibition of discrimination on grounds of religion, race, caste, sex or place of birth"
+        },
+        {
+          "num": "16",
+          "title": "Equality of opportunity in matters of public employment"
+        },
+        {
+          "num": "17",
+          "title": "Abolition of Untouchability"
+        },
+        {
+          "num": "18",
+          "title": "Abolition of titles"
+        },
+        {
+          "num": "19",
+          "title": "Protection of certain rights regarding freedom of speech etc."
+        },
+        {
+          "num": "20",
+          "title": "Protection in respect of conviction for offences"
+        },
+        {
+          "num": "21",
+          "title": "Protection of life and personal liberty"
+        },
+        {
+          "num": "21A",
+          "title": "Right to education"
+        },
+        {
+          "num": "22",
+          "title": "Protection against arrest and detention in certain cases"
+        },
+        {
+          "num": "23",
+          "title": "Prohibition of traffic in human beings and forced labour"
+        },
+        {
+          "num": "24",
+          "title": "Prohibition of employment of children in factories etc."
+        },
+        {
+          "num": "25",
+          "title": "Freedom of conscience and free profession, practice and propagation of religion"
+        },
+        {
+          "num": "26",
+          "title": "Freedom to manage religious affairs"
+        },
+        {
+          "num": "28",
+          "title": "Freedom as to attendance at religious instruction or religious worship in certain educational institutions"
+        },
+        {
+          "num": "29",
+          "title": "Protection of interests of minorities"
+        },
+        {
+          "num": "30",
+          "title": "Right of minorities to establish and administer educational institutions"
+        },
+        {
+          "num": "32",
+          "title": "Remedies for enforcement of rights conferred by this Part (Right to Constitutional Remedies)"
+        },
+        {
+          "num": "38",
+          "title": "State to secure a social order for the promotion of welfare of the people"
+        },
+        {
+          "num": "39",
+          "title": "Certain principles of policy to be followed by the State"
+        },
+        {
+          "num": "39A",
+          "title": "Equal justice and free legal aid"
+        },
+        {
+          "num": "41",
+          "title": "Right to work, to education and to public assistance in certain cases"
+        },
+        {
+          "num": "44",
+          "title": "Uniform civil code for the citizens"
+        },
+        {
+          "num": "45",
+          "title": "Provision for early childhood care and education"
+        },
+        {
+          "num": "46",
+          "title": "Promotion of educational and economic interests of Scheduled Castes, Scheduled Tribes"
+        },
+        {
+          "num": "51A",
+          "title": "Fundamental Duties"
+        },
+        {
+          "num": "72",
+          "title": "Power of President to grant pardons, etc."
+        },
+        {
+          "num": "105",
+          "title": "Powers, privileges, etc. of Houses of Parliament"
+        },
+        {
+          "num": "124",
+          "title": "Establishment and constitution of Supreme Court"
+        },
+        {
+          "num": "129",
+          "title": "Supreme Court to be a court of record"
+        },
+        {
+          "num": "131",
+          "title": "Original jurisdiction of the Supreme Court"
+        },
+        {
+          "num": "132",
+          "title": "Appellate jurisdiction of Supreme Court in appeals from High Courts"
+        },
+        {
+          "num": "136",
+          "title": "Special leave to appeal by the Supreme Court"
+        },
+        {
+          "num": "137",
+          "title": "Review of judgments or orders by the Supreme Court"
+        },
+        {
+          "num": "141",
+          "title": "Law declared by Supreme Court to be binding on all courts"
+        },
+        {
+          "num": "142",
+          "title": "Enforcement of decrees and orders of Supreme Court"
+        },
+        {
+          "num": "143",
+          "title": "Power of President to consult Supreme Court"
+        },
+        {
+          "num": "214",
+          "title": "High Courts for States"
+        },
+        {
+          "num": "215",
+          "title": "High Courts to be courts of record"
+        },
+        {
+          "num": "226",
+          "title": "Power of High Courts to issue certain writs"
+        },
+        {
+          "num": "227",
+          "title": "Power of superintendence over all courts by the High Court"
+        },
+        {
+          "num": "233",
+          "title": "Appointment of district judges"
+        },
+        {
+          "num": "300A",
+          "title": "Persons not to be deprived of property save by authority of law"
+        },
+        {
+          "num": "324",
+          "title": "Superintendence, direction and control of elections to be vested in an Election Commission"
+        },
+        {
+          "num": "356",
+          "title": "Provisions in case of failure of constitutional machinery in States"
+        },
+        {
+          "num": "368",
+          "title": "Power of Parliament to amend the Constitution and procedure therefor"
+        }
+      ]
+    },
+    {
+      "id": "bsa_2023",
+      "title": "Bharatiya Sakshya Adhiniyam, 2023",
+      "year": 2023,
+      "status": "in_force",
+      "effective_date": "2024-07-01",
+      "type": "evidence",
+      "replaces": "Indian Evidence Act, 1872",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions"
+        },
+        {
+          "num": "3",
+          "title": "Relevancy of facts"
+        },
+        {
+          "num": "4",
+          "title": "Facts forming part of same transaction"
+        },
+        {
+          "num": "5",
+          "title": "Facts which are the occasion, cause or effect of facts in issue"
+        },
+        {
+          "num": "6",
+          "title": "Facts showing existence of state of mind, or of body or bodily feeling"
+        },
+        {
+          "num": "7",
+          "title": "Facts necessary to explain or introduce relevant facts"
+        },
+        {
+          "num": "9",
+          "title": "Facts inconsistent with fact in issue"
+        },
+        {
+          "num": "10",
+          "title": "Admissions defined"
+        },
+        {
+          "num": "11",
+          "title": "Admission — when relevant"
+        },
+        {
+          "num": "14",
+          "title": "Confessions caused by inducement, threat or promise"
+        },
+        {
+          "num": "15",
+          "title": "Confession to police officer not to be proved"
+        },
+        {
+          "num": "16",
+          "title": "Confession by accused while in custody of police"
+        },
+        {
+          "num": "17",
+          "title": "How much of information received from accused may be proved"
+        },
+        {
+          "num": "22",
+          "title": "Dying declaration"
+        },
+        {
+          "num": "23",
+          "title": "Statements made under special circumstances"
+        },
+        {
+          "num": "25",
+          "title": "Entries in books of account when relevant"
+        },
+        {
+          "num": "31",
+          "title": "Judgments of courts — when relevant"
+        },
+        {
+          "num": "32",
+          "title": "Relevancy of certain evidence for proving truth of facts stated"
+        },
+        {
+          "num": "35",
+          "title": "Expert opinion"
+        },
+        {
+          "num": "39",
+          "title": "DNA and scientific evidence"
+        },
+        {
+          "num": "43",
+          "title": "Character — when relevant"
+        },
+        {
+          "num": "57",
+          "title": "Proof of contents of documents"
+        },
+        {
+          "num": "61",
+          "title": "Primary evidence"
+        },
+        {
+          "num": "62",
+          "title": "Secondary evidence"
+        },
+        {
+          "num": "63",
+          "title": "Proof of documents by primary evidence"
+        },
+        {
+          "num": "64",
+          "title": "Cases in which secondary evidence relating to documents may be given"
+        },
+        {
+          "num": "65",
+          "title": "Rules as to notice to produce"
+        },
+        {
+          "num": "78",
+          "title": "Electronic records — admissibility"
+        },
+        {
+          "num": "79",
+          "title": "Presumption as to electronic records and digital signatures"
+        },
+        {
+          "num": "94",
+          "title": "Burden of proof"
+        },
+        {
+          "num": "95",
+          "title": "On whom burden of proof lies"
+        },
+        {
+          "num": "96",
+          "title": "Burden of proof as to particular fact"
+        },
+        {
+          "num": "97",
+          "title": "Burden of proving fact to bring case within exception"
+        },
+        {
+          "num": "102",
+          "title": "Court may presume existence of certain facts"
+        },
+        {
+          "num": "103",
+          "title": "Court shall presume existence of certain facts"
+        },
+        {
+          "num": "104",
+          "title": "Court shall presume that certain offences were committed"
+        },
+        {
+          "num": "111",
+          "title": "Estoppel"
+        },
+        {
+          "num": "113",
+          "title": "Estoppel of tenant and of licensee"
+        },
+        {
+          "num": "118",
+          "title": "Who may testify"
+        },
+        {
+          "num": "119",
+          "title": "Dumb witnesses"
+        },
+        {
+          "num": "120",
+          "title": "Parties to civil suit and their wives or husbands"
+        },
+        {
+          "num": "122",
+          "title": "Communications during marriage"
+        },
+        {
+          "num": "123",
+          "title": "Evidence as to affairs of State"
+        },
+        {
+          "num": "124",
+          "title": "Official communications"
+        },
+        {
+          "num": "125",
+          "title": "Information as to commission of offences"
+        },
+        {
+          "num": "126",
+          "title": "Professional communications"
+        },
+        {
+          "num": "131",
+          "title": "Examination of witnesses"
+        },
+        {
+          "num": "132",
+          "title": "Order of examination"
+        },
+        {
+          "num": "137",
+          "title": "Cross-examination"
+        },
+        {
+          "num": "143",
+          "title": "Leading questions"
+        },
+        {
+          "num": "145",
+          "title": "Evidence as to matters in writing"
+        },
+        {
+          "num": "148",
+          "title": "Impeaching credit of witness"
+        },
+        {
+          "num": "157",
+          "title": "Improper admission and rejection of evidence"
+        }
+      ]
+    },
+    {
+      "id": "ipc_1860",
+      "title": "Indian Penal Code, 1860",
+      "year": 1860,
+      "status": "repealed",
+      "repealed_by": "Bharatiya Nyaya Sanhita, 2023",
+      "effective_repeal": "2024-07-01",
+      "note": "Applies to offences committed before 1 July 2024",
+      "type": "criminal",
+      "key_sections": [
+        {
+          "num": "34",
+          "title": "Acts done by several persons in furtherance of common intention"
+        },
+        {
+          "num": "107",
+          "title": "Abetment of a thing"
+        },
+        {
+          "num": "120A",
+          "title": "Definition of criminal conspiracy"
+        },
+        {
+          "num": "120B",
+          "title": "Punishment of criminal conspiracy"
+        },
+        {
+          "num": "299",
+          "title": "Culpable homicide"
+        },
+        {
+          "num": "300",
+          "title": "Murder"
+        },
+        {
+          "num": "302",
+          "title": "Punishment for murder"
+        },
+        {
+          "num": "304",
+          "title": "Punishment for culpable homicide not amounting to murder"
+        },
+        {
+          "num": "304A",
+          "title": "Causing death by negligence"
+        },
+        {
+          "num": "304B",
+          "title": "Dowry death"
+        },
+        {
+          "num": "305",
+          "title": "Abetment of suicide of child or insane person"
+        },
+        {
+          "num": "306",
+          "title": "Abetment of suicide"
+        },
+        {
+          "num": "307",
+          "title": "Attempt to murder"
+        },
+        {
+          "num": "319",
+          "title": "Hurt"
+        },
+        {
+          "num": "320",
+          "title": "Grievous hurt"
+        },
+        {
+          "num": "323",
+          "title": "Punishment for voluntarily causing hurt"
+        },
+        {
+          "num": "324",
+          "title": "Voluntarily causing hurt by dangerous weapons"
+        },
+        {
+          "num": "325",
+          "title": "Punishment for voluntarily causing grievous hurt"
+        },
+        {
+          "num": "326",
+          "title": "Voluntarily causing grievous hurt by dangerous weapons"
+        },
+        {
+          "num": "326A",
+          "title": "Voluntarily causing grievous hurt by use of acid, etc."
+        },
+        {
+          "num": "354",
+          "title": "Assault or criminal force with intent to outrage modesty of woman"
+        },
+        {
+          "num": "354A",
+          "title": "Sexual harassment"
+        },
+        {
+          "num": "354B",
+          "title": "Assault or use of criminal force to woman with intent to disrobe"
+        },
+        {
+          "num": "354C",
+          "title": "Voyeurism"
+        },
+        {
+          "num": "354D",
+          "title": "Stalking"
+        },
+        {
+          "num": "363",
+          "title": "Punishment for kidnapping"
+        },
+        {
+          "num": "375",
+          "title": "Rape"
+        },
+        {
+          "num": "376",
+          "title": "Punishment for rape"
+        },
+        {
+          "num": "376A",
+          "title": "Punishment for causing death or resulting in persistent vegetative state of victim"
+        },
+        {
+          "num": "376D",
+          "title": "Gang rape"
+        },
+        {
+          "num": "378",
+          "title": "Theft"
+        },
+        {
+          "num": "379",
+          "title": "Punishment for theft"
+        },
+        {
+          "num": "383",
+          "title": "Extortion"
+        },
+        {
+          "num": "390",
+          "title": "Robbery"
+        },
+        {
+          "num": "391",
+          "title": "Dacoity"
+        },
+        {
+          "num": "405",
+          "title": "Criminal breach of trust"
+        },
+        {
+          "num": "406",
+          "title": "Punishment for criminal breach of trust"
+        },
+        {
+          "num": "409",
+          "title": "Criminal breach of trust by public servant, banker, merchant"
+        },
+        {
+          "num": "415",
+          "title": "Cheating"
+        },
+        {
+          "num": "420",
+          "title": "Cheating and dishonestly inducing delivery of property"
+        },
+        {
+          "num": "441",
+          "title": "Criminal trespass"
+        },
+        {
+          "num": "447",
+          "title": "Punishment for criminal trespass"
+        },
+        {
+          "num": "468",
+          "title": "Forgery for purpose of cheating"
+        },
+        {
+          "num": "471",
+          "title": "Using as genuine a forged document"
+        },
+        {
+          "num": "498A",
+          "title": "Husband or relative of husband of a woman subjecting her to cruelty"
+        },
+        {
+          "num": "499",
+          "title": "Defamation"
+        },
+        {
+          "num": "500",
+          "title": "Punishment for defamation"
+        },
+        {
+          "num": "503",
+          "title": "Criminal intimidation"
+        },
+        {
+          "num": "506",
+          "title": "Punishment for criminal intimidation"
+        }
+      ]
+    },
+    {
+      "id": "cpc_1908",
+      "title": "Code of Civil Procedure, 1908",
+      "year": 1908,
+      "status": "in_force",
+      "type": "civil_procedure",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions"
+        },
+        {
+          "num": "9",
+          "title": "Courts to try all civil suits unless barred"
+        },
+        {
+          "num": "10",
+          "title": "Stay of suit"
+        },
+        {
+          "num": "11",
+          "title": "Res judicata"
+        },
+        {
+          "num": "13",
+          "title": "When foreign judgment not conclusive"
+        },
+        {
+          "num": "14",
+          "title": "Presumption as to foreign judgments"
+        },
+        {
+          "num": "15",
+          "title": "Court in which suits to be instituted"
+        },
+        {
+          "num": "16",
+          "title": "Suits to be instituted where subject matter situate"
+        },
+        {
+          "num": "17",
+          "title": "Suits for immovable property situate within jurisdiction of different Courts"
+        },
+        {
+          "num": "19",
+          "title": "Suits for compensation for wrongs to person or movables"
+        },
+        {
+          "num": "20",
+          "title": "Other suits to be instituted where defendants reside"
+        },
+        {
+          "num": "21",
+          "title": "Objections to jurisdiction"
+        },
+        {
+          "num": "22",
+          "title": "Power to transfer suits"
+        },
+        {
+          "num": "24",
+          "title": "General power of transfer and withdrawal"
+        },
+        {
+          "num": "26",
+          "title": "Institution of suits"
+        },
+        {
+          "num": "35",
+          "title": "Costs"
+        },
+        {
+          "num": "35A",
+          "title": "Compensatory costs in respect of false or vexatious claims or defences"
+        },
+        {
+          "num": "35B",
+          "title": "Costs for causing delay"
+        },
+        {
+          "num": "36",
+          "title": "Application of provisions of Code to orders"
+        },
+        {
+          "num": "37",
+          "title": "Definition of Court which passed a decree"
+        },
+        {
+          "num": "51",
+          "title": "Powers of Court to enforce execution"
+        },
+        {
+          "num": "60",
+          "title": "Property liable to attachment and sale in execution of decree"
+        },
+        {
+          "num": "75",
+          "title": "Power to issue commissions"
+        },
+        {
+          "num": "80",
+          "title": "Notice"
+        },
+        {
+          "num": "89",
+          "title": "Settlement of disputes outside the Court"
+        },
+        {
+          "num": "91",
+          "title": "Public nuisances and other wrongful acts affecting the public"
+        },
+        {
+          "num": "92",
+          "title": "Public charities"
+        },
+        {
+          "num": "96",
+          "title": "Appeal from original decree"
+        },
+        {
+          "num": "100",
+          "title": "Second appeal"
+        },
+        {
+          "num": "104",
+          "title": "Orders from which appeal lies"
+        },
+        {
+          "num": "115",
+          "title": "Revision"
+        },
+        {
+          "num": "151",
+          "title": "Saving of inherent powers of Court"
+        },
+        {
+          "num": "152",
+          "title": "Amendment of judgments, decrees or orders"
+        },
+        {
+          "num": "153",
+          "title": "General power to amend"
+        },
+        {
+          "num": "Order1_Rule1",
+          "title": "Who may be joined as plaintiffs"
+        },
+        {
+          "num": "Order1_Rule3",
+          "title": "Who may be joined as defendants"
+        },
+        {
+          "num": "Order6_Rule17",
+          "title": "Amendment of pleadings"
+        },
+        {
+          "num": "Order7",
+          "title": "Plaint"
+        },
+        {
+          "num": "Order8",
+          "title": "Written Statement, Set-off and Counter-Claim"
+        },
+        {
+          "num": "Order11",
+          "title": "Discovery and Inspection"
+        },
+        {
+          "num": "Order12",
+          "title": "Admissions"
+        },
+        {
+          "num": "Order16",
+          "title": "Summoning and Attendance of Witnesses"
+        },
+        {
+          "num": "Order17",
+          "title": "Adjournments"
+        },
+        {
+          "num": "Order18",
+          "title": "Hearing of the Suit and Examination of Witnesses"
+        },
+        {
+          "num": "Order20",
+          "title": "Judgment and Decree"
+        },
+        {
+          "num": "Order21",
+          "title": "Execution of Decrees and Orders"
+        },
+        {
+          "num": "Order22",
+          "title": "Death, Marriage and Insolvency of Parties"
+        },
+        {
+          "num": "Order23",
+          "title": "Withdrawal and Adjustment of Suits"
+        },
+        {
+          "num": "Order24",
+          "title": "Payment into Court"
+        },
+        {
+          "num": "Order25",
+          "title": "Security for Costs"
+        },
+        {
+          "num": "Order37",
+          "title": "Summary Procedure"
+        },
+        {
+          "num": "Order38",
+          "title": "Arrest before Judgment"
+        },
+        {
+          "num": "Order39",
+          "title": "Temporary Injunctions and Interlocutory Orders"
+        },
+        {
+          "num": "Order40",
+          "title": "Appointment of Receivers"
+        },
+        {
+          "num": "Order41",
+          "title": "Appeals from Original Decrees"
+        }
+      ]
+    },
+    {
+      "id": "tpa_1882",
+      "title": "Transfer of Property Act, 1882",
+      "year": 1882,
+      "status": "in_force",
+      "type": "property",
+      "key_sections": [
+        {
+          "num": "3",
+          "title": "Interpretation clause — definitions"
+        },
+        {
+          "num": "4",
+          "title": "Enactments relating to contracts to be taken as part of contract"
+        },
+        {
+          "num": "5",
+          "title": "Transfer of property defined"
+        },
+        {
+          "num": "6",
+          "title": "What may be transferred"
+        },
+        {
+          "num": "7",
+          "title": "Persons competent to transfer"
+        },
+        {
+          "num": "8",
+          "title": "Operation of transfer"
+        },
+        {
+          "num": "10",
+          "title": "Condition restraining alienation"
+        },
+        {
+          "num": "11",
+          "title": "Restriction repugnant to interest created"
+        },
+        {
+          "num": "13",
+          "title": "Transfer for benefit of unborn person"
+        },
+        {
+          "num": "14",
+          "title": "Rule against perpetuity"
+        },
+        {
+          "num": "17",
+          "title": "Direction for accumulation"
+        },
+        {
+          "num": "19",
+          "title": "Vested interest"
+        },
+        {
+          "num": "21",
+          "title": "Contingent interest"
+        },
+        {
+          "num": "25",
+          "title": "Conditional transfer"
+        },
+        {
+          "num": "40",
+          "title": "Burden of obligation imposing restriction on use of land"
+        },
+        {
+          "num": "41",
+          "title": "Transfer by ostensible owner"
+        },
+        {
+          "num": "43",
+          "title": "Transfer by unauthorised person who subsequently acquires interest in property transferred"
+        },
+        {
+          "num": "44",
+          "title": "Transfer by one co-owner"
+        },
+        {
+          "num": "45",
+          "title": "Joint transfer for consideration"
+        },
+        {
+          "num": "47",
+          "title": "Transfer where third person entitled to maintenance"
+        },
+        {
+          "num": "52",
+          "title": "Transfer of property pending suit relating thereto"
+        },
+        {
+          "num": "53",
+          "title": "Fraudulent transfer"
+        },
+        {
+          "num": "53A",
+          "title": "Part performance"
+        },
+        {
+          "num": "54",
+          "title": "Sale defined"
+        },
+        {
+          "num": "55",
+          "title": "Rights and liabilities of buyer and seller"
+        },
+        {
+          "num": "58",
+          "title": "Mortgage, mortgagor and mortgagee defined"
+        },
+        {
+          "num": "59",
+          "title": "Mortgage when to be by assurance"
+        },
+        {
+          "num": "60",
+          "title": "Right of mortgagor to redeem"
+        },
+        {
+          "num": "67",
+          "title": "Right of mortgagee to foreclosure or sale"
+        },
+        {
+          "num": "69",
+          "title": "Power of sale when valid"
+        },
+        {
+          "num": "100",
+          "title": "Charge"
+        },
+        {
+          "num": "105",
+          "title": "Lease defined"
+        },
+        {
+          "num": "106",
+          "title": "Duration of certain leases in absence of written contract or local usage"
+        },
+        {
+          "num": "107",
+          "title": "Leases how made"
+        },
+        {
+          "num": "108",
+          "title": "Rights and liabilities of lessor and lessee"
+        },
+        {
+          "num": "111",
+          "title": "Determination of lease"
+        },
+        {
+          "num": "114",
+          "title": "Relief against forfeiture for non-payment of rent"
+        },
+        {
+          "num": "118",
+          "title": "Exchange defined"
+        },
+        {
+          "num": "122",
+          "title": "Gift defined"
+        },
+        {
+          "num": "123",
+          "title": "Transfer how effected"
+        },
+        {
+          "num": "124",
+          "title": "Gift of existing and future property"
+        },
+        {
+          "num": "126",
+          "title": "When gift may be suspended or revoked"
+        },
+        {
+          "num": "129",
+          "title": "Saving of donations mortis causa and Muhammadan law"
+        },
+        {
+          "num": "130",
+          "title": "Transfer of actionable claim"
+        }
+      ]
+    },
+    {
+      "id": "ni_act_1881",
+      "title": "Negotiable Instruments Act, 1881",
+      "year": 1881,
+      "status": "in_force",
+      "type": "commercial",
+      "key_sections": [
+        {
+          "num": "4",
+          "title": "Promissory note"
+        },
+        {
+          "num": "5",
+          "title": "Bill of exchange"
+        },
+        {
+          "num": "6",
+          "title": "Cheque"
+        },
+        {
+          "num": "13",
+          "title": "Negotiable instrument"
+        },
+        {
+          "num": "17",
+          "title": "Holder"
+        },
+        {
+          "num": "18",
+          "title": "Holder in due course"
+        },
+        {
+          "num": "36",
+          "title": "Liability of maker of note and acceptor of bill"
+        },
+        {
+          "num": "85",
+          "title": "Cheque payable to order"
+        },
+        {
+          "num": "118",
+          "title": "Presumptions as to negotiable instruments"
+        },
+        {
+          "num": "138",
+          "title": "Dishonour of cheque for insufficiency, etc., of funds in the account"
+        },
+        {
+          "num": "139",
+          "title": "Presumption in favour of holder"
+        },
+        {
+          "num": "140",
+          "title": "Defence which may not be allowed in any prosecution under section 138"
+        },
+        {
+          "num": "141",
+          "title": "Offences by companies"
+        },
+        {
+          "num": "142",
+          "title": "Cognizance of offences"
+        },
+        {
+          "num": "143",
+          "title": "Power of Court to try cases summarily"
+        },
+        {
+          "num": "143A",
+          "title": "Power to direct interim compensation"
+        },
+        {
+          "num": "144",
+          "title": "Mode of service of summons"
+        },
+        {
+          "num": "145",
+          "title": "Evidence on affidavit"
+        },
+        {
+          "num": "147",
+          "title": "Offences to be compoundable"
+        }
+      ]
+    },
+    {
+      "id": "limitation_act_1963",
+      "title": "Limitation Act, 1963",
+      "year": 1963,
+      "status": "in_force",
+      "type": "procedural",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions"
+        },
+        {
+          "num": "3",
+          "title": "Bar of limitation"
+        },
+        {
+          "num": "4",
+          "title": "Expiry of prescribed period when court is closed"
+        },
+        {
+          "num": "5",
+          "title": "Extension of prescribed period in certain cases (condonation of delay)"
+        },
+        {
+          "num": "6",
+          "title": "Legal disability"
+        },
+        {
+          "num": "7",
+          "title": "Disability of one of several persons"
+        },
+        {
+          "num": "8",
+          "title": "Special exceptions"
+        },
+        {
+          "num": "12",
+          "title": "Exclusion of time in legal proceedings"
+        },
+        {
+          "num": "13",
+          "title": "Exclusion of time in cases where leave to sue or appeal as a pauper is applied for"
+        },
+        {
+          "num": "14",
+          "title": "Exclusion of time of proceeding bona fide in court without jurisdiction"
+        },
+        {
+          "num": "15",
+          "title": "Exclusion of time during which proceedings are stayed"
+        },
+        {
+          "num": "17",
+          "title": "Effect of fraud or mistake"
+        },
+        {
+          "num": "18",
+          "title": "Effect of acknowledgment in writing"
+        },
+        {
+          "num": "19",
+          "title": "Effect of payment on account of debt or of interest on legacy"
+        },
+        {
+          "num": "20",
+          "title": "Effect of acknowledgment or payment by another person"
+        },
+        {
+          "num": "22",
+          "title": "Continuing breaches and torts"
+        },
+        {
+          "num": "23",
+          "title": "Suits for compensation for acts not actionable without special damage"
+        },
+        {
+          "num": "25",
+          "title": "Acquisition of easement by prescription"
+        },
+        {
+          "num": "27",
+          "title": "Extinguishment of right to property"
+        },
+        {
+          "num": "29",
+          "title": "Savings"
+        },
+        {
+          "num": "Schedule_1_Art3",
+          "title": "Suit for compensation for doing or omitting to do an act alleged to be in pursuance of any enactment in force — 1 year"
+        },
+        {
+          "num": "Schedule_1_Art36",
+          "title": "Suit for compensation for false imprisonment — 1 year"
+        },
+        {
+          "num": "Schedule_1_Art44",
+          "title": "Suit for compensation for libel or slander — 1 year"
+        },
+        {
+          "num": "Schedule_1_Art54",
+          "title": "Suit for specific performance of a contract — 3 years from date fixed for performance"
+        },
+        {
+          "num": "Schedule_1_Art55",
+          "title": "Suit for compensation for breach of contract — 3 years"
+        },
+        {
+          "num": "Schedule_1_Art56",
+          "title": "Suit for compensation for breach of contract in writing — 3 years"
+        },
+        {
+          "num": "Schedule_1_Art58",
+          "title": "Suit to obtain a declaration — 3 years"
+        },
+        {
+          "num": "Schedule_1_Art59",
+          "title": "Suit to cancel or set aside an instrument — 3 years"
+        },
+        {
+          "num": "Schedule_1_Art64",
+          "title": "Suit for possession of immovable property — 12 years"
+        },
+        {
+          "num": "Schedule_1_Art65",
+          "title": "Suit for possession based on title — 12 years from date of dispossession"
+        },
+        {
+          "num": "Schedule_1_Art113",
+          "title": "Any suit for which no period of limitation is provided elsewhere in this schedule — 3 years"
+        },
+        {
+          "num": "Schedule_1_Art116",
+          "title": "Execution of a decree — 12 years"
+        },
+        {
+          "num": "Schedule_1_Art117",
+          "title": "Application for leave to appeal as a pauper — 60 days"
+        },
+        {
+          "num": "Schedule_1_Art123",
+          "title": "Appeal to High Court from a decision of lower court — 90 days"
+        }
+      ]
+    },
+    {
+      "id": "rti_act_2005",
+      "title": "Right to Information Act, 2005",
+      "year": 2005,
+      "status": "in_force",
+      "type": "administrative",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions — information, public authority, public information officer, third party"
+        },
+        {
+          "num": "3",
+          "title": "Right to information"
+        },
+        {
+          "num": "4",
+          "title": "Obligations of public authorities — proactive disclosure"
+        },
+        {
+          "num": "5",
+          "title": "Designation of Public Information Officers"
+        },
+        {
+          "num": "6",
+          "title": "Request for obtaining information"
+        },
+        {
+          "num": "7",
+          "title": "Disposal of request"
+        },
+        {
+          "num": "8",
+          "title": "Exemption from disclosure of information"
+        },
+        {
+          "num": "9",
+          "title": "Grounds for rejection to access in certain cases"
+        },
+        {
+          "num": "10",
+          "title": "Severability"
+        },
+        {
+          "num": "11",
+          "title": "Third party information"
+        },
+        {
+          "num": "12",
+          "title": "Constitution of Central Information Commission"
+        },
+        {
+          "num": "15",
+          "title": "Constitution of State Information Commission"
+        },
+        {
+          "num": "18",
+          "title": "Powers and functions of the Information Commissions"
+        },
+        {
+          "num": "19",
+          "title": "Appeal"
+        },
+        {
+          "num": "20",
+          "title": "Penalties"
+        },
+        {
+          "num": "22",
+          "title": "Act to have overriding effect"
+        },
+        {
+          "num": "23",
+          "title": "Bar of jurisdiction of courts"
+        },
+        {
+          "num": "24",
+          "title": "Act not to apply to certain organisations"
+        }
+      ]
+    },
+    {
+      "id": "consumer_protection_2019",
+      "title": "Consumer Protection Act, 2019",
+      "year": 2019,
+      "status": "in_force",
+      "type": "consumer",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions — consumer, complainant, complaint, defect, deficiency, goods, service, trader, unfair trade practice"
+        },
+        {
+          "num": "3",
+          "title": "Application of other laws not barred"
+        },
+        {
+          "num": "4",
+          "title": "Central Consumer Protection Authority"
+        },
+        {
+          "num": "10",
+          "title": "Powers and functions of the Central Authority"
+        },
+        {
+          "num": "17",
+          "title": "Complaints, unfair trade practices and false or misleading advertisements"
+        },
+        {
+          "num": "21",
+          "title": "District Consumer Disputes Redressal Commission — jurisdiction"
+        },
+        {
+          "num": "34",
+          "title": "Jurisdiction of District Commission"
+        },
+        {
+          "num": "35",
+          "title": "Manner in which complaint shall be made"
+        },
+        {
+          "num": "36",
+          "title": "Proceedings before District Commission"
+        },
+        {
+          "num": "37",
+          "title": "Reference to mediation"
+        },
+        {
+          "num": "38",
+          "title": "Procedure on admission of complaint"
+        },
+        {
+          "num": "39",
+          "title": "Finding of District Commission"
+        },
+        {
+          "num": "40",
+          "title": "Appeal"
+        },
+        {
+          "num": "41",
+          "title": "Jurisdiction of State Commission"
+        },
+        {
+          "num": "47",
+          "title": "Jurisdiction of State Commission"
+        },
+        {
+          "num": "48",
+          "title": "Circuit benches"
+        },
+        {
+          "num": "49",
+          "title": "Powers of State Commission"
+        },
+        {
+          "num": "50",
+          "title": "Appeal against orders of State Commission"
+        },
+        {
+          "num": "58",
+          "title": "Jurisdiction of National Commission"
+        },
+        {
+          "num": "67",
+          "title": "Appeal against orders of National Commission"
+        },
+        {
+          "num": "69",
+          "title": "Limitation period — complaint to be filed within two years"
+        },
+        {
+          "num": "71",
+          "title": "Enforcement of orders of District Commission"
+        },
+        {
+          "num": "72",
+          "title": "Penalties for noncompliance"
+        },
+        {
+          "num": "85",
+          "title": "Product liability — liability of product manufacturer"
+        },
+        {
+          "num": "86",
+          "title": "Liability of product service provider"
+        },
+        {
+          "num": "87",
+          "title": "Liability of product seller"
+        },
+        {
+          "num": "88",
+          "title": "Exceptions to product liability"
+        },
+        {
+          "num": "89",
+          "title": "Defences in a product liability action"
+        },
+        {
+          "num": "90",
+          "title": "Product liability action"
+        },
+        {
+          "num": "101",
+          "title": "Power to make rules"
+        }
+      ]
+    },
+    {
+      "id": "specific_relief_1963",
+      "title": "Specific Relief Act, 1963",
+      "year": 1963,
+      "status": "in_force",
+      "type": "civil",
+      "key_sections": [
+        {
+          "num": "4",
+          "title": "Specific relief — how given"
+        },
+        {
+          "num": "5",
+          "title": "Recovery of specific immovable property"
+        },
+        {
+          "num": "6",
+          "title": "Suit by person dispossessed of immovable property"
+        },
+        {
+          "num": "7",
+          "title": "Recovery of specific movable property"
+        },
+        {
+          "num": "10",
+          "title": "Cases in which specific performance of contract enforceable"
+        },
+        {
+          "num": "11",
+          "title": "Cases in which specific performance of contracts connected with trusts enforceable"
+        },
+        {
+          "num": "12",
+          "title": "Specific performance of part of contract"
+        },
+        {
+          "num": "13",
+          "title": "Rights of purchaser or lessee against person with no title or imperfect title"
+        },
+        {
+          "num": "14",
+          "title": "Contracts not specifically enforceable"
+        },
+        {
+          "num": "16",
+          "title": "Personal bars to relief"
+        },
+        {
+          "num": "17",
+          "title": "Contract to sell or let property by one who has no title"
+        },
+        {
+          "num": "18",
+          "title": "Non-enforcement except with variation"
+        },
+        {
+          "num": "20",
+          "title": "Substituted performance of contract"
+        },
+        {
+          "num": "21",
+          "title": "Power to award compensation in certain cases"
+        },
+        {
+          "num": "22",
+          "title": "Power to grant relief for possession, partition, refund of earnest money, etc."
+        },
+        {
+          "num": "26",
+          "title": "When instrument may be rectified"
+        },
+        {
+          "num": "27",
+          "title": "Recession in certain circumstances"
+        },
+        {
+          "num": "31",
+          "title": "When cancellation may be ordered"
+        },
+        {
+          "num": "34",
+          "title": "Discretion of court as to declaration of status or right"
+        },
+        {
+          "num": "38",
+          "title": "Perpetual injunction when granted"
+        },
+        {
+          "num": "39",
+          "title": "Mandatory injunctions"
+        },
+        {
+          "num": "40",
+          "title": "Damages in lieu of, or in addition to, injunction"
+        },
+        {
+          "num": "41",
+          "title": "Injunction when refused"
+        }
+      ]
+    },
+    {
+      "id": "hma_1955",
+      "title": "Hindu Marriage Act, 1955",
+      "year": 1955,
+      "status": "in_force",
+      "type": "family",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Application of Act — who is a Hindu"
+        },
+        {
+          "num": "3",
+          "title": "Definitions — custom, sapinda relationship, degrees of prohibited relationship"
+        },
+        {
+          "num": "5",
+          "title": "Conditions for a Hindu marriage"
+        },
+        {
+          "num": "7",
+          "title": "Ceremonies for a Hindu marriage"
+        },
+        {
+          "num": "8",
+          "title": "Registration of Hindu marriages"
+        },
+        {
+          "num": "9",
+          "title": "Restitution of conjugal rights"
+        },
+        {
+          "num": "10",
+          "title": "Judicial separation"
+        },
+        {
+          "num": "11",
+          "title": "Void marriages"
+        },
+        {
+          "num": "12",
+          "title": "Voidable marriages"
+        },
+        {
+          "num": "13",
+          "title": "Divorce"
+        },
+        {
+          "num": "13A",
+          "title": "Alternate relief in divorce proceedings"
+        },
+        {
+          "num": "13B",
+          "title": "Divorce by mutual consent"
+        },
+        {
+          "num": "14",
+          "title": "No petition for divorce to be presented within one year of marriage"
+        },
+        {
+          "num": "15",
+          "title": "Divorced persons when may marry again"
+        },
+        {
+          "num": "16",
+          "title": "Legitimacy of children of void and voidable marriages"
+        },
+        {
+          "num": "17",
+          "title": "Punishment of bigamy"
+        },
+        {
+          "num": "18",
+          "title": "Punishment for contravention of certain other conditions for a Hindu marriage"
+        },
+        {
+          "num": "19",
+          "title": "Court to which petition shall be presented"
+        },
+        {
+          "num": "20",
+          "title": "Contents and verification of petitions"
+        },
+        {
+          "num": "24",
+          "title": "Maintenance pendente lite and expenses of proceedings"
+        },
+        {
+          "num": "25",
+          "title": "Permanent alimony and maintenance"
+        },
+        {
+          "num": "26",
+          "title": "Custody of children"
+        },
+        {
+          "num": "27",
+          "title": "Disposal of property"
+        },
+        {
+          "num": "28",
+          "title": "Appeals from decrees and orders"
+        }
+      ]
+    },
+    {
+      "id": "hsa_1956",
+      "title": "Hindu Succession Act, 1956",
+      "year": 1956,
+      "status": "in_force",
+      "type": "family",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Application of Act"
+        },
+        {
+          "num": "3",
+          "title": "Definitions — agnates, cognates, full blood, half blood, intestate, related"
+        },
+        {
+          "num": "4",
+          "title": "Overriding effect of Act"
+        },
+        {
+          "num": "5",
+          "title": "Act not to apply to certain properties"
+        },
+        {
+          "num": "6",
+          "title": "Devolution of interest in coparcenary property (amended 2005 — daughters have equal rights)"
+        },
+        {
+          "num": "7",
+          "title": "Devolution of interest of a member of a Mitakshara coparcenary"
+        },
+        {
+          "num": "8",
+          "title": "General rules of succession in the case of males"
+        },
+        {
+          "num": "9",
+          "title": "Order of succession among heirs in the Schedule"
+        },
+        {
+          "num": "10",
+          "title": "Distribution of property among heirs in Class I of the Schedule"
+        },
+        {
+          "num": "11",
+          "title": "Distribution of property among heirs in Class II of the Schedule"
+        },
+        {
+          "num": "12",
+          "title": "Order of succession among agnates and cognates"
+        },
+        {
+          "num": "14",
+          "title": "Property of a female Hindu to be her absolute property"
+        },
+        {
+          "num": "15",
+          "title": "General rules of succession in the case of female Hindus"
+        },
+        {
+          "num": "16",
+          "title": "Order of succession and manner of distribution among heirs of a female Hindu"
+        },
+        {
+          "num": "17",
+          "title": "Special provisions respecting persons governed by Marumakkattayam and Aliyasantana laws"
+        },
+        {
+          "num": "21",
+          "title": "Presumption in cases of simultaneous deaths"
+        },
+        {
+          "num": "22",
+          "title": "Preferential right to acquire property in certain cases"
+        },
+        {
+          "num": "23",
+          "title": "Special provision respecting dwelling houses"
+        },
+        {
+          "num": "24",
+          "title": "Certain widows remarrying may not inherit as widows"
+        },
+        {
+          "num": "25",
+          "title": "Murderer disqualified"
+        },
+        {
+          "num": "29A",
+          "title": "Equal rights to daughter in coparcenary property — amendment 2005"
+        },
+        {
+          "num": "30",
+          "title": "Testamentary succession"
+        }
+      ]
+    },
+    {
+      "id": "it_act_2000",
+      "title": "Information Technology Act, 2000",
+      "year": 2000,
+      "status": "in_force",
+      "type": "technology",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions — computer, computer network, data, electronic record, information system"
+        },
+        {
+          "num": "3",
+          "title": "Authentication of electronic records"
+        },
+        {
+          "num": "4",
+          "title": "Legal recognition of electronic records"
+        },
+        {
+          "num": "5",
+          "title": "Legal recognition of digital signatures"
+        },
+        {
+          "num": "7",
+          "title": "Retention of electronic records"
+        },
+        {
+          "num": "11",
+          "title": "Attribution of electronic records"
+        },
+        {
+          "num": "43",
+          "title": "Penalty and compensation for damage to computer, computer system etc."
+        },
+        {
+          "num": "43A",
+          "title": "Compensation for failure to protect data"
+        },
+        {
+          "num": "65",
+          "title": "Tampering with computer source documents"
+        },
+        {
+          "num": "66",
+          "title": "Computer related offences"
+        },
+        {
+          "num": "66A",
+          "title": "Punishment for sending offensive messages through communication service (struck down in Shreya Singhal case)"
+        },
+        {
+          "num": "66B",
+          "title": "Punishment for dishonestly receiving stolen computer resource"
+        },
+        {
+          "num": "66C",
+          "title": "Punishment for identity theft"
+        },
+        {
+          "num": "66D",
+          "title": "Punishment for cheating by personation by using computer resource"
+        },
+        {
+          "num": "66E",
+          "title": "Punishment for violation of privacy"
+        },
+        {
+          "num": "66F",
+          "title": "Punishment for cyber terrorism"
+        },
+        {
+          "num": "67",
+          "title": "Punishment for publishing obscene material in electronic form"
+        },
+        {
+          "num": "67A",
+          "title": "Punishment for publishing material containing sexually explicit act, etc."
+        },
+        {
+          "num": "69",
+          "title": "Power to issue directions for interception, monitoring or decryption"
+        },
+        {
+          "num": "69A",
+          "title": "Power to issue directions for blocking public access of any information"
+        },
+        {
+          "num": "72",
+          "title": "Penalty for breach of confidentiality and privacy"
+        },
+        {
+          "num": "72A",
+          "title": "Punishment for disclosure of information in breach of lawful contract"
+        },
+        {
+          "num": "79",
+          "title": "Exemption from liability of intermediary in certain cases"
+        },
+        {
+          "num": "85",
+          "title": "Offences by companies"
+        }
+      ]
+    },
+    {
+      "id": "pocso_2012",
+      "title": "Protection of Children from Sexual Offences Act, 2012",
+      "year": 2012,
+      "status": "in_force",
+      "type": "criminal_special",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions — child, penetrative sexual assault, sexual assault, sexual harassment"
+        },
+        {
+          "num": "3",
+          "title": "Penetrative sexual assault"
+        },
+        {
+          "num": "4",
+          "title": "Punishment for penetrative sexual assault"
+        },
+        {
+          "num": "5",
+          "title": "Aggravated penetrative sexual assault"
+        },
+        {
+          "num": "6",
+          "title": "Punishment for aggravated penetrative sexual assault"
+        },
+        {
+          "num": "7",
+          "title": "Sexual assault"
+        },
+        {
+          "num": "8",
+          "title": "Punishment for sexual assault"
+        },
+        {
+          "num": "9",
+          "title": "Aggravated sexual assault"
+        },
+        {
+          "num": "10",
+          "title": "Punishment for aggravated sexual assault"
+        },
+        {
+          "num": "11",
+          "title": "Sexual harassment of a child"
+        },
+        {
+          "num": "12",
+          "title": "Punishment for sexual harassment"
+        },
+        {
+          "num": "14",
+          "title": "Using child for pornographic purposes"
+        },
+        {
+          "num": "15",
+          "title": "Punishment for storage of pornographic material involving child"
+        },
+        {
+          "num": "19",
+          "title": "Reporting of offences"
+        },
+        {
+          "num": "21",
+          "title": "Punishment for failure to report or record a case"
+        },
+        {
+          "num": "23",
+          "title": "Procedure for media"
+        },
+        {
+          "num": "24",
+          "title": "Recording of statement of child"
+        },
+        {
+          "num": "25",
+          "title": "Recording of statement of child by Magistrate"
+        },
+        {
+          "num": "26",
+          "title": "Additional provisions regarding statement of child"
+        },
+        {
+          "num": "27",
+          "title": "Medical examination of child"
+        },
+        {
+          "num": "28",
+          "title": "Designation of Special Court"
+        },
+        {
+          "num": "29",
+          "title": "Presumption of culpability in certain cases"
+        },
+        {
+          "num": "30",
+          "title": "Presumption of mens rea"
+        },
+        {
+          "num": "33",
+          "title": "Procedure and Powers of Special Court"
+        },
+        {
+          "num": "35",
+          "title": "Period for recording of evidence of child"
+        },
+        {
+          "num": "36",
+          "title": "Child not to see accused during testimony"
+        },
+        {
+          "num": "37",
+          "title": "Assistance of interpreter or expert"
+        },
+        {
+          "num": "40",
+          "title": "Alternative means of filing complaint"
+        }
+      ]
+    },
+    {
+      "id": "dv_act_2005",
+      "title": "Protection of Women from Domestic Violence Act, 2005",
+      "year": 2005,
+      "status": "in_force",
+      "type": "civil_criminal",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions — aggrieved person, domestic violence, respondent, shared household"
+        },
+        {
+          "num": "3",
+          "title": "Definition of domestic violence"
+        },
+        {
+          "num": "4",
+          "title": "Information to Protection Officer and exclusion of liability of informant"
+        },
+        {
+          "num": "5",
+          "title": "Duties of police officers, service providers and Magistrate"
+        },
+        {
+          "num": "6",
+          "title": "Duties of shelter homes"
+        },
+        {
+          "num": "7",
+          "title": "Duties of medical facilities"
+        },
+        {
+          "num": "8",
+          "title": "Appointment of Protection Officers"
+        },
+        {
+          "num": "9",
+          "title": "Duties and functions of Protection Officers"
+        },
+        {
+          "num": "10",
+          "title": "Service providers"
+        },
+        {
+          "num": "12",
+          "title": "Application to Magistrate"
+        },
+        {
+          "num": "13",
+          "title": "Service of notice"
+        },
+        {
+          "num": "17",
+          "title": "Right to reside in a shared household"
+        },
+        {
+          "num": "18",
+          "title": "Protection orders"
+        },
+        {
+          "num": "19",
+          "title": "Residence orders"
+        },
+        {
+          "num": "20",
+          "title": "Monetary reliefs"
+        },
+        {
+          "num": "21",
+          "title": "Custody orders"
+        },
+        {
+          "num": "22",
+          "title": "Compensation orders"
+        },
+        {
+          "num": "23",
+          "title": "Power to grant interim and ex parte orders"
+        },
+        {
+          "num": "26",
+          "title": "Relief in other suits and legal proceedings"
+        },
+        {
+          "num": "28",
+          "title": "Proceedings to be governed by Code of Criminal Procedure"
+        },
+        {
+          "num": "29",
+          "title": "Appeal"
+        },
+        {
+          "num": "31",
+          "title": "Punishment for breach of protection order by respondent"
+        },
+        {
+          "num": "32",
+          "title": "Cognizance and proof"
+        },
+        {
+          "num": "33",
+          "title": "Penalty for not discharging duty by Protection Officer"
+        }
+      ]
+    },
+    {
+      "id": "rera_2016",
+      "title": "Real Estate (Regulation and Development) Act, 2016",
+      "year": 2016,
+      "status": "in_force",
+      "type": "real_estate",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions — allottee, apartment, common areas, developer, project, promoter, real estate agent"
+        },
+        {
+          "num": "3",
+          "title": "Prior registration of real estate project with Real Estate Regulatory Authority"
+        },
+        {
+          "num": "4",
+          "title": "Application for registration of real estate projects"
+        },
+        {
+          "num": "5",
+          "title": "Grant of registration"
+        },
+        {
+          "num": "6",
+          "title": "Extension of registration"
+        },
+        {
+          "num": "7",
+          "title": "Revocation of registration"
+        },
+        {
+          "num": "8",
+          "title": "Obligation of Authority consequent upon lapse of registration"
+        },
+        {
+          "num": "11",
+          "title": "Functions and duties of promoter"
+        },
+        {
+          "num": "12",
+          "title": "Obligations of promoter regarding veracity of the advertisement or prospectus"
+        },
+        {
+          "num": "13",
+          "title": "No deposit or advance to be taken by promoter without first entering into agreement for sale"
+        },
+        {
+          "num": "14",
+          "title": "Adherence to sanctioned plans and project specifications"
+        },
+        {
+          "num": "15",
+          "title": "Obligations of promoter in case of transfer of a real estate project to a third party"
+        },
+        {
+          "num": "17",
+          "title": "Transfer of title"
+        },
+        {
+          "num": "18",
+          "title": "Return of amount and compensation"
+        },
+        {
+          "num": "19",
+          "title": "Rights and duties of allottees"
+        },
+        {
+          "num": "31",
+          "title": "Filing of complaints with the Authority"
+        },
+        {
+          "num": "40",
+          "title": "Recovery of interest, penalty and compensation"
+        },
+        {
+          "num": "43",
+          "title": "Establishment of Real Estate Appellate Tribunal"
+        },
+        {
+          "num": "44",
+          "title": "Appeals to Appellate Tribunal"
+        },
+        {
+          "num": "56",
+          "title": "Offences and penalties"
+        },
+        {
+          "num": "57",
+          "title": "Penalty for non-registration"
+        },
+        {
+          "num": "59",
+          "title": "Penalty for non-registration under section 3"
+        },
+        {
+          "num": "60",
+          "title": "Penalty for making false statement, false information, or contravention of the Act"
+        },
+        {
+          "num": "63",
+          "title": "Penalty for failure to comply with orders of Authority"
+        },
+        {
+          "num": "64",
+          "title": "Penalty for failure to comply with orders of Appellate Tribunal"
+        }
+      ]
+    },
+    {
+      "id": "companies_act_2013",
+      "title": "Companies Act, 2013",
+      "year": 2013,
+      "status": "in_force",
+      "type": "corporate",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions — company, director, promoter, share, debenture, holding company, subsidiary"
+        },
+        {
+          "num": "3",
+          "title": "Formation of company"
+        },
+        {
+          "num": "4",
+          "title": "Memorandum"
+        },
+        {
+          "num": "5",
+          "title": "Articles"
+        },
+        {
+          "num": "7",
+          "title": "Incorporation of company"
+        },
+        {
+          "num": "9",
+          "title": "Effect of registration"
+        },
+        {
+          "num": "13",
+          "title": "Alteration of memorandum"
+        },
+        {
+          "num": "14",
+          "title": "Alteration of articles"
+        },
+        {
+          "num": "21",
+          "title": "Authentication of documents, proceedings and contracts"
+        },
+        {
+          "num": "56",
+          "title": "Transfer and transmission of securities"
+        },
+        {
+          "num": "66",
+          "title": "Reduction of share capital"
+        },
+        {
+          "num": "73",
+          "title": "Prohibition on acceptance of deposits from public"
+        },
+        {
+          "num": "76",
+          "title": "Acceptance of deposits from public by certain companies"
+        },
+        {
+          "num": "88",
+          "title": "Register of members"
+        },
+        {
+          "num": "96",
+          "title": "Annual general meetings"
+        },
+        {
+          "num": "100",
+          "title": "Calling of extraordinary general meeting"
+        },
+        {
+          "num": "102",
+          "title": "Statement to be annexed to notice"
+        },
+        {
+          "num": "108",
+          "title": "Voting through electronic means"
+        },
+        {
+          "num": "117",
+          "title": "Resolutions and agreements to be filed"
+        },
+        {
+          "num": "129",
+          "title": "Financial statements"
+        },
+        {
+          "num": "134",
+          "title": "Financial statement, Board's report, etc."
+        },
+        {
+          "num": "135",
+          "title": "Corporate social responsibility"
+        },
+        {
+          "num": "139",
+          "title": "Appointment of auditors"
+        },
+        {
+          "num": "143",
+          "title": "Powers and duties of auditors and auditing standards"
+        },
+        {
+          "num": "147",
+          "title": "Punishment for contravention"
+        },
+        {
+          "num": "149",
+          "title": "Company to have Board of Directors"
+        },
+        {
+          "num": "152",
+          "title": "Appointment of directors"
+        },
+        {
+          "num": "166",
+          "title": "Duties of directors"
+        },
+        {
+          "num": "177",
+          "title": "Audit Committee"
+        },
+        {
+          "num": "179",
+          "title": "Powers of Board"
+        },
+        {
+          "num": "184",
+          "title": "Disclosure of interest by director"
+        },
+        {
+          "num": "186",
+          "title": "Loan and investment by company"
+        },
+        {
+          "num": "188",
+          "title": "Related party transactions"
+        },
+        {
+          "num": "196",
+          "title": "Appointment of Managing Director, Whole-time Director or Manager"
+        },
+        {
+          "num": "197",
+          "title": "Overall maximum managerial remuneration"
+        },
+        {
+          "num": "230",
+          "title": "Power to compromise or make arrangements with creditors and members"
+        },
+        {
+          "num": "241",
+          "title": "Application to Tribunal for relief in cases of oppression"
+        },
+        {
+          "num": "244",
+          "title": "Right to apply under section 241"
+        },
+        {
+          "num": "271",
+          "title": "Circumstances in which company may be wound up by Tribunal"
+        },
+        {
+          "num": "272",
+          "title": "Petition for winding up"
+        },
+        {
+          "num": "420",
+          "title": "Punishment for wrongful withholding of property"
+        },
+        {
+          "num": "447",
+          "title": "Punishment for fraud"
+        },
+        {
+          "num": "448",
+          "title": "Punishment for false statement"
+        },
+        {
+          "num": "449",
+          "title": "Punishment for false evidence"
+        }
+      ]
+    },
+    {
+      "id": "income_tax_1961",
+      "title": "Income-tax Act, 1961",
+      "year": 1961,
+      "status": "in_force",
+      "type": "central_act",
+      "coverage": "key_sections",
+      "verification_status": "ai_compiled_unverified",
+      "key_sections": [
+        {
+          "num": "2",
+          "title": "Definitions"
+        },
+        {
+          "num": "10",
+          "title": "Incomes not included in total income (exemptions)"
+        },
+        {
+          "num": "14",
+          "title": "Heads of income"
+        },
+        {
+          "num": "80C",
+          "title": "Deduction in respect of life insurance, PF, etc."
+        },
+        {
+          "num": "80D",
+          "title": "Deduction in respect of health insurance premia"
+        },
+        {
+          "num": "139",
+          "title": "Return of income"
+        },
+        {
+          "num": "143",
+          "title": "Assessment"
+        },
+        {
+          "num": "147",
+          "title": "Income escaping assessment"
+        },
+        {
+          "num": "194",
+          "title": "Deduction of tax at source (TDS)"
+        },
+        {
+          "num": "234A",
+          "title": "Interest for default in furnishing return"
+        },
+        {
+          "num": "271",
+          "title": "Penalty for concealment of income"
+        },
+        {
+          "num": "276C",
+          "title": "Wilful attempt to evade tax"
+        }
+      ]
+    },
+    {
+      "id": "cgst_2017",
+      "title": "Central Goods and Services Tax Act, 2017",
+      "year": 2017,
+      "status": "in_force",
+      "type": "central_act",
+      "coverage": "key_sections",
+      "verification_status": "ai_compiled_unverified",
+      "key_sections": [
+        {
+          "num": "7",
+          "title": "Scope of supply"
+        },
+        {
+          "num": "9",
+          "title": "Levy and collection"
+        },
+        {
+          "num": "16",
+          "title": "Eligibility and conditions for taking input tax credit"
+        },
+        {
+          "num": "17",
+          "title": "Apportionment of credit and blocked credits"
+        },
+        {
+          "num": "22",
+          "title": "Persons liable for registration"
+        },
+        {
+          "num": "31",
+          "title": "Tax invoice"
+        },
+        {
+          "num": "49",
+          "title": "Payment of tax, interest, penalty"
+        },
+        {
+          "num": "73",
+          "title": "Demand (other than fraud)"
+        },
+        {
+          "num": "74",
+          "title": "Demand (fraud / wilful misstatement)"
+        },
+        {
+          "num": "122",
+          "title": "Penalty for certain offences"
+        },
+        {
+          "num": "129",
+          "title": "Detention, seizure and release of goods"
+        },
+        {
+          "num": "132",
+          "title": "Punishment for certain offences"
+        }
+      ]
+    },
+    {
+      "id": "motor_vehicles_1988",
+      "title": "Motor Vehicles Act, 1988",
+      "year": 1988,
+      "status": "in_force",
+      "type": "central_act",
+      "coverage": "key_sections",
+      "verification_status": "ai_compiled_unverified",
+      "key_sections": [
+        {
+          "num": "3",
+          "title": "Necessity for driving licence"
+        },
+        {
+          "num": "39",
+          "title": "Necessity for registration"
+        },
+        {
+          "num": "66",
+          "title": "Necessity for permits"
+        },
+        {
+          "num": "129",
+          "title": "Wearing of protective headgear"
+        },
+        {
+          "num": "146",
+          "title": "Necessity for insurance against third party risk"
+        },
+        {
+          "num": "166",
+          "title": "Application for compensation"
+        },
+        {
+          "num": "184",
+          "title": "Driving dangerously"
+        },
+        {
+          "num": "185",
+          "title": "Driving by a drunken person or under drugs"
+        },
+        {
+          "num": "194",
+          "title": "Driving when overloaded"
+        }
+      ]
+    },
+    {
+      "id": "arbitration_1996",
+      "title": "Arbitration and Conciliation Act, 1996",
+      "year": 1996,
+      "status": "in_force",
+      "type": "central_act",
+      "coverage": "key_sections",
+      "verification_status": "ai_compiled_unverified",
+      "key_sections": [
+        {
+          "num": "7",
+          "title": "Arbitration agreement"
+        },
+        {
+          "num": "8",
+          "title": "Power to refer parties to arbitration"
+        },
+        {
+          "num": "9",
+          "title": "Interim measures by Court"
+        },
+        {
+          "num": "11",
+          "title": "Appointment of arbitrators"
+        },
+        {
+          "num": "16",
+          "title": "Competence of arbitral tribunal to rule on its jurisdiction"
+        },
+        {
+          "num": "17",
+          "title": "Interim measures ordered by arbitral tribunal"
+        },
+        {
+          "num": "34",
+          "title": "Application for setting aside arbitral award"
+        },
+        {
+          "num": "36",
+          "title": "Enforcement of award"
+        },
+        {
+          "num": "37",
+          "title": "Appealable orders"
+        }
+      ]
+    },
+    {
+      "id": "ibc_2016",
+      "title": "Insolvency and Bankruptcy Code, 2016",
+      "year": 2016,
+      "status": "in_force",
+      "type": "central_act",
+      "coverage": "key_sections",
+      "verification_status": "ai_compiled_unverified",
+      "key_sections": [
+        {
+          "num": "7",
+          "title": "Initiation of CIRP by financial creditor"
+        },
+        {
+          "num": "9",
+          "title": "Application for initiation of CIRP by operational creditor"
+        },
+        {
+          "num": "10",
+          "title": "Initiation of CIRP by corporate applicant"
+        },
+        {
+          "num": "12",
+          "title": "Time-limit for completion of CIRP"
+        },
+        {
+          "num": "14",
+          "title": "Moratorium"
+        },
+        {
+          "num": "29A",
+          "title": "Persons not eligible to be resolution applicant"
+        },
+        {
+          "num": "31",
+          "title": "Approval of resolution plan"
+        },
+        {
+          "num": "53",
+          "title": "Distribution of assets (waterfall)"
+        }
+      ]
+    },
+    {
+      "id": "partnership_1932",
+      "title": "Indian Partnership Act, 1932",
+      "year": 1932,
+      "status": "in_force",
+      "type": "central_act",
+      "coverage": "key_sections",
+      "verification_status": "ai_compiled_unverified",
+      "key_sections": [
+        {
+          "num": "4",
+          "title": "Definition of partnership, partner, firm"
+        },
+        {
+          "num": "6",
+          "title": "Mode of determining existence of partnership"
+        },
+        {
+          "num": "9",
+          "title": "General duties of partners"
+        },
+        {
+          "num": "18",
+          "title": "Partner to be agent of the firm"
+        },
+        {
+          "num": "25",
+          "title": "Liability of a partner for acts of the firm"
+        },
+        {
+          "num": "39",
+          "title": "Dissolution of a firm"
+        },
+        {
+          "num": "69",
+          "title": "Effect of non-registration"
+        }
+      ]
+    },
+    {
+      "id": "sale_of_goods_1930",
+      "title": "Sale of Goods Act, 1930",
+      "year": 1930,
+      "status": "in_force",
+      "type": "central_act",
+      "coverage": "key_sections",
+      "verification_status": "ai_compiled_unverified",
+      "key_sections": [
+        {
+          "num": "4",
+          "title": "Sale and agreement to sell"
+        },
+        {
+          "num": "12",
+          "title": "Condition and warranty"
+        },
+        {
+          "num": "16",
+          "title": "Implied conditions as to quality or fitness"
+        },
+        {
+          "num": "19",
+          "title": "Property passes when intended to pass"
+        },
+        {
+          "num": "27",
+          "title": "Sale by person not the owner"
+        },
+        {
+          "num": "55",
+          "title": "Suit for price"
+        },
+        {
+          "num": "57",
+          "title": "Damages for non-acceptance"
+        }
+      ]
+    },
+    {
+      "id": "sarfaesi_2002",
+      "title": "Securitisation and Reconstruction of Financial Assets and Enforcement of Security Interest Act, 2002",
+      "year": 2002,
+      "status": "in_force",
+      "type": "central_act",
+      "coverage": "key_sections",
+      "verification_status": "ai_compiled_unverified",
+      "key_sections": [
+        {
+          "num": "13",
+          "title": "Enforcement of security interest"
+        },
+        {
+          "num": "14",
+          "title": "Chief Metropolitan Magistrate to assist secured creditor"
+        },
+        {
+          "num": "17",
+          "title": "Application to Debts Recovery Tribunal"
+        },
+        {
+          "num": "31",
+          "title": "Provisions not applicable"
+        }
+      ]
+    }
+  ]
+}

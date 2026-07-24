@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    body {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 100vh;
+      background: #0B0F14;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(200,169,106,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 90%, rgba(59,130,246,.05) 0%, transparent 60%);
+      padding: 2rem 1rem;
+    }
+
+    .auth-wrap { width: 95%; max-width: 420px; }
+
+    .auth-brand {
+      text-align: center; margin-bottom: 2rem;
+    }
+    .auth-brand-logo {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-size: 1.65rem; font-weight: 800; letter-spacing: -.03em;
+    }
+    .auth-brand-logo .name { color: #fff; }
+    .auth-brand-logo .ai   { color: var(--gold); }
+    .auth-brand-tagline { color: rgba(255,255,255,.35); font-size: .82rem; margin-top: .35rem; }
+
+    .auth-card {
+      background: #111116; border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px; padding: 2.25rem 2rem;
+      box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(200,169,106,.04);
+    }
+    .auth-card h2 { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 1.4rem; }
+
+    /* Dark form fields */
+    .auth-card .form-group label { color: rgba(255,255,255,.5); font-size: .78rem; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+    .auth-card input {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      color: #fff; border-radius: 10px; padding: .7rem .9rem; font-size: .9rem;
+      transition: border-color .2s;
+    }
+    .auth-card input:focus { outline: none; border-color: rgba(200,169,106,.5); box-shadow: 0 0 0 3px rgba(200,169,106,.08); }
+    .auth-card input::placeholder { color: rgba(255,255,255,.2); }
+
+    .btn-auth {
+      width: 100%; justify-content: center; padding: .8rem;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark,#C8A96A) 100%);
+      color: #0B0F14; font-weight: 800; font-size: .93rem; border: none;
+      border-radius: 10px; cursor: pointer; letter-spacing: -.01em;
+      transition: opacity .15s, transform .15s; display: flex; align-items: center; gap: .5rem;
+    }
+    .btn-auth:hover { opacity: .92; transform: translateY(-1px); }
+    .btn-auth:active { transform: translateY(0); }
+
+    .auth-footer { text-align: center; margin-top: 1.4rem; font-size: .84rem; color: rgba(255,255,255,.35); }
+    .auth-footer a { color: var(--gold); font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
+
+    .auth-divider {
+      display: flex; align-items: center; gap: .75rem; margin: 1.25rem 0;
+      font-size: .78rem; color: rgba(255,255,255,.2);
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.08);
+    }
+
+    /* 2FA panel */
+    #panel-2fa { display: none; }
+    .otp-input {
+      font-size: 1.8rem; text-align: center; letter-spacing: .5em;
+      font-weight: 800; background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1); color: #fff;
+      border-radius: 10px; padding: .75rem 1rem;
+    }
+    .otp-input:focus { outline: none; border-color: rgba(200,169,106,.5); box-shadow: 0 0 0 3px rgba(200,169,106,.08); }
+
+    /* Trust badges */
+    .trust-badges {
+      display: flex; justify-content: center; gap: 1.5rem;
+      margin-top: 1.75rem; flex-wrap: wrap;
+    }
+    .trust-item { display: flex; align-items: center; gap: .35rem; font-size: .73rem; color: rgba(255,255,255,.25); }
+    .trust-icon { font-size: .9rem; }
+
+    @media (max-width: 440px) {
+      .auth-card { padding: 1.75rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-wrap">
+
+  <div class="auth-brand">
+    <div class="auth-brand-logo">
+      <span class="name">Juris</span><span class="ai">cite</span>
+    </div>
+    <div class="auth-brand-tagline">India&#39;s Legal Operating System</div>
+  </div>
+
+  <div class="auth-card">
+
+    <!-- Step 1: Email + Password -->
+    <div id="panel-login">
+      <h2>Welcome back</h2>
+      <form id="login-form">
+        <div class="form-group" style="margin-bottom:.9rem">
+          <label>Email</label>
+          <input name="email" type="email" placeholder="you@example.com" required autocomplete="email"/>
+        </div>
+        <div class="form-group" style="margin-bottom:1.4rem">
+          <label>Password</label>
+          <input name="password" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="current-password"/>
+        </div>
+        <button type="submit" class="btn-auth">
+          Sign In &rarr;
+        </button>
+      </form>
+      <div class="auth-footer" style="margin-top:.9rem">
+        <a href="/reset-password">Forgot password?</a>
+      </div>
+      <div class="auth-divider">or</div>
+      <div class="auth-footer" style="margin-top:0">
+        Don&#39;t have an account? <a href="/register">Create one free</a>
+      </div>
+    </div>
+
+    <!-- Step 2: 2FA -->
+    <div id="panel-2fa">
+      <h2 style="margin-bottom:.4rem">Two-Factor Auth</h2>
+      <p style="color:rgba(255,255,255,.35);font-size:.84rem;margin-bottom:1.5rem">
+        Enter the 6-digit code from your authenticator app.
+      </p>
+      <form id="totp-form">
+        <div class="form-group" style="margin-bottom:1.4rem">
+          <input class="otp-input" name="code" type="text" inputmode="numeric" maxlength="6"
+                 placeholder="000000" autocomplete="one-time-code" required/>
+        </div>
+        <button type="submit" class="btn-auth">Verify Code</button>
+      </form>
+      <div class="auth-footer" style="margin-top:1rem">
+        <a href="#" onclick="resetToStep1()">&larr; Back to login</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="trust-badges">
+    <div class="trust-item"><span class="trust-icon">&#x1F512;</span> End-to-end encrypted</div>
+    <div class="trust-item"><span class="trust-icon">&#x1F6E1;&#xFE0F;</span> DPDP compliant</div>
+    <div class="trust-item"><span class="trust-icon">&#x2696;&#xFE0F;</span> Made for Indian law</div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>
+  let tempToken = null;
+
+  document.getElementById('login-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.textContent = 'Signing in…'; btn.disabled = true;
+    try {
+      const res = await api.post('/api/auth/login', {
+        email: fd.get('email'),
+        password: fd.get('password'),
+      });
+      if (res.temp_token) {
+        tempToken = res.temp_token;
+        document.getElementById('panel-login').style.display = 'none';
+        document.getElementById('panel-2fa').style.display = '';
+        return;
+      }
+      localStorage.setItem('access_token', res.access_token);
+      localStorage.setItem('refresh_token', res.refresh_token);
+      if (res.requires_2fa_setup) { window.location.href = '/setup-2fa'; return; }
+      window.location.href = '/';
+    } catch {
+      toast('Invalid email or password', 'error');
+      btn.textContent = 'Sign In →'; btn.disabled = false;
+    }
+  });
+
+  document.getElementById('totp-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const code = new FormData(e.target).get('code').replace(/\s/g, '');
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.textContent = 'Verifying…'; btn.disabled = true;
+    try {
+      const res = await api.post('/api/auth/login/verify-2fa', { temp_token: tempToken, code });
+      localStorage.setItem('access_token', res.access_token);
+      localStorage.setItem('refresh_token', res.refresh_token);
+      window.location.href = '/';
+    } catch {
+      toast('Invalid 2FA code — try again', 'error');
+      btn.textContent = 'Verify Code'; btn.disabled = false;
+    }
+  });
+
+  function resetToStep1() {
+    tempToken = null;
+    document.getElementById('panel-2fa').style.display = 'none';
+    document.getElementById('panel-login').style.display = '';
+  }
+
+  if (localStorage.getItem('access_token')) window.location.href = '/';
+</script>
+</body>
+</html>

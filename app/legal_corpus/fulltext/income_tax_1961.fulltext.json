@@ -1,0 +1,4770 @@
+{
+  "acts": [
+    {
+      "id": "income_tax_1961",
+      "title": "Income-tax Act, 1961",
+      "short": "Income-tax Act",
+      "year": 1961,
+      "status": "repealed",
+      "source_verified": true,
+      "source": {
+        "name": "India Code (indiacode.nic.in)",
+        "url": "https://www.indiacode.nic.in/bitstream/123456789/2435/1/a1961-43.pdf",
+        "landing": "https://www.indiacode.nic.in/handle/123456789/2435",
+        "sha256": "428b1b3cf2c3c09f22014d488f60eb0aebe209fffbf63ae6430d4a6644bd55eb",
+        "fetched_on": "2026-06-25",
+        "extractor": "pdfplumber (deterministic, no AI)"
+      },
+      "sections": [
+        {
+          "num": "1",
+          "text": "Short title, extent and commencement.",
+          "page": 1,
+          "title": "Short title, extent and commencement"
+        },
+        {
+          "num": "2",
+          "text": "Definitions.",
+          "page": 1,
+          "title": "Definitions"
+        },
+        {
+          "num": "3",
+          "text": "“Previous year” defined.\nCHAPTER II\nBASIS OF CHARGE",
+          "page": 1,
+          "title": "“Previous year” defined.\nCHAPTER II\nBASIS OF CHARGE"
+        },
+        {
+          "num": "4",
+          "text": "Charge of income-tax.",
+          "page": 1,
+          "title": "Charge of income-tax"
+        },
+        {
+          "num": "5",
+          "text": "Scope of total income.",
+          "page": 1,
+          "title": "Scope of total income"
+        },
+        {
+          "num": "5A",
+          "text": "Apportionment of income between spouses governed by Portuguese Civil Code.",
+          "page": 1,
+          "title": "Apportionment of income between spouses governed by Portuguese Civil Code"
+        },
+        {
+          "num": "6",
+          "text": "Residence in India.",
+          "page": 1,
+          "title": "Residence in India"
+        },
+        {
+          "num": "7",
+          "text": "Income deemed to be received.",
+          "page": 1,
+          "title": "Income deemed to be received"
+        },
+        {
+          "num": "8",
+          "text": "Dividend income.",
+          "page": 1,
+          "title": "Dividend income"
+        },
+        {
+          "num": "9",
+          "text": "Income deemed to accrue or arise in India.",
+          "page": 1,
+          "title": "Income deemed to accrue or arise in India"
+        },
+        {
+          "num": "9A",
+          "text": "Certain activities not to constitute business connection in India.\nCHAPTER III\nINCOMES WHICH DO NOT FORM PART OF TOTAL INCOME",
+          "page": 1,
+          "title": "Certain activities not to constitute business connection in India.\nCHAPTER III\nINCOMES WHICH DO NOT FORM PART OF TOTAL INCOME"
+        },
+        {
+          "num": "10",
+          "text": "Incomes not included in total income.",
+          "page": 1,
+          "title": "Incomes not included in total income"
+        },
+        {
+          "num": "10A",
+          "text": "Special provision in respect of newly established undertakings in free trade zone, etc.",
+          "page": 1,
+          "title": "Special provision in respect of newly established undertakings in free trade zone, etc"
+        },
+        {
+          "num": "10AA",
+          "text": "Special provisions in respect of newly established Units in Special Economic Zones.",
+          "page": 1,
+          "title": "Special provisions in respect of newly established Units in Special Economic Zones"
+        },
+        {
+          "num": "10B",
+          "text": "Special provisions in respect of newly established hundred per cent. export-oriented undertakings.",
+          "page": 1,
+          "title": "Special provisions in respect of newly established hundred per cent. export-oriented undertakings"
+        },
+        {
+          "num": "10BA",
+          "text": "Special provisions in respect of export of certain articles or things.",
+          "page": 1,
+          "title": "Special provisions in respect of export of certain articles or things"
+        },
+        {
+          "num": "10BB",
+          "text": "Meaning of computer programmes in certain cases.",
+          "page": 1,
+          "title": "Meaning of computer programmes in certain cases"
+        },
+        {
+          "num": "10C",
+          "text": "Special provision in respect of certain industrial undertakings in North-Eastern Region.",
+          "page": 1,
+          "title": "Special provision in respect of certain industrial undertakings in North-Eastern Region"
+        },
+        {
+          "num": "11",
+          "text": "Income from property held for charitable or religious purposes.",
+          "page": 1,
+          "title": "Income from property held for charitable or religious purposes"
+        },
+        {
+          "num": "12",
+          "text": "Income of trusts or institutions from contributions.",
+          "page": 1,
+          "title": "Income of trusts or institutions from contributions"
+        },
+        {
+          "num": "12A",
+          "text": "Conditions for applicability of sections 11 and 12.",
+          "page": 1,
+          "title": "Conditions for applicability of sections 11 and 12"
+        },
+        {
+          "num": "12AA",
+          "text": "Procedure for registration.",
+          "page": 1,
+          "title": "Procedure for registration"
+        },
+        {
+          "num": "13",
+          "text": "Section 11 not to apply in certain cases.",
+          "page": 1,
+          "title": "Section 11 not to apply in certain cases"
+        },
+        {
+          "num": "13A",
+          "text": "Special provision relating to incomes of political parties.",
+          "page": 1,
+          "title": "Special provision relating to incomes of political parties"
+        },
+        {
+          "num": "13B",
+          "text": "Special provisions relating to voluntary contributions received by electoral trust.\n Subject to verification and confirmation by the Department.\n1\nCHAPTER IV\nCOMPUTATION OF TOTAL INCOME\nHeads of income\nSECTIONS",
+          "page": 1,
+          "title": "Special provisions relating to voluntary contributions received by electoral trust"
+        },
+        {
+          "num": "14",
+          "text": "Heads of income.",
+          "page": 2,
+          "title": "Heads of income"
+        },
+        {
+          "num": "14A",
+          "text": "Expenditure incurred in relation to income not includible in total income.\nA.—Salaries",
+          "page": 2,
+          "title": "Expenditure incurred in relation to income not includible in total income.\nA"
+        },
+        {
+          "num": "15",
+          "text": "Salaries.",
+          "page": 2,
+          "title": "Salaries"
+        },
+        {
+          "num": "16",
+          "text": "Deductions from salaries.",
+          "page": 2,
+          "title": "Deductions from salaries"
+        },
+        {
+          "num": "17",
+          "text": "“Salary”, “perquisite” and “profits in lieu of salary” defined.\nB.— [Omitted]",
+          "page": 2,
+          "title": "“Salary”, “perquisite” and “profits in lieu of salary” defined.\nB"
+        },
+        {
+          "num": "18",
+          "text": "[Omitted.].",
+          "page": 2,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "19",
+          "text": "[Omitted.].",
+          "page": 2,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "20",
+          "text": "[Omitted.].",
+          "page": 2,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "21",
+          "text": "[Omitted.].\nC.—Income from house property",
+          "page": 2,
+          "title": "[Omitted.].\nC"
+        },
+        {
+          "num": "22",
+          "text": "Income from house property.",
+          "page": 2,
+          "title": "Income from house property"
+        },
+        {
+          "num": "23",
+          "text": "Annual value how determined.",
+          "page": 2,
+          "title": "Annual value how determined"
+        },
+        {
+          "num": "24",
+          "text": "Deductions from income from house property.",
+          "page": 2,
+          "title": "Deductions from income from house property"
+        },
+        {
+          "num": "25",
+          "text": "Amounts not deductible from income from house property.",
+          "page": 2,
+          "title": "Amounts not deductible from income from house property"
+        },
+        {
+          "num": "25A",
+          "text": "Special provision for arrears of rent and unrealised rent received subsequently.",
+          "page": 2,
+          "title": "Special provision for arrears of rent and unrealised rent received subsequently"
+        },
+        {
+          "num": "26",
+          "text": "Property owned by co-owners.",
+          "page": 2,
+          "title": "Property owned by co-owners"
+        },
+        {
+          "num": "27",
+          "text": "“Owner of house property”, “annual charge”, etc., defined.\nD.—Profits and gains of business or profession",
+          "page": 2,
+          "title": "“Owner of house property”, “annual charge”, etc., defined.\nD"
+        },
+        {
+          "num": "28",
+          "text": "Profits and gains of business or profession.",
+          "page": 2,
+          "title": "Profits and gains of business or profession"
+        },
+        {
+          "num": "29",
+          "text": "Income from profits and gains of business or profession, how computed.",
+          "page": 2,
+          "title": "Income from profits and gains of business or profession, how computed"
+        },
+        {
+          "num": "30",
+          "text": "Rent, rates, taxes, repairs and insurance for buildings.",
+          "page": 2,
+          "title": "Rent, rates, taxes, repairs and insurance for buildings"
+        },
+        {
+          "num": "31",
+          "text": "Repairs and insurance of machinery, plant and furniture.",
+          "page": 2,
+          "title": "Repairs and insurance of machinery, plant and furniture"
+        },
+        {
+          "num": "32",
+          "text": "Depreciation.",
+          "page": 2,
+          "title": "Depreciation"
+        },
+        {
+          "num": "32A",
+          "text": "Investment allowance.",
+          "page": 2,
+          "title": "Investment allowance"
+        },
+        {
+          "num": "32AB",
+          "text": "Investment deposit account.",
+          "page": 2,
+          "title": "Investment deposit account"
+        },
+        {
+          "num": "32AC",
+          "text": "Investment in new plant or machinery.",
+          "page": 2,
+          "title": "Investment in new plant or machinery"
+        },
+        {
+          "num": "32AD",
+          "text": "Investment in new plant or machinery in notified backward areas in certain States.",
+          "page": 2,
+          "title": "Investment in new plant or machinery in notified backward areas in certain States"
+        },
+        {
+          "num": "33",
+          "text": "Development rebate.",
+          "page": 2,
+          "title": "Development rebate"
+        },
+        {
+          "num": "33A",
+          "text": "Development allowance.",
+          "page": 2,
+          "title": "Development allowance"
+        },
+        {
+          "num": "33AB",
+          "text": "Tea development account, coffee development account and rubber development account.\n2\nSECTIONS\n33ABA. Site Restoration Fund.",
+          "page": 2,
+          "title": "Tea development account, coffee development account and rubber development account.\n2\nSECTIONS\n33ABA. Site Restoration Fund"
+        },
+        {
+          "num": "33AC",
+          "text": "Reserves for shipping business.",
+          "page": 3,
+          "title": "Reserves for shipping business"
+        },
+        {
+          "num": "33B",
+          "text": "Rehabilitation allowance.",
+          "page": 3,
+          "title": "Rehabilitation allowance"
+        },
+        {
+          "num": "34",
+          "text": "Conditions for depreciation allowance and development rebate.",
+          "page": 3,
+          "title": "Conditions for depreciation allowance and development rebate"
+        },
+        {
+          "num": "34A",
+          "text": "Restriction on unabsorbed depreciation and unabsorbed investment allowance for limited period\nin case of certain domestic companies.",
+          "page": 3,
+          "title": "Restriction on unabsorbed depreciation and unabsorbed investment allowance for limited period\nin case of certain domestic companies"
+        },
+        {
+          "num": "35",
+          "text": "Expenditure on scientific research.",
+          "page": 3,
+          "title": "Expenditure on scientific research"
+        },
+        {
+          "num": "35A",
+          "text": "Expenditure on acquisition of patent rights or copyrights.",
+          "page": 3,
+          "title": "Expenditure on acquisition of patent rights or copyrights"
+        },
+        {
+          "num": "35AB",
+          "text": "Expenditure on know-how.\n35ABA. Expenditure for obtaining right to use spectrum for telecommunication services.\n35ABB. Expenditure for obtaining licence to operate telecommunication services.",
+          "page": 3,
+          "title": "Expenditure on know-how"
+        },
+        {
+          "num": "35AC",
+          "text": "Expenditure on eligible projects or schemes.",
+          "page": 3,
+          "title": "Expenditure on eligible projects or schemes"
+        },
+        {
+          "num": "35AD",
+          "text": "Deduction in respect of expenditure on specified business.",
+          "page": 3,
+          "title": "Deduction in respect of expenditure on specified business"
+        },
+        {
+          "num": "35B",
+          "text": "[Omitted.].",
+          "page": 3,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "35C",
+          "text": "[Omitted.].",
+          "page": 3,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "35CC",
+          "text": "[Omitted.].\n35CCA. Expenditure by way of payment to associations and institutions for carrying out rural\ndevelopment programmes.\n35CCB. Expenditure by way of payment to associations and institutions for carrying out programmes of\nconservation of natural resources.\n35CCC. Expenditure on agricultural extension project.\n35CCD. Expenditure on skill development project.",
+          "page": 3,
+          "title": "[Omitted"
+        },
+        {
+          "num": "35D",
+          "text": "Amortisation of certain preliminary expenses.",
+          "page": 3,
+          "title": "Amortisation of certain preliminary expenses"
+        },
+        {
+          "num": "35DD",
+          "text": "Amortisation of expenditure in case of amalgamation or demerger.\n35DDA. Amortisation of expenditure incurred under voluntary retirement scheme.",
+          "page": 3,
+          "title": "Amortisation of expenditure in case of amalgamation or demerger"
+        },
+        {
+          "num": "35E",
+          "text": "Deduction for expenditure on prospecting, etc., for certain minerals.",
+          "page": 3,
+          "title": "Deduction for expenditure on prospecting, etc., for certain minerals"
+        },
+        {
+          "num": "36",
+          "text": "Other deductions.",
+          "page": 3,
+          "title": "Other deductions"
+        },
+        {
+          "num": "37",
+          "text": "General.",
+          "page": 3,
+          "title": "General"
+        },
+        {
+          "num": "38",
+          "text": "Building, etc., partly used for business, etc., or not exclusively so used.",
+          "page": 3,
+          "title": "Building, etc., partly used for business, etc., or not exclusively so used"
+        },
+        {
+          "num": "39",
+          "text": "[Omitted.].",
+          "page": 3,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "40",
+          "text": "Amounts not deductible.",
+          "page": 3,
+          "title": "Amounts not deductible"
+        },
+        {
+          "num": "40A",
+          "text": "Expenses or payments not deductible in certain circumstances.",
+          "page": 3,
+          "title": "Expenses or payments not deductible in certain circumstances"
+        },
+        {
+          "num": "41",
+          "text": "Profits chargeable to tax.",
+          "page": 3,
+          "title": "Profits chargeable to tax"
+        },
+        {
+          "num": "42",
+          "text": "Special provision for deductions in the case of business for prospecting, etc., for mineral oil.",
+          "page": 3,
+          "title": "Special provision for deductions in the case of business for prospecting, etc., for mineral oil"
+        },
+        {
+          "num": "43",
+          "text": "Definitions of certain terms relevant to income from profits and gains of business or profession.",
+          "page": 3,
+          "title": "Definitions of certain terms relevant to income from profits and gains of business or profession"
+        },
+        {
+          "num": "43A",
+          "text": "Special provisions consequential to changes in rate of exchange of currency.",
+          "page": 3,
+          "title": "Special provisions consequential to changes in rate of exchange of currency"
+        },
+        {
+          "num": "43AA",
+          "text": "Taxation of foreign exchange fluctuation.",
+          "page": 3,
+          "title": "Taxation of foreign exchange fluctuation"
+        },
+        {
+          "num": "43B",
+          "text": "Certain deductions to be only on actual payment.",
+          "page": 3,
+          "title": "Certain deductions to be only on actual payment"
+        },
+        {
+          "num": "43C",
+          "text": "Special provision for computation of cost of acquisition of certain assets.",
+          "page": 3,
+          "title": "Special provision for computation of cost of acquisition of certain assets"
+        },
+        {
+          "num": "43CA",
+          "text": "Special provision for full value of consideration for transfer of assets other than capital assets\nin certain cases.",
+          "page": 3,
+          "title": "Special provision for full value of consideration for transfer of assets other than capital assets\nin certain cases"
+        },
+        {
+          "num": "43CB",
+          "text": "Computation of income from construction and service contracts.",
+          "page": 3,
+          "title": "Computation of income from construction and service contracts"
+        },
+        {
+          "num": "43D",
+          "text": "Special provision in case of income of public financial institutions, public companies, etc.",
+          "page": 3,
+          "title": "Special provision in case of income of public financial institutions, public companies, etc"
+        },
+        {
+          "num": "44",
+          "text": "Insurance business.",
+          "page": 3,
+          "title": "Insurance business"
+        },
+        {
+          "num": "44A",
+          "text": "Special provision for deduction in the case of trade, professional or similar association.",
+          "page": 3,
+          "title": "Special provision for deduction in the case of trade, professional or similar association"
+        },
+        {
+          "num": "44AA",
+          "text": "Maintenance of accounts by certain persons carrying on profession or business.",
+          "page": 3,
+          "title": "Maintenance of accounts by certain persons carrying on profession or business"
+        },
+        {
+          "num": "44AB",
+          "text": "Audit of accounts of certain persons carrying on business or profession.\n3\nSECTIONS",
+          "page": 3,
+          "title": "Audit of accounts of certain persons carrying on business or profession.\n3\nSECTIONS"
+        },
+        {
+          "num": "44AC",
+          "text": "[Omitted.].",
+          "page": 4,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "44AD",
+          "text": "Special provision for computing profits and gains of business on presumptive basis.\n44ADA. Special provision for computing profits and gains of profession on presumptive basis.",
+          "page": 4,
+          "title": "Special provision for computing profits and gains of business on presumptive basis"
+        },
+        {
+          "num": "44AE",
+          "text": "Special provision for computing profits and gains of business of plying, hiring or leasing goods\ncarriages.",
+          "page": 4,
+          "title": "Special provision for computing profits and gains of business of plying, hiring or leasing goods\ncarriages"
+        },
+        {
+          "num": "44AF",
+          "text": "Special provisions for computing profits and gains of retail business.",
+          "page": 4,
+          "title": "Special provisions for computing profits and gains of retail business"
+        },
+        {
+          "num": "44B",
+          "text": "Special provision for computing profits and gains of shipping business in the case of non-\nresidents.",
+          "page": 4,
+          "title": "Special provision for computing profits and gains of shipping business in the case of non-\nresidents"
+        },
+        {
+          "num": "44BB",
+          "text": "Special provision for computing profits and gains in connection with the business of exploration,\netc., of mineral oils.\n44BBA. Special provision for computing profits and gains of the business of operation of aircraft in\nthe case of non-residents.\n44BBB. Special provision for computing profits and gains of foreign companies engaged in the business\nof civil construction, etc., in certain turnkey power projects.",
+          "page": 4,
+          "title": "Special provision for computing profits and gains in connection with the business of exploration,\netc"
+        },
+        {
+          "num": "44C",
+          "text": "Deduction of head office expenditure in the case of non-residents.",
+          "page": 4,
+          "title": "Deduction of head office expenditure in the case of non-residents"
+        },
+        {
+          "num": "44D",
+          "text": "Special provisions for computing income by way of royalties, etc., in the case of foreign\ncompanies.",
+          "page": 4,
+          "title": "Special provisions for computing income by way of royalties, etc., in the case of foreign\ncompanies"
+        },
+        {
+          "num": "44DA",
+          "text": "Special provision for computing income by way of royalties, etc., in the case of non- residents.",
+          "page": 4,
+          "title": "Special provision for computing income by way of royalties, etc., in the case of non- residents"
+        },
+        {
+          "num": "44DB",
+          "text": "Special provision for computing deductions in the case of business reorganisation of\nco-operative banks.\nE.—Capital gains",
+          "page": 4,
+          "title": "Special provision for computing deductions in the case of business reorganisation of\nco-operative banks.\nE"
+        },
+        {
+          "num": "45",
+          "text": "Capital gains.",
+          "page": 4,
+          "title": "Capital gains"
+        },
+        {
+          "num": "46",
+          "text": "Capital gains on distribution of assets by companies in liquidation.",
+          "page": 4,
+          "title": "Capital gains on distribution of assets by companies in liquidation"
+        },
+        {
+          "num": "46A",
+          "text": "Capital gains on purchase by company of its own shares or other specified securities.",
+          "page": 4,
+          "title": "Capital gains on purchase by company of its own shares or other specified securities"
+        },
+        {
+          "num": "47",
+          "text": "Transactions not regarded as transfer.",
+          "page": 4,
+          "title": "Transactions not regarded as transfer"
+        },
+        {
+          "num": "47A",
+          "text": "Withdrawal of exemption in certain cases.",
+          "page": 4,
+          "title": "Withdrawal of exemption in certain cases"
+        },
+        {
+          "num": "48",
+          "text": "Mode of computation.",
+          "page": 4,
+          "title": "Mode of computation"
+        },
+        {
+          "num": "49",
+          "text": "Cost with reference to certain modes of acquisition.",
+          "page": 4,
+          "title": "Cost with reference to certain modes of acquisition"
+        },
+        {
+          "num": "50",
+          "text": "Special provision for computation of capital gains in case of depreciable assets.",
+          "page": 4,
+          "title": "Special provision for computation of capital gains in case of depreciable assets"
+        },
+        {
+          "num": "50A",
+          "text": "Special provision for cost of acquisition in case of depreciable asset.",
+          "page": 4,
+          "title": "Special provision for cost of acquisition in case of depreciable asset"
+        },
+        {
+          "num": "50B",
+          "text": "Special provision for computation of capital gains in case of slump sale.",
+          "page": 4,
+          "title": "Special provision for computation of capital gains in case of slump sale"
+        },
+        {
+          "num": "50C",
+          "text": "Special provision for full value of consideration in certain cases.",
+          "page": 4,
+          "title": "Special provision for full value of consideration in certain cases"
+        },
+        {
+          "num": "50CA",
+          "text": "Special provision for full value of consideration for transfer of share other than quoted share.",
+          "page": 4,
+          "title": "Special provision for full value of consideration for transfer of share other than quoted share"
+        },
+        {
+          "num": "50D",
+          "text": "Fair market value deemed to be full value of consideration in certain cases.",
+          "page": 4,
+          "title": "Fair market value deemed to be full value of consideration in certain cases"
+        },
+        {
+          "num": "51",
+          "text": "Advance money received.",
+          "page": 4,
+          "title": "Advance money received"
+        },
+        {
+          "num": "52",
+          "text": "[Omitted.].",
+          "page": 4,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "53",
+          "text": "[Omitted.].",
+          "page": 4,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "54",
+          "text": "Profit on sale of property used for residence.",
+          "page": 4,
+          "title": "Profit on sale of property used for residence"
+        },
+        {
+          "num": "54A",
+          "text": "[Omitted.].",
+          "page": 4,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "54B",
+          "text": "Capital gain on transfer of land used for agricultural purposes not to be charged in certain cases.",
+          "page": 4,
+          "title": "Capital gain on transfer of land used for agricultural purposes not to be charged in certain cases"
+        },
+        {
+          "num": "54C",
+          "text": "[Omitted.].",
+          "page": 4,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "54D",
+          "text": "Capital gain on compulsory acquisition of lands and buildings not to be charged in certain cases.",
+          "page": 4,
+          "title": "Capital gain on compulsory acquisition of lands and buildings not to be charged in certain cases"
+        },
+        {
+          "num": "54E",
+          "text": "Capital gain on transfer of capital assets not to be charged in certain cases.\n4\nSECTIONS",
+          "page": 4,
+          "title": "Capital gain on transfer of capital assets not to be charged in certain cases.\n4\nSECTIONS"
+        },
+        {
+          "num": "54EA",
+          "text": "Capital gain on transfer of long-term capital assets not to be charged in the case of investment\nin specified securities.",
+          "page": 5,
+          "title": "Capital gain on transfer of long-term capital assets not to be charged in the case of investment\nin specified securities"
+        },
+        {
+          "num": "54EB",
+          "text": "Capital gain on transfer of long-term capital assets not to be charged in certain cases.",
+          "page": 5,
+          "title": "Capital gain on transfer of long-term capital assets not to be charged in certain cases"
+        },
+        {
+          "num": "54EC",
+          "text": "Capital gain not to be charged on investment in certain bonds.",
+          "page": 5,
+          "title": "Capital gain not to be charged on investment in certain bonds"
+        },
+        {
+          "num": "54ED",
+          "text": "Capital gain on transfer of certain listed securities or unit not to be charged in certain cases.",
+          "page": 5,
+          "title": "Capital gain on transfer of certain listed securities or unit not to be charged in certain cases"
+        },
+        {
+          "num": "54EE",
+          "text": "Capital gain not to be charged on investment in units of a specified fund.",
+          "page": 5,
+          "title": "Capital gain not to be charged on investment in units of a specified fund"
+        },
+        {
+          "num": "54F",
+          "text": "Capital gain on transfer of certain capital assets not to be charged in case of investment in\nresidential house.",
+          "page": 5,
+          "title": "Capital gain on transfer of certain capital assets not to be charged in case of investment in\nresidential house"
+        },
+        {
+          "num": "54G",
+          "text": "Exemption of capital gains on transfer of assets in cases of shifting of industrial undertaking\nfrom urban area.",
+          "page": 5,
+          "title": "Exemption of capital gains on transfer of assets in cases of shifting of industrial undertaking\nfrom urban area"
+        },
+        {
+          "num": "54GA",
+          "text": "Exemption capital gains on transfer of assets in cases of shifting of industrial undertaking\nfrom urban area to any Special Economic Zone.",
+          "page": 5,
+          "title": "Exemption capital gains on transfer of assets in cases of shifting of industrial undertaking\nfrom urban area to any Special Economic Zone"
+        },
+        {
+          "num": "54GB",
+          "text": "Capital gain on transfer of residential property not to be charged in certain cases.",
+          "page": 5,
+          "title": "Capital gain on transfer of residential property not to be charged in certain cases"
+        },
+        {
+          "num": "54H",
+          "text": "Extension of time for acquiring new asset or depositing or investing amount of capital gain.",
+          "page": 5,
+          "title": "Extension of time for acquiring new asset or depositing or investing amount of capital gain"
+        },
+        {
+          "num": "55",
+          "text": "Meaning of “adjusted”, “cost of improvement” and “cost of acquisition”.",
+          "page": 5,
+          "title": "Meaning of “adjusted”, “cost of improvement” and “cost of acquisition”"
+        },
+        {
+          "num": "55A",
+          "text": "Reference to Valuation Officer.\nF.—Income from other sources",
+          "page": 5,
+          "title": "Reference to Valuation Officer.\nF"
+        },
+        {
+          "num": "56",
+          "text": "Income from other sources.",
+          "page": 5,
+          "title": "Income from other sources"
+        },
+        {
+          "num": "57",
+          "text": "Deductions.",
+          "page": 5,
+          "title": "Deductions"
+        },
+        {
+          "num": "58",
+          "text": "Amounts not deductible.",
+          "page": 5,
+          "title": "Amounts not deductible"
+        },
+        {
+          "num": "59",
+          "text": "Profits chargeable to tax.\nCHAPTER V\nINCOME OF OTHER PERSONS, INCLUDED IN ASSESSEE’S TOTAL INCOME",
+          "page": 5,
+          "title": "Profits chargeable to tax.\nCHAPTER V\nINCOME OF OTHER PERSONS, INCLUDED IN ASSESSEE’S TOTAL INCOME"
+        },
+        {
+          "num": "60",
+          "text": "Transfer of income where there is no transfer of assets.",
+          "page": 5,
+          "title": "Transfer of income where there is no transfer of assets"
+        },
+        {
+          "num": "61",
+          "text": "Revocable transfer of assets.",
+          "page": 5,
+          "title": "Revocable transfer of assets"
+        },
+        {
+          "num": "62",
+          "text": "Transfer irrevocable for a specified period.",
+          "page": 5,
+          "title": "Transfer irrevocable for a specified period"
+        },
+        {
+          "num": "63",
+          "text": "“Transfer” and “revocable transfer” defined.",
+          "page": 5,
+          "title": "“Transfer” and “revocable transfer” defined"
+        },
+        {
+          "num": "64",
+          "text": "Income of individual to include income of spouse, minor child, etc.",
+          "page": 5,
+          "title": "Income of individual to include income of spouse, minor child, etc"
+        },
+        {
+          "num": "65",
+          "text": "Liability of person in respect of income included in the income of another person.\nCHAPTER VI\nAGGREGATION OF INCOME AND SET OFF OR CARRY FORWARD OF LOSS\nAggregation of income",
+          "page": 5,
+          "title": "Liability of person in respect of income included in the income of another person"
+        },
+        {
+          "num": "66",
+          "text": "Total income.",
+          "page": 5,
+          "title": "Total income"
+        },
+        {
+          "num": "67",
+          "text": "[Omitted.].",
+          "page": 5,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "67A",
+          "text": "Method of computing a member’s share in income of association of persons or body of individuals.",
+          "page": 5,
+          "title": "Method of computing a member’s share in income of association of persons or body of individuals"
+        },
+        {
+          "num": "68",
+          "text": "Cash credits.",
+          "page": 5,
+          "title": "Cash credits"
+        },
+        {
+          "num": "69",
+          "text": "Unexplained investments.",
+          "page": 5,
+          "title": "Unexplained investments"
+        },
+        {
+          "num": "69A",
+          "text": "Unexplained money, etc.",
+          "page": 5,
+          "title": "Unexplained money, etc"
+        },
+        {
+          "num": "69B",
+          "text": "Amount of investments, etc., not fully disclosed in books of account.",
+          "page": 5,
+          "title": "Amount of investments, etc., not fully disclosed in books of account"
+        },
+        {
+          "num": "69C",
+          "text": "Unexplained expenditure, etc.",
+          "page": 5,
+          "title": "Unexplained expenditure, etc"
+        },
+        {
+          "num": "69D",
+          "text": "Amount borrowed or repaid on hundi.\n5\nSet off, or carry forward and set off\nSECTIONS",
+          "page": 5,
+          "title": "Amount borrowed or repaid on hundi.\n5\nSet off, or carry forward and set off\nSECTIONS"
+        },
+        {
+          "num": "70",
+          "text": "Set off of loss from one source against income from another source under the same head of\nincome.",
+          "page": 6,
+          "title": "Set off of loss from one source against income from another source under the same head of\nincome"
+        },
+        {
+          "num": "71",
+          "text": "Set off of loss from one head against income from another.",
+          "page": 6,
+          "title": "Set off of loss from one head against income from another"
+        },
+        {
+          "num": "71A",
+          "text": "Transitional provisions for set off of loss under the head “Income from house property”.",
+          "page": 6,
+          "title": "Transitional provisions for set off of loss under the head “Income from house property”"
+        },
+        {
+          "num": "71B",
+          "text": "Carry forward and set off of loss from house property.",
+          "page": 6,
+          "title": "Carry forward and set off of loss from house property"
+        },
+        {
+          "num": "72",
+          "text": "Carry forward and set off of business losses.",
+          "page": 6,
+          "title": "Carry forward and set off of business losses"
+        },
+        {
+          "num": "72A",
+          "text": "Provisions relating to carry forward and set-off of accumulated loss and unabsorbed depreciation\nallowance in amalgamation or demerger, etc.",
+          "page": 6,
+          "title": "Provisions relating to carry forward and set-off of accumulated loss and unabsorbed depreciation\nallowance in amalgamation or demerger, etc"
+        },
+        {
+          "num": "72AA",
+          "text": "Provisions relating to carry forward and set-off of accumulated loss and unabsorbed\ndepreciation allowance in scheme of amalgamation of banking company in certain cases.",
+          "page": 6,
+          "title": "Provisions relating to carry forward and set-off of accumulated loss and unabsorbed\ndepreciation allowance in scheme of amalgamation of bank"
+        },
+        {
+          "num": "72AB",
+          "text": "Provisions relating to carry forward and set-off of accumulated loss and unabsorbed\ndepreciation allowance in business reorganisation of co-operative banks.",
+          "page": 6,
+          "title": "Provisions relating to carry forward and set-off of accumulated loss and unabsorbed\ndepreciation allowance in business reorganisation of co-"
+        },
+        {
+          "num": "73",
+          "text": "Losses in speculation business.",
+          "page": 6,
+          "title": "Losses in speculation business"
+        },
+        {
+          "num": "73A",
+          "text": "Carry forward and set off of losses by specified business.",
+          "page": 6,
+          "title": "Carry forward and set off of losses by specified business"
+        },
+        {
+          "num": "74",
+          "text": "Losses under the head “Capital gains”.",
+          "page": 6,
+          "title": "Losses under the head “Capital gains”"
+        },
+        {
+          "num": "74A",
+          "text": "Losses from certain specified sources falling under the head “Income from other sources”.",
+          "page": 6,
+          "title": "Losses from certain specified sources falling under the head “Income from other sources”"
+        },
+        {
+          "num": "75",
+          "text": "Losses of firms.",
+          "page": 6,
+          "title": "Losses of firms"
+        },
+        {
+          "num": "78",
+          "text": "Carry forward and set off of losses in case of change in constitution of firm or on succession.",
+          "page": 6,
+          "title": "Carry forward and set off of losses in case of change in constitution of firm or on succession"
+        },
+        {
+          "num": "79",
+          "text": "Carry forward and set off of losses in case of certain companies.",
+          "page": 6,
+          "title": "Carry forward and set off of losses in case of certain companies"
+        },
+        {
+          "num": "80",
+          "text": "Submission of return for losses.\nCHAPTER VI-A\nDEDUCTIONS TO BE MADE IN COMPUTING\nTOTAL INCOME\nA.—General",
+          "page": 6,
+          "title": "Submission of return for losses.\nCHAPTER VI-A\nDEDUCTIONS TO BE MADE IN COMPUTING\nTOTAL INCOME\nA"
+        },
+        {
+          "num": "80A",
+          "text": "Deductions to be made in computing total income.",
+          "page": 6,
+          "title": "Deductions to be made in computing total income"
+        },
+        {
+          "num": "80AA",
+          "text": "[Omitted.].",
+          "page": 6,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80AB",
+          "text": "Deductions to be made with reference to the income included in the gross total income.",
+          "page": 6,
+          "title": "Deductions to be made with reference to the income included in the gross total income"
+        },
+        {
+          "num": "80AC",
+          "text": "Deduction not to be allowed unless return furnished.",
+          "page": 6,
+          "title": "Deduction not to be allowed unless return furnished"
+        },
+        {
+          "num": "80B",
+          "text": "Definitions.\nB.—Deductions in respect of certain payments",
+          "page": 6,
+          "title": "Definitions.\nB"
+        },
+        {
+          "num": "80C",
+          "text": "Deduction in respect of life insurance premia, deferred annuity, contributions to provident fund,\nsubscription to certain equity shares or debentures, etc.",
+          "page": 6,
+          "title": "Deduction in respect of life insurance premia, deferred annuity, contributions to provident fund,\nsubscription to certain equity shares or d"
+        },
+        {
+          "num": "80CC",
+          "text": "[Omitted.].\n80CCA. Deduction in respect of deposits under National Savings Scheme or payment to a deferred\nannuity plan.\n80CCB. Deduction in respect of investment made under Equity Linked Savings Scheme.\n80CCC. Deduction in respect of contribution to certain pension funds.\n80CCD. Deduction in respect of contribution to pension scheme of Central Government.\n80CCE. Limit on deductions under sections 80C, 80CCC and 80CCD.\n6\nSECTIONS\n80CCF. Deduction in respect of subscription to long-term infrastructure bonds.\n80CCG. Deduction in respect of investment made under an equity savings scheme.",
+          "page": 6,
+          "title": "[Omitted"
+        },
+        {
+          "num": "80D",
+          "text": "Deduction in respect of health insurance premia.",
+          "page": 7,
+          "title": "Deduction in respect of health insurance premia"
+        },
+        {
+          "num": "80DD",
+          "text": "Deduction in respect of maintenance including medical treatment of a dependant who is a\nperson with disability.\n80DDB. Deduction in respect of medical treatment, etc.",
+          "page": 7,
+          "title": "Deduction in respect of maintenance including medical treatment of a dependant who is a\nperson with disability"
+        },
+        {
+          "num": "80E",
+          "text": "Deduction in respect of interest on loan taken for higher education.",
+          "page": 7,
+          "title": "Deduction in respect of interest on loan taken for higher education"
+        },
+        {
+          "num": "80EE",
+          "text": "Deduction in respect of interest on loan taken for residential house property.",
+          "page": 7,
+          "title": "Deduction in respect of interest on loan taken for residential house property"
+        },
+        {
+          "num": "80F",
+          "text": "[Omitted.].",
+          "page": 7,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80FF",
+          "text": "[Omitted.].",
+          "page": 7,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80G",
+          "text": "Deduction in respect of donations to certain funds, charitable institutions, etc.",
+          "page": 7,
+          "title": "Deduction in respect of donations to certain funds, charitable institutions, etc"
+        },
+        {
+          "num": "80GG",
+          "text": "Deductions in respect of rents paid.\n80GGA. Deduction in respect of certain donations for scientific research or rural development.\n80GGB. Deduction in respect of contributions given by companies to political parties.\n80GGC. Deduction in respect of contributions given by any person to political parties.\nC.-Deductions in respect of certain incomes",
+          "page": 7,
+          "title": "Deductions in respect of rents paid"
+        },
+        {
+          "num": "80H",
+          "text": "[Omitted.].",
+          "page": 7,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80HH",
+          "text": "Deduction in respect of profits and gains from newly established industrial undertakings or\nhotel business in backward areas.\n80HHA. Deduction in respect of profits and gains from newly established small-scale industrial\nundertakings in certain areas.\n80HHB. Deduction in respect of profits and gains from projects outside India.\n80HHBA. Deduction in respect of profits and gains from housing projects in certain cases.\n80HHC. Deduction in respect of profits retained for export business.\n80HHD. Deduction in respect of earnings in convertible foreign exchange.\n80HHE. Deduction in respect of profits from export of computer software, etc.\n80HHF. Deduction in respect of profits and gains from export or transfer of film software, etc.\n80-I. Deduction in respect of profits and gains from industrial undertakings after a certain date, etc.\n80-IA. Deductions in respect of profits and gains from industrial undertakings or enterprises engaged\nin infrastructure development, etc.\n80-IAB. Deductions in respect of profits and gains by an undertaking or enterprise engaged in\ndevelopment of Special Economic Zone.\n80-IAC. Special provision in respect of specified business.\n7\nSECTIONS\n80-IB. Deduction in respect of profits and gains from certain industrial undertakings other than\ninfrastructure development undertakings.\n80-IBA. Deductions in respect of profits and gains from housing projects.\n80-IC. Special provisions in respect of certain undertakings or enterprises in certain special category\nStates.\n80-ID. Deduction in respect of profits and gains from business of hotels and convention centres in\nspecified area.\n80-IE. Special provisions in respect of certain undertakings in North-Eastern States.",
+          "page": 7,
+          "title": "Deduction in respect of profits and gains from newly established industrial undertakings or\nhotel business in backward areas"
+        },
+        {
+          "num": "80J",
+          "text": "[Omitted.].",
+          "page": 8,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80JJ",
+          "text": "[Omitted.].\n80JJA. Deduction in respect of profits and gains from business of collecting and processing of\nbio-degradable waste.\n80JJAA. Deduction in respect of employment of new workmen.",
+          "page": 8,
+          "title": "[Omitted"
+        },
+        {
+          "num": "80K",
+          "text": "[Omitted.].",
+          "page": 8,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80L",
+          "text": "[Omitted.].",
+          "page": 8,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80LA",
+          "text": "Deductions in respect of certain incomes of Offshore Banking Units and International\nFinancial Services Centre.",
+          "page": 8,
+          "title": "Deductions in respect of certain incomes of Offshore Banking Units and International\nFinancial Services Centre"
+        },
+        {
+          "num": "80M",
+          "text": "[Omitted.].",
+          "page": 8,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80MM",
+          "text": "[Omitted.].",
+          "page": 8,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80N",
+          "text": "[Omitted.].\n80-O. Deduction in respect of royalties, etc., from certain foreign enterprises.",
+          "page": 8,
+          "title": "[Omitted.].\n80-O. Deduction in respect of royalties, etc., from certain foreign enterprises"
+        },
+        {
+          "num": "80P",
+          "text": "Deduction in respect of income of co-operative societies.",
+          "page": 8,
+          "title": "Deduction in respect of income of co-operative societies"
+        },
+        {
+          "num": "80PA",
+          "text": "Deduction in respect of certain income of Producer Companies.",
+          "page": 8,
+          "title": "Deduction in respect of certain income of Producer Companies"
+        },
+        {
+          "num": "80Q",
+          "text": "Deduction in respect of profits and gains from the business of publication of books.",
+          "page": 8,
+          "title": "Deduction in respect of profits and gains from the business of publication of books"
+        },
+        {
+          "num": "80QQ",
+          "text": "[Omitted.].\n80QQA. Deduction in respect of professional income of authors of text books in Indian languages.\n80QQB. Deduction in respect of royalty income, etc., of authors of certain books other than\ntext-books.",
+          "page": 8,
+          "title": "[Omitted"
+        },
+        {
+          "num": "80R",
+          "text": "Deduction in respect of remuneration from certain foreign sources in the case of professors,\nteachers, etc.",
+          "page": 8,
+          "title": "Deduction in respect of remuneration from certain foreign sources in the case of professors,\nteachers, etc"
+        },
+        {
+          "num": "80RR",
+          "text": "Deduction in respect of professional income from foreign sources in certain cases.\n80RRA. Deduction in respect of remuneration received for services rendered outside India.\n80RRB. Deduction in respect of royalty on patents.",
+          "page": 8,
+          "title": "Deduction in respect of professional income from foreign sources in certain cases"
+        },
+        {
+          "num": "80S",
+          "text": "[Omitted.].",
+          "page": 8,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80T",
+          "text": "[Omitted.].",
+          "page": 8,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80TT",
+          "text": "[Omitted.].\nCA.—Deductions in respect of other incomes\n80TTA. Deduction in respect of interest on deposits in savings account.\n80TTB. Deduction in respect of interest on deposits in case of senior citizens.\nD.—Other deductions",
+          "page": 8,
+          "title": "[Omitted.].\nCA"
+        },
+        {
+          "num": "80U",
+          "text": "Deduction in case of a person with disability.\n8\nSECTIONS",
+          "page": 8,
+          "title": "Deduction in case of a person with disability.\n8\nSECTIONS"
+        },
+        {
+          "num": "80V",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "80VV",
+          "text": "[Omitted.].\nCHAPTER VI-B\nRESTRICTION ON CERTAIN DEDUCTIONS IN THE CASE OF COMPANIES\n80VVA. [Omitted.].\nCHAPTER VII\nINCOMES FORMING PART OF TOTAL INCOME\nON WHICH NO INCOME-TAX IS PAYABLE",
+          "page": 9,
+          "title": "[Omitted"
+        },
+        {
+          "num": "81",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "82",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "83",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "84",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "85",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "85A",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "85B",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "85C",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "86",
+          "text": "Share of member of an association of persons or body of individuals in the income of the\nassociation or body.",
+          "page": 9,
+          "title": "Share of member of an association of persons or body of individuals in the income of the\nassociation or body"
+        },
+        {
+          "num": "86A",
+          "text": "[Omitted.].\nCHAPTER VIII\nREBATES AND RELIEFS\nA.—Rebate of income-tax",
+          "page": 9,
+          "title": "[Omitted.].\nCHAPTER VIII\nREBATES AND RELIEFS\nA"
+        },
+        {
+          "num": "87",
+          "text": "Rebate to be allowed in computing income-tax.",
+          "page": 9,
+          "title": "Rebate to be allowed in computing income-tax"
+        },
+        {
+          "num": "87A",
+          "text": "Rebate of income-tax in case of certain individuals.",
+          "page": 9,
+          "title": "Rebate of income-tax in case of certain individuals"
+        },
+        {
+          "num": "88",
+          "text": "Rebate on life insurance premia, contribution to provident fund, etc.",
+          "page": 9,
+          "title": "Rebate on life insurance premia, contribution to provident fund, etc"
+        },
+        {
+          "num": "88A",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "88B",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "88C",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "88D",
+          "text": "[Omitted.].",
+          "page": 9,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "88E",
+          "text": "Rebate in respect of securities transaction tax.\nB.—Relief for income-tax",
+          "page": 9,
+          "title": "Rebate in respect of securities transaction tax.\nB"
+        },
+        {
+          "num": "89",
+          "text": "Relief when salary, etc., is paid in arrears or in advance.",
+          "page": 9,
+          "title": "Relief when salary, etc., is paid in arrears or in advance"
+        },
+        {
+          "num": "89A",
+          "text": "[Omitted.].\nCHAPTER IX\nDOUBLE TAXATION RELIEF",
+          "page": 9,
+          "title": "[Omitted.].\nCHAPTER IX\nDOUBLE TAXATION RELIEF"
+        },
+        {
+          "num": "90",
+          "text": "Agreement with foreign countries or specified territories.",
+          "page": 9,
+          "title": "Agreement with foreign countries or specified territories"
+        },
+        {
+          "num": "90A",
+          "text": "Adoption by Central Government of agreement between specified associations for double\ntaxation relief.",
+          "page": 9,
+          "title": "Adoption by Central Government of agreement between specified associations for double\ntaxation relief"
+        },
+        {
+          "num": "91",
+          "text": "Countries with which no agreement exists.\nCHAPTER X\nSPECIAL PROVISIONS RELATING TO AVOIDANCE OF TAX",
+          "page": 9,
+          "title": "Countries with which no agreement exists.\nCHAPTER X\nSPECIAL PROVISIONS RELATING TO AVOIDANCE OF TAX"
+        },
+        {
+          "num": "92",
+          "text": "Computation of income from international transaction having regard to arm’s length price.",
+          "page": 9,
+          "title": "Computation of income from international transaction having regard to arm’s length price"
+        },
+        {
+          "num": "92A",
+          "text": "Meaning of associated enterprise.",
+          "page": 9,
+          "title": "Meaning of associated enterprise"
+        },
+        {
+          "num": "92B",
+          "text": "Meaning of international transaction.\n9\nSECTIONS",
+          "page": 9,
+          "title": "Meaning of international transaction.\n9\nSECTIONS"
+        },
+        {
+          "num": "92BA",
+          "text": "Meaning of specified domestic transaction.",
+          "page": 10,
+          "title": "Meaning of specified domestic transaction"
+        },
+        {
+          "num": "92C",
+          "text": "Computation of arm’s length price.",
+          "page": 10,
+          "title": "Computation of arm’s length price"
+        },
+        {
+          "num": "92CA",
+          "text": "Reference to Transfer Pricing Officer.",
+          "page": 10,
+          "title": "Reference to Transfer Pricing Officer"
+        },
+        {
+          "num": "92CB",
+          "text": "Power of Board to make safe harbour rules.",
+          "page": 10,
+          "title": "Power of Board to make safe harbour rules"
+        },
+        {
+          "num": "92CC",
+          "text": "Advance pricing agreement.",
+          "page": 10,
+          "title": "Advance pricing agreement"
+        },
+        {
+          "num": "92CD",
+          "text": "Effect to advance pricing agreement.",
+          "page": 10,
+          "title": "Effect to advance pricing agreement"
+        },
+        {
+          "num": "92CE",
+          "text": "Secondary adjustment in certain cases.",
+          "page": 10,
+          "title": "Secondary adjustment in certain cases"
+        },
+        {
+          "num": "92D",
+          "text": "Maintenance and keeping of information and document by persons entering into an international\ntransaction or specified domestic transaction.",
+          "page": 10,
+          "title": "Maintenance and keeping of information and document by persons entering into an international\ntransaction or specified domestic transaction"
+        },
+        {
+          "num": "92E",
+          "text": "Report from an accountant to be furnished by persons entering into international transaction or\nspecified domestic transaction.",
+          "page": 10,
+          "title": "Report from an accountant to be furnished by persons entering into international transaction or\nspecified domestic transaction"
+        },
+        {
+          "num": "92F",
+          "text": "Definitions of certain terms relevant to computation of arm’s length price, etc.",
+          "page": 10,
+          "title": "Definitions of certain terms relevant to computation of arm’s length price, etc"
+        },
+        {
+          "num": "93",
+          "text": "Avoidance of income-tax by transactions resulting in transfer of income to non- residents.",
+          "page": 10,
+          "title": "Avoidance of income-tax by transactions resulting in transfer of income to non- residents"
+        },
+        {
+          "num": "94",
+          "text": "Avoidance of tax by certain transactions in securities.",
+          "page": 10,
+          "title": "Avoidance of tax by certain transactions in securities"
+        },
+        {
+          "num": "94A",
+          "text": "Special measures in respect of transactions with persons located in notified jurisdictional\narea.",
+          "page": 10,
+          "title": "Special measures in respect of transactions with persons located in notified jurisdictional\narea"
+        },
+        {
+          "num": "94B",
+          "text": "Limitation on interest deduction in certain cases.\nCHAPTER XA\nGENERAL ANTI-AVOIDANCE RULE",
+          "page": 10,
+          "title": "Limitation on interest deduction in certain cases.\nCHAPTER XA\nGENERAL ANTI-AVOIDANCE RULE"
+        },
+        {
+          "num": "95",
+          "text": "Applicability of General Anti-Avoidance Rule.",
+          "page": 10,
+          "title": "Applicability of General Anti-Avoidance Rule"
+        },
+        {
+          "num": "96",
+          "text": "Impermissible avoidance arrangement.",
+          "page": 10,
+          "title": "Impermissible avoidance arrangement"
+        },
+        {
+          "num": "97",
+          "text": "Arrangement to lack commercial substance.",
+          "page": 10,
+          "title": "Arrangement to lack commercial substance"
+        },
+        {
+          "num": "98",
+          "text": "Consequences of impermissible avoidance arrangement.",
+          "page": 10,
+          "title": "Consequences of impermissible avoidance arrangement"
+        },
+        {
+          "num": "99",
+          "text": "Treatment of connected person and accommodating party.",
+          "page": 10,
+          "title": "Treatment of connected person and accommodating party"
+        },
+        {
+          "num": "100",
+          "text": "Application of this Chapter.",
+          "page": 10,
+          "title": "Application of this Chapter"
+        },
+        {
+          "num": "101",
+          "text": "Framing of guidelines.",
+          "page": 10,
+          "title": "Framing of guidelines"
+        },
+        {
+          "num": "102",
+          "text": "Definitions.\nCHAPTER XI\nADDITIONAL INCOME-TAX ON UNDISTRIBUTED PROFITS",
+          "page": 10,
+          "title": "Definitions.\nCHAPTER XI\nADDITIONAL INCOME-TAX ON UNDISTRIBUTED PROFITS"
+        },
+        {
+          "num": "103",
+          "text": "[Omitted.].",
+          "page": 10,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "104",
+          "text": "[Omitted.].",
+          "page": 10,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "105",
+          "text": "[Omitted.].",
+          "page": 10,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "106",
+          "text": "[Omitted.].",
+          "page": 10,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "107",
+          "text": "[Omitted.].",
+          "page": 10,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "107A",
+          "text": "[Omitted.].",
+          "page": 10,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "108",
+          "text": "[Omitted.].",
+          "page": 10,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "109",
+          "text": "[Omitted.].\nCHAPTER XII\nDETERMINATION OF TAX IN CERTAIN SPECIAL CASES",
+          "page": 10,
+          "title": "[Omitted.].\nCHAPTER XII\nDETERMINATION OF TAX IN CERTAIN SPECIAL CASES"
+        },
+        {
+          "num": "110",
+          "text": "Determination of tax where total income includes income on which no tax is payable.",
+          "page": 10,
+          "title": "Determination of tax where total income includes income on which no tax is payable"
+        },
+        {
+          "num": "111",
+          "text": "Tax on accumulated balance of recognised provident fund.",
+          "page": 10,
+          "title": "Tax on accumulated balance of recognised provident fund"
+        },
+        {
+          "num": "111A",
+          "text": "Tax on short-term capital gains in certain cases.",
+          "page": 10,
+          "title": "Tax on short-term capital gains in certain cases"
+        },
+        {
+          "num": "112",
+          "text": "Tax on long-term capital gains.\n10\nSECTIONS",
+          "page": 10,
+          "title": "Tax on long-term capital gains.\n10\nSECTIONS"
+        },
+        {
+          "num": "112A",
+          "text": "Tax on long-term capital gains in certain cases.",
+          "page": 11,
+          "title": "Tax on long-term capital gains in certain cases"
+        },
+        {
+          "num": "113",
+          "text": "Tax in the case of block assessment of search cases.",
+          "page": 11,
+          "title": "Tax in the case of block assessment of search cases"
+        },
+        {
+          "num": "114",
+          "text": "[Omitted.].",
+          "page": 11,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "115",
+          "text": "[Omitted.].",
+          "page": 11,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "115A",
+          "text": "Tax on dividends, royalty and technical service fees in the case of foreign Companies.",
+          "page": 11,
+          "title": "Tax on dividends, royalty and technical service fees in the case of foreign Companies"
+        },
+        {
+          "num": "115AB",
+          "text": "Tax on income from units purchased in foreign currency or capital gains arising from their\ntransfer.",
+          "page": 11,
+          "title": "Tax on income from units purchased in foreign currency or capital gains arising from their\ntransfer"
+        },
+        {
+          "num": "115AC",
+          "text": "Tax on income from bonds or Global Depository Receipts purchased in foreign currency or\ncapital gains arising from their transfer.\n115ACA. Tax on income from Global Depository Receipts purchased in foreign currency or capital\ngains arising from their transfer.",
+          "page": 11,
+          "title": "Tax on income from bonds or Global Depository Receipts purchased in foreign currency or\ncapital gains arising from their transfer"
+        },
+        {
+          "num": "115AD",
+          "text": "Tax on income of Foreign Institutional Investors from securities or capital gains arising from\ntheir transfer.",
+          "page": 11,
+          "title": "Tax on income of Foreign Institutional Investors from securities or capital gains arising from\ntheir transfer"
+        },
+        {
+          "num": "115B",
+          "text": "Tax on profits and gains of life insurance business.",
+          "page": 11,
+          "title": "Tax on profits and gains of life insurance business"
+        },
+        {
+          "num": "115BA",
+          "text": "Tax on income of certain domestic companies.",
+          "page": 11,
+          "title": "Tax on income of certain domestic companies"
+        },
+        {
+          "num": "115BB",
+          "text": "Tax on winnings from lotteries, crossword puzzles, races including horse races, card games\nand other games of any sort or gambling or betting of any form or nature whatsoever.\n115BBA. Tax on non-resident sportsmen or sports associations.\n115BBB. Tax on income from units of an open-ended equity oriented fund of the Unit Trust of India\nor of Mutual Funds.\n115BBC. Anonymous donations to be taxed in certain cases.\n115BBD. Tax on certain dividends received from foreign companies.\n115BBDA. Tax on certain dividends received from domestic companies.\n115BBE. Tax on income referred to in section 68 or section 69 or section 69A or section 69B or\nsection 69C or section 69D.\n115BBF. Tax on income from patent.\n115BBG. Tax on income from transfer of carbon credits.\nCHAPTER XIIA\nSPECIAL PROVIONS RELATING TO CERTAIN INCOMES OF NON-RESIDENTS",
+          "page": 11,
+          "title": "Tax on winnings from lotteries, crossword puzzles, races including horse races, card games\nand other games of any sort or gambling or bettin"
+        },
+        {
+          "num": "115C",
+          "text": "Definitions.",
+          "page": 11,
+          "title": "Definitions"
+        },
+        {
+          "num": "115D",
+          "text": "Special provision for computation of total income of non-residents.",
+          "page": 11,
+          "title": "Special provision for computation of total income of non-residents"
+        },
+        {
+          "num": "115E",
+          "text": "Tax on investment income and long-term capital gains.",
+          "page": 11,
+          "title": "Tax on investment income and long-term capital gains"
+        },
+        {
+          "num": "115F",
+          "text": "Capital gains on transfer of foreign exchange assets not to be charged in certain cases.",
+          "page": 11,
+          "title": "Capital gains on transfer of foreign exchange assets not to be charged in certain cases"
+        },
+        {
+          "num": "115G",
+          "text": "Return of income not to be filed in certain cases.",
+          "page": 11,
+          "title": "Return of income not to be filed in certain cases"
+        },
+        {
+          "num": "115H",
+          "text": "Benefit under Chapter to be available in certain cases even after the assessee become resident.\n115-I. Chapter not to apply if the assessee so chooses.\n11\nCHAPTER XII-B\nSPECIAL PROVISIONS RELATING TO CERTAIN COMPANIES\nSECTIONS",
+          "page": 11,
+          "title": "Benefit under Chapter to be available in certain cases even after the assessee become resident"
+        },
+        {
+          "num": "115J",
+          "text": "Special provisions relating to certain companies.",
+          "page": 12,
+          "title": "Special provisions relating to certain companies"
+        },
+        {
+          "num": "115JA",
+          "text": "Deemed income relating to certain companies.\n115JAA. Tax credit in respect of tax paid on deemed income relating to certain companies.",
+          "page": 12,
+          "title": "Deemed income relating to certain companies.\n115JAA. Tax credit in respect of tax paid on deemed income relating to certain companies"
+        },
+        {
+          "num": "115JB",
+          "text": "Special provision for payment of tax by certain companies.\nCHAPTER XII-BA\nSPECIAL PROVISIONS RELATING TO CERTAIN PERSONS OTHER THAN A COMPANY",
+          "page": 12,
+          "title": "Special provision for payment of tax by certain companies"
+        },
+        {
+          "num": "115JC",
+          "text": "Special provisions for payment of tax by certain persons other than a company.",
+          "page": 12,
+          "title": "Special provisions for payment of tax by certain persons other than a company"
+        },
+        {
+          "num": "115JD",
+          "text": "Tax credit for alternate minimum tax.",
+          "page": 12,
+          "title": "Tax credit for alternate minimum tax"
+        },
+        {
+          "num": "115JE",
+          "text": "Application of other provisions of this Act.\n115JEE. Application of this Chapter to certain persons.",
+          "page": 12,
+          "title": "Application of other provisions of this Act.\n115JEE. Application of this Chapter to certain persons"
+        },
+        {
+          "num": "115JF",
+          "text": "Interpretation in this Chapter.\nCHAPTER XII-BB\nSPECIAL PROVISIONS RELATING TO CONVERSION OF INIDAN BRANCH OF A\nFOREIGN BANK INTO A SUBSIDIARY COMPANY",
+          "page": 12,
+          "title": "Interpretation in this Chapter"
+        },
+        {
+          "num": "115JG",
+          "text": "Conversion of an Indian branch of foreign company into subsidiary Indian company.\nCHAPTER XII-BC\nSPECIAL PROVISIONS RELATING TO FOREIGN COMPANY SAID TO\nBE RESIDENT IN INIDA",
+          "page": 12,
+          "title": "Conversion of an Indian branch of foreign company into subsidiary Indian company"
+        },
+        {
+          "num": "115JH",
+          "text": "Foreign company said to be resident in india.\nCHAPTER XII-C\nSPECIAL PROVISIONS RELATING TO RETAIL TRADE, ETC.",
+          "page": 12,
+          "title": "Foreign company said to be resident in india.\nCHAPTER XII-C\nSPECIAL PROVISIONS RELATING TO RETAIL TRADE, ETC"
+        },
+        {
+          "num": "115K",
+          "text": "[Omitted.].",
+          "page": 12,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "115L",
+          "text": "[Omitted.].",
+          "page": 12,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "115M",
+          "text": "[Omitted.].",
+          "page": 12,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "115N",
+          "text": "[Omitted.].\nCHAPTER XII-D\nSPECIAL PROVISIONS RELATING TO TAX ON DISTRIBUTED\nPROFITS OF DOMESTIC COMPANIES\n115-O. Tax on distributed profits of domestic companies.",
+          "page": 12,
+          "title": "[Omitted"
+        },
+        {
+          "num": "115P",
+          "text": "Interest payable for non-payment of tax by domestic companies.",
+          "page": 12,
+          "title": "Interest payable for non-payment of tax by domestic companies"
+        },
+        {
+          "num": "115Q",
+          "text": "When company is deemed to be in default.\nCHAPTER XII-DA\nSPECIAL PROVISIONS RELATING TO TAX ON DISTRIBUTED INCOME OF DOMESTIC\nCOMPANY FOR BUY-BACK OF SHARES",
+          "page": 12,
+          "title": "When company is deemed to be in default"
+        },
+        {
+          "num": "115QA",
+          "text": "Tax on distributed income to shareholders.\n12\nSECTIONS",
+          "page": 12,
+          "title": "Tax on distributed income to shareholders.\n12\nSECTIONS"
+        },
+        {
+          "num": "115QB",
+          "text": "Interest payable for non-payment of tax by company.",
+          "page": 13,
+          "title": "Interest payable for non-payment of tax by company"
+        },
+        {
+          "num": "115QC",
+          "text": "When company is deemed to be assessee in default.\nCHAPTER XII-E\nSPECIAL PROVISIONS RELATING TO TAX ON DISTRIBUTED INCOME",
+          "page": 13,
+          "title": "When company is deemed to be assessee in default.\nCHAPTER XII-E\nSPECIAL PROVISIONS RELATING TO TAX ON DISTRIBUTED INCOME"
+        },
+        {
+          "num": "115R",
+          "text": "Tax on distributed income to unit holders.",
+          "page": 13,
+          "title": "Tax on distributed income to unit holders"
+        },
+        {
+          "num": "115S",
+          "text": "Interest payable for non-payment of tax.",
+          "page": 13,
+          "title": "Interest payable for non-payment of tax"
+        },
+        {
+          "num": "115T",
+          "text": "Unit trust of India or mutual fund to be an assessee in default.\nCHAPTER XII-EA\nSPECIAL PROVISIONS RELATING TO TAX ON DISTRIBUTED INCOME BY\nSECURITISATION TRUSTS",
+          "page": 13,
+          "title": "Unit trust of India or mutual fund to be an assessee in default"
+        },
+        {
+          "num": "115TA",
+          "text": "Tax on distributed income to investors.",
+          "page": 13,
+          "title": "Tax on distributed income to investors"
+        },
+        {
+          "num": "115TB",
+          "text": "Interest payable for non-payment of tax.",
+          "page": 13,
+          "title": "Interest payable for non-payment of tax"
+        },
+        {
+          "num": "115TC",
+          "text": "Securitisation trust to be assessee in default.\n115TCA. Tax on income from securitization trusts.\nCHAPTER XII-EB\nSPECIAL PROVISIONS RELATING TO TAX ON ACCRETED INCOME\nOF CERTAIN TRUSTS AND INSTITUTIONS",
+          "page": 13,
+          "title": "Securitisation trust to be assessee in default"
+        },
+        {
+          "num": "115TD",
+          "text": "Tax on accreted income.",
+          "page": 13,
+          "title": "Tax on accreted income"
+        },
+        {
+          "num": "115TE",
+          "text": "Interest payable for non-payment of tax by trust or institution.",
+          "page": 13,
+          "title": "Interest payable for non-payment of tax by trust or institution"
+        },
+        {
+          "num": "115TF",
+          "text": "When trust or institution is deemed to be assessee in default.\nCHAPTER XII-F\nSPECIAL PROVISIONS RELATING TO TAX ON INCOME RECEIVED FROM VENTURE CAPTIAL\nCOMPANIES AND VENTURE CAPTIAL FUNDS",
+          "page": 13,
+          "title": "When trust or institution is deemed to be assessee in default"
+        },
+        {
+          "num": "115U",
+          "text": "Tax on income in certain cases.\nCHAPTER XII-FA\nSPECIAL PROVISIONS RELATING TO BUSINESS TRUSTS",
+          "page": 13,
+          "title": "Tax on income in certain cases.\nCHAPTER XII-FA\nSPECIAL PROVISIONS RELATING TO BUSINESS TRUSTS"
+        },
+        {
+          "num": "115UA",
+          "text": "Tax on income of unit holder and business trust.\nCHAPTER XII-FB\nSPECIAL PROVISIONS RELATING TO TAX ON INCOME OF INVESTMENT FUNDS AND INCOME\nRECEIVED FROM SUCH FUNDS",
+          "page": 13,
+          "title": "Tax on income of unit holder and business trust"
+        },
+        {
+          "num": "115UB",
+          "text": "Tax on income of investment fund and its unit holders.\nCHAPTER XII-G\nSPECIAL PROVISIONS RELATING TO INCOME OF SHIPPING COMPANIES\nA. — Meaning of certain expressions",
+          "page": 13,
+          "title": "Tax on income of investment fund and its unit holders.\nCHAPTER XII-G\nSPECIAL PROVISIONS RELATING TO INCOME OF SHIPPING COMPANIES\nA"
+        },
+        {
+          "num": "115V",
+          "text": "Definitions.\n13\nB.—Computation of tonnage income from business of\noperating qualifying ships\nSECTIONS",
+          "page": 13,
+          "title": "Definitions.\n13\nB"
+        },
+        {
+          "num": "115VA",
+          "text": "Computation of profits and gains from the business of operating qualifying ships.",
+          "page": 14,
+          "title": "Computation of profits and gains from the business of operating qualifying ships"
+        },
+        {
+          "num": "115VB",
+          "text": "Operating ships.",
+          "page": 14,
+          "title": "Operating ships"
+        },
+        {
+          "num": "115VC",
+          "text": "Qualifying company.",
+          "page": 14,
+          "title": "Qualifying company"
+        },
+        {
+          "num": "115VD",
+          "text": "Qualifying ship.",
+          "page": 14,
+          "title": "Qualifying ship"
+        },
+        {
+          "num": "115VE",
+          "text": "Manner of computation of income under tonnage tax scheme.",
+          "page": 14,
+          "title": "Manner of computation of income under tonnage tax scheme"
+        },
+        {
+          "num": "115VF",
+          "text": "Tonnage income.",
+          "page": 14,
+          "title": "Tonnage income"
+        },
+        {
+          "num": "115VG",
+          "text": "Computation of tonnage income.",
+          "page": 14,
+          "title": "Computation of tonnage income"
+        },
+        {
+          "num": "115VH",
+          "text": "Calculation in case of joint operation, etc.\n115V-I. Relevant shipping income.",
+          "page": 14,
+          "title": "Calculation in case of joint operation, etc.\n115V-I. Relevant shipping income"
+        },
+        {
+          "num": "115VJ",
+          "text": "Treatment of common costs.",
+          "page": 14,
+          "title": "Treatment of common costs"
+        },
+        {
+          "num": "115VK",
+          "text": "Depreciation.",
+          "page": 14,
+          "title": "Depreciation"
+        },
+        {
+          "num": "115VL",
+          "text": "General exclusion of deduction and set off, etc.",
+          "page": 14,
+          "title": "General exclusion of deduction and set off, etc"
+        },
+        {
+          "num": "115VM",
+          "text": "Exclusion of loss.",
+          "page": 14,
+          "title": "Exclusion of loss"
+        },
+        {
+          "num": "115VN",
+          "text": "Chargeable gains from transfer of tonnage tax assets.\n115V-O. Exclusion from provisions of section 115JB.\nC.—Procedure for option of tonnage tax scheme",
+          "page": 14,
+          "title": "Chargeable gains from transfer of tonnage tax assets.\n115V-O. Exclusion from provisions of section 115JB.\nC"
+        },
+        {
+          "num": "115VP",
+          "text": "Method and time of opting for tonnage tax scheme.",
+          "page": 14,
+          "title": "Method and time of opting for tonnage tax scheme"
+        },
+        {
+          "num": "115VQ",
+          "text": "Period for which tonnage tax option to remain in force.",
+          "page": 14,
+          "title": "Period for which tonnage tax option to remain in force"
+        },
+        {
+          "num": "115VR",
+          "text": "Renewal of tonnage tax scheme.",
+          "page": 14,
+          "title": "Renewal of tonnage tax scheme"
+        },
+        {
+          "num": "115VS",
+          "text": "Prohibition to opt for tonnage tax scheme in certain cases.\nD.—Conditions for applicability of tonnage tax scheme",
+          "page": 14,
+          "title": "Prohibition to opt for tonnage tax scheme in certain cases.\nD"
+        },
+        {
+          "num": "115VT",
+          "text": "Transfer of profits to Tonnage Tax Reserve Account.",
+          "page": 14,
+          "title": "Transfer of profits to Tonnage Tax Reserve Account"
+        },
+        {
+          "num": "115VU",
+          "text": "Minimum training requirement for tonnage tax company.",
+          "page": 14,
+          "title": "Minimum training requirement for tonnage tax company"
+        },
+        {
+          "num": "115VV",
+          "text": "Limit for charter in of tonnage.",
+          "page": 14,
+          "title": "Limit for charter in of tonnage"
+        },
+        {
+          "num": "115VW",
+          "text": "Maintenance and audit of accounts.",
+          "page": 14,
+          "title": "Maintenance and audit of accounts"
+        },
+        {
+          "num": "115VX",
+          "text": "Determination of tonnage.\nE.—Amalgamation and demerger of shipping companies",
+          "page": 14,
+          "title": "Determination of tonnage.\nE"
+        },
+        {
+          "num": "115VY",
+          "text": "Amalgamation.",
+          "page": 14,
+          "title": "Amalgamation"
+        },
+        {
+          "num": "115VZ",
+          "text": "Demerger.\nF.— Miscellaneous\n115VZA. Effect of temporarily ceasing to operate qualifying ships.\nG.—Provisions of this chapter not to apply in certain cases\n115VZB. Avoidance of tax.\n115VZC. Exclusion from tonnage tax scheme.\nCHAPTER XII-H\nINCOME-TAX OF FRINGE BENEFITS\nA. — Meaning of certain expressions",
+          "page": 14,
+          "title": "Demerger.\nF"
+        },
+        {
+          "num": "115W",
+          "text": "Definitions.\n14\nB. —Basis of charge\nSECTIONS",
+          "page": 14,
+          "title": "Definitions.\n14\nB"
+        },
+        {
+          "num": "115WA",
+          "text": "Charge of fringe benefit tax.",
+          "page": 15,
+          "title": "Charge of fringe benefit tax"
+        },
+        {
+          "num": "115WB",
+          "text": "Fringe benefits.",
+          "page": 15,
+          "title": "Fringe benefits"
+        },
+        {
+          "num": "115WC",
+          "text": "Value of fringe benefits.\nC.—Procedure for filing of return in respect of fringe benefits, assessment and\npayment of tax in respect thereof",
+          "page": 15,
+          "title": "Value of fringe benefits.\nC"
+        },
+        {
+          "num": "115WD",
+          "text": "Return of fringe benefits.",
+          "page": 15,
+          "title": "Return of fringe benefits"
+        },
+        {
+          "num": "115WE",
+          "text": "Assessment.",
+          "page": 15,
+          "title": "Assessment"
+        },
+        {
+          "num": "115WF",
+          "text": "Best judgment assessment.",
+          "page": 15,
+          "title": "Best judgment assessment"
+        },
+        {
+          "num": "115WG",
+          "text": "Fringe benefits escaping assessment.",
+          "page": 15,
+          "title": "Fringe benefits escaping assessment"
+        },
+        {
+          "num": "115WH",
+          "text": "Issue of notice where fringe benefits have escaped assessment.",
+          "page": 15,
+          "title": "Issue of notice where fringe benefits have escaped assessment"
+        },
+        {
+          "num": "115WI",
+          "text": "Payment of fringe benefit tax.",
+          "page": 15,
+          "title": "Payment of fringe benefit tax"
+        },
+        {
+          "num": "115WJ",
+          "text": "Advance tax in respect of fringe benefits.",
+          "page": 15,
+          "title": "Advance tax in respect of fringe benefits"
+        },
+        {
+          "num": "115WK",
+          "text": "Interest for default in furnishing return of fringe benefits.\n115WKA. Recovery of fringe benefit tax by the employer from the employee.\n115WKB. Deemed payment of tax by employee.",
+          "page": 15,
+          "title": "Interest for default in furnishing return of fringe benefits"
+        },
+        {
+          "num": "115WL",
+          "text": "Application of other provisions of this Act.",
+          "page": 15,
+          "title": "Application of other provisions of this Act"
+        },
+        {
+          "num": "115WM",
+          "text": "Chapter XII-H not to apply after a certain date.\nCHAPTER XIII\nINCOME-TAX AUTHORITIES\nA. —Appointment and control",
+          "page": 15,
+          "title": "Chapter XII-H not to apply after a certain date.\nCHAPTER XIII\nINCOME-TAX AUTHORITIES\nA"
+        },
+        {
+          "num": "116",
+          "text": "Income-tax authorities.",
+          "page": 15,
+          "title": "Income-tax authorities"
+        },
+        {
+          "num": "117",
+          "text": "Appointment of income-tax authorities.",
+          "page": 15,
+          "title": "Appointment of income-tax authorities"
+        },
+        {
+          "num": "118",
+          "text": "Control of income-tax authorities.",
+          "page": 15,
+          "title": "Control of income-tax authorities"
+        },
+        {
+          "num": "119",
+          "text": "Instructions to subordinate authorities.\nB.—Jurisdiction",
+          "page": 15,
+          "title": "Instructions to subordinate authorities.\nB"
+        },
+        {
+          "num": "120",
+          "text": "Jurisdiction of income-tax authorities.",
+          "page": 15,
+          "title": "Jurisdiction of income-tax authorities"
+        },
+        {
+          "num": "121",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "121A",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "122",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "123",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "124",
+          "text": "Jurisdiction of Assessing Officers.",
+          "page": 15,
+          "title": "Jurisdiction of Assessing Officers"
+        },
+        {
+          "num": "125",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "125A",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "126",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "127",
+          "text": "Power to transfer cases.",
+          "page": 15,
+          "title": "Power to transfer cases"
+        },
+        {
+          "num": "128",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "129",
+          "text": "Change of incumbent of an office.",
+          "page": 15,
+          "title": "Change of incumbent of an office"
+        },
+        {
+          "num": "130",
+          "text": "[Omitted.].",
+          "page": 15,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "130A",
+          "text": "[Omitted.].\n15\nC.—Powers\nSECTIONS",
+          "page": 15,
+          "title": "[Omitted.].\n15\nC"
+        },
+        {
+          "num": "131",
+          "text": "Power regarding discovery, production of evidence, etc.",
+          "page": 16,
+          "title": "Power regarding discovery, production of evidence, etc"
+        },
+        {
+          "num": "132",
+          "text": "Search and seizure.",
+          "page": 16,
+          "title": "Search and seizure"
+        },
+        {
+          "num": "132A",
+          "text": "Powers to requisition books of account, etc.",
+          "page": 16,
+          "title": "Powers to requisition books of account, etc"
+        },
+        {
+          "num": "132B",
+          "text": "Application of seized or requisitioned assets.",
+          "page": 16,
+          "title": "Application of seized or requisitioned assets"
+        },
+        {
+          "num": "133",
+          "text": "Power to call for information.",
+          "page": 16,
+          "title": "Power to call for information"
+        },
+        {
+          "num": "133A",
+          "text": "Power of survey.",
+          "page": 16,
+          "title": "Power of survey"
+        },
+        {
+          "num": "133B",
+          "text": "Power to collect certain information.",
+          "page": 16,
+          "title": "Power to collect certain information"
+        },
+        {
+          "num": "133C",
+          "text": "Power to call for information by prescribed income-tax authority.",
+          "page": 16,
+          "title": "Power to call for information by prescribed income-tax authority"
+        },
+        {
+          "num": "134",
+          "text": "Power to inspect registers of companies.",
+          "page": 16,
+          "title": "Power to inspect registers of companies"
+        },
+        {
+          "num": "135",
+          "text": "Power of Principal Director General or Director General or Principal Director or Director,\nPrincipal Chief Commissioner or Chief Commissioner or Principal Commissioner or\nCommissioner and Joint Commissioner.",
+          "page": 16,
+          "title": "Power of Principal Director General or Director General or Principal Director or Director,\nPrincipal Chief Commissioner or Chief Commissione"
+        },
+        {
+          "num": "136",
+          "text": "Proceedings before income-tax authorities to be judicial proceedings.\nD. —Disclosure of information",
+          "page": 16,
+          "title": "Proceedings before income-tax authorities to be judicial proceedings.\nD"
+        },
+        {
+          "num": "137",
+          "text": "[Omitted.].",
+          "page": 16,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "138",
+          "text": "Disclosure of information respecting assessees.\nCHAPTER XIV\nPROCEDURE FOR ASSESSMENT",
+          "page": 16,
+          "title": "Disclosure of information respecting assessees.\nCHAPTER XIV\nPROCEDURE FOR ASSESSMENT"
+        },
+        {
+          "num": "139",
+          "text": "Return of income.",
+          "page": 16,
+          "title": "Return of income"
+        },
+        {
+          "num": "139A",
+          "text": "Permanent account number.",
+          "page": 16,
+          "title": "Permanent account number"
+        },
+        {
+          "num": "139AA",
+          "text": "Quoting of Aadhaar number.",
+          "page": 16,
+          "title": "Quoting of Aadhaar number"
+        },
+        {
+          "num": "139B",
+          "text": "Scheme for submission of returns through Tax Return Preparers.",
+          "page": 16,
+          "title": "Scheme for submission of returns through Tax Return Preparers"
+        },
+        {
+          "num": "139C",
+          "text": "Power of Board to dispense with furnishing documents, etc., with return.",
+          "page": 16,
+          "title": "Power of Board to dispense with furnishing documents, etc., with return"
+        },
+        {
+          "num": "139D",
+          "text": "Filing of return in electronic form.",
+          "page": 16,
+          "title": "Filing of return in electronic form"
+        },
+        {
+          "num": "140",
+          "text": "Return by whom to be verified.",
+          "page": 16,
+          "title": "Return by whom to be verified"
+        },
+        {
+          "num": "140A",
+          "text": "Self-assessment.",
+          "page": 16,
+          "title": "Self-assessment"
+        },
+        {
+          "num": "141",
+          "text": "[Omitted.].",
+          "page": 16,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "141A",
+          "text": "[Omitted.].",
+          "page": 16,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "142",
+          "text": "Inquiry before assessment.",
+          "page": 16,
+          "title": "Inquiry before assessment"
+        },
+        {
+          "num": "142A",
+          "text": "Estimation of value of assets by Valuation Officer.",
+          "page": 16,
+          "title": "Estimation of value of assets by Valuation Officer"
+        },
+        {
+          "num": "143",
+          "text": "Assessment.",
+          "page": 16,
+          "title": "Assessment"
+        },
+        {
+          "num": "144",
+          "text": "Best judgment assessment.",
+          "page": 16,
+          "title": "Best judgment assessment"
+        },
+        {
+          "num": "144A",
+          "text": "Power of Joint Commissioner to issue directions in certain cases.",
+          "page": 16,
+          "title": "Power of Joint Commissioner to issue directions in certain cases"
+        },
+        {
+          "num": "144B",
+          "text": "[Omitted.].",
+          "page": 16,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "144BA",
+          "text": "Reference to Principal Commissioner or Commissioner in certain cases.",
+          "page": 16,
+          "title": "Reference to Principal Commissioner or Commissioner in certain cases"
+        },
+        {
+          "num": "144C",
+          "text": "Reference to dispute resolution panel.",
+          "page": 16,
+          "title": "Reference to dispute resolution panel"
+        },
+        {
+          "num": "145",
+          "text": "Method of accounting.",
+          "page": 16,
+          "title": "Method of accounting"
+        },
+        {
+          "num": "145A",
+          "text": "Method of accounting in certain cases.",
+          "page": 16,
+          "title": "Method of accounting in certain cases"
+        },
+        {
+          "num": "145B",
+          "text": "Taxability of certain income.",
+          "page": 16,
+          "title": "Taxability of certain income"
+        },
+        {
+          "num": "146",
+          "text": "[Omitted.].",
+          "page": 16,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "147",
+          "text": "Income escaping assessment.\n16\nSECTIONS",
+          "page": 16,
+          "title": "Income escaping assessment.\n16\nSECTIONS"
+        },
+        {
+          "num": "148",
+          "text": "Issue of notice where income has escaped assessment.",
+          "page": 17,
+          "title": "Issue of notice where income has escaped assessment"
+        },
+        {
+          "num": "149",
+          "text": "Time limit for notice.",
+          "page": 17,
+          "title": "Time limit for notice"
+        },
+        {
+          "num": "150",
+          "text": "Provision for cases where assessment is in pursuance of an order on appeal, etc.",
+          "page": 17,
+          "title": "Provision for cases where assessment is in pursuance of an order on appeal, etc"
+        },
+        {
+          "num": "151",
+          "text": "Sanction for issue of notice.",
+          "page": 17,
+          "title": "Sanction for issue of notice"
+        },
+        {
+          "num": "152",
+          "text": "Other provisions.",
+          "page": 17,
+          "title": "Other provisions"
+        },
+        {
+          "num": "153",
+          "text": "Time limit for completion of assessments, reassessments and recomputation.",
+          "page": 17,
+          "title": "Time limit for completion of assessments, reassessments and recomputation"
+        },
+        {
+          "num": "153A",
+          "text": "Assessment in case of search or requisition.",
+          "page": 17,
+          "title": "Assessment in case of search or requisition"
+        },
+        {
+          "num": "153B",
+          "text": "Time-limit for completion of assessment under section 153A.",
+          "page": 17,
+          "title": "Time-limit for completion of assessment under section 153A"
+        },
+        {
+          "num": "153C",
+          "text": "Assessment of income of any other person.",
+          "page": 17,
+          "title": "Assessment of income of any other person"
+        },
+        {
+          "num": "153D",
+          "text": "Prior approval necessary for assessment in cases of search or requisition.",
+          "page": 17,
+          "title": "Prior approval necessary for assessment in cases of search or requisition"
+        },
+        {
+          "num": "154",
+          "text": "Rectification of mistake.",
+          "page": 17,
+          "title": "Rectification of mistake"
+        },
+        {
+          "num": "155",
+          "text": "Other amendments.",
+          "page": 17,
+          "title": "Other amendments"
+        },
+        {
+          "num": "156",
+          "text": "Notice of demand.",
+          "page": 17,
+          "title": "Notice of demand"
+        },
+        {
+          "num": "157",
+          "text": "Intimation of loss.",
+          "page": 17,
+          "title": "Intimation of loss"
+        },
+        {
+          "num": "158",
+          "text": "Intimation of assessment of firm.\nCHAPTER XIV-A\nSPECIAL PROVISION FOR AVOIDING REPETITIVE APPEALS",
+          "page": 17,
+          "title": "Intimation of assessment of firm.\nCHAPTER XIV-A\nSPECIAL PROVISION FOR AVOIDING REPETITIVE APPEALS"
+        },
+        {
+          "num": "158A",
+          "text": "Procedure when assessee claims identical question of law is pending before High Court or\nSupreme Court.",
+          "page": 17,
+          "title": "Procedure when assessee claims identical question of law is pending before High Court or\nSupreme Court"
+        },
+        {
+          "num": "158AA",
+          "text": "Procedure when in an appeal by revenue an identical question of law is pending before\nSupreme Court.\nCHAPTER XIV-B\nSPECIAL PROCEDURE FOR ASSESSMENT OF SEARCH CASES",
+          "page": 17,
+          "title": "Procedure when in an appeal by revenue an identical question of law is pending before\nSupreme Court"
+        },
+        {
+          "num": "158B",
+          "text": "Definitions.",
+          "page": 17,
+          "title": "Definitions"
+        },
+        {
+          "num": "158BA",
+          "text": "Assessment of undisclosed income as a result of search.",
+          "page": 17,
+          "title": "Assessment of undisclosed income as a result of search"
+        },
+        {
+          "num": "158BB",
+          "text": "Computation of undisclosed income of the block period.",
+          "page": 17,
+          "title": "Computation of undisclosed income of the block period"
+        },
+        {
+          "num": "158BC",
+          "text": "Procedure for block assessment.",
+          "page": 17,
+          "title": "Procedure for block assessment"
+        },
+        {
+          "num": "158BD",
+          "text": "Undisclosed income of any other person.",
+          "page": 17,
+          "title": "Undisclosed income of any other person"
+        },
+        {
+          "num": "158BE",
+          "text": "Time limit for completion of block assessment.",
+          "page": 17,
+          "title": "Time limit for completion of block assessment"
+        },
+        {
+          "num": "158BF",
+          "text": "Certain interests and penalties not to be levied or imposed.\n158BFA. Levy of interest and penalty in certain cases.",
+          "page": 17,
+          "title": "Certain interests and penalties not to be levied or imposed.\n158BFA. Levy of interest and penalty in certain cases"
+        },
+        {
+          "num": "158BG",
+          "text": "Authority competent to make the block assessment.",
+          "page": 17,
+          "title": "Authority competent to make the block assessment"
+        },
+        {
+          "num": "158BH",
+          "text": "Application of other provisions of this Act.",
+          "page": 17,
+          "title": "Application of other provisions of this Act"
+        },
+        {
+          "num": "158BI",
+          "text": "Chapter not to apply after certain date.\nCHAPTER XV\nLIABILITY IN SPECIAL CASES\nA.—Legal representatives",
+          "page": 17,
+          "title": "Chapter not to apply after certain date.\nCHAPTER XV\nLIABILITY IN SPECIAL CASES\nA"
+        },
+        {
+          "num": "159",
+          "text": "Legal representatives.\nB.—Representative assesses – General provisions",
+          "page": 17,
+          "title": "Legal representatives.\nB"
+        },
+        {
+          "num": "160",
+          "text": "Representative assessee.",
+          "page": 17,
+          "title": "Representative assessee"
+        },
+        {
+          "num": "161",
+          "text": "Liability of representative assessee.",
+          "page": 17,
+          "title": "Liability of representative assessee"
+        },
+        {
+          "num": "162",
+          "text": "Right of representative assessee to recover tax paid.\nC.—Representative assesses- Special cases",
+          "page": 17,
+          "title": "Right of representative assessee to recover tax paid.\nC"
+        },
+        {
+          "num": "163",
+          "text": "Who may be regarded as agent.\n17\nSECTIONS",
+          "page": 17,
+          "title": "Who may be regarded as agent.\n17\nSECTIONS"
+        },
+        {
+          "num": "164",
+          "text": "Charge of tax where share of beneficiaries unknown.",
+          "page": 18,
+          "title": "Charge of tax where share of beneficiaries unknown"
+        },
+        {
+          "num": "164A",
+          "text": "Charge of tax in case of oral trust.",
+          "page": 18,
+          "title": "Charge of tax in case of oral trust"
+        },
+        {
+          "num": "165",
+          "text": "Case where part of trust income is chargeable.\nD.—Representative assesses-Miscellaneous provisions",
+          "page": 18,
+          "title": "Case where part of trust income is chargeable.\nD"
+        },
+        {
+          "num": "166",
+          "text": "Direct assessment or recovery not barred.",
+          "page": 18,
+          "title": "Direct assessment or recovery not barred"
+        },
+        {
+          "num": "167",
+          "text": "Remedies against property in cases of representative assessees.\nDD.—Firms, association of persons and body of individuals",
+          "page": 18,
+          "title": "Remedies against property in cases of representative assessees.\nDD"
+        },
+        {
+          "num": "167A",
+          "text": "Charge of tax in the case of a firm.",
+          "page": 18,
+          "title": "Charge of tax in the case of a firm"
+        },
+        {
+          "num": "167B",
+          "text": "Charge of tax where shares of members in association of persons or body of individuals\nunknown, etc.",
+          "page": 18,
+          "title": "Charge of tax where shares of members in association of persons or body of individuals\nunknown, etc"
+        },
+        {
+          "num": "167C",
+          "text": "Liability of partners of limited liability partnership in liquidation.\nE.—Executors",
+          "page": 18,
+          "title": "Liability of partners of limited liability partnership in liquidation.\nE"
+        },
+        {
+          "num": "168",
+          "text": "Executors.",
+          "page": 18,
+          "title": "Executors"
+        },
+        {
+          "num": "169",
+          "text": "Right of executor to recover tax paid.\nF.—Succession to business or profession",
+          "page": 18,
+          "title": "Right of executor to recover tax paid.\nF"
+        },
+        {
+          "num": "170",
+          "text": "Succession to business otherwise than on death.\nG.—Partition",
+          "page": 18,
+          "title": "Succession to business otherwise than on death.\nG"
+        },
+        {
+          "num": "171",
+          "text": "Assessment after partition of a Hindu undivided family.\nH.—Profits of non-residents from occasional shipping business",
+          "page": 18,
+          "title": "Assessment after partition of a Hindu undivided family.\nH"
+        },
+        {
+          "num": "172",
+          "text": "Shipping business of non-residents.\nI.— Recovery of tax in respect of non-residents.",
+          "page": 18,
+          "title": "Shipping business of non-residents.\nI"
+        },
+        {
+          "num": "173",
+          "text": "Recovery of tax in respect of non-resident from his assets.\nJ.—Persons leaving India",
+          "page": 18,
+          "title": "Recovery of tax in respect of non-resident from his assets.\nJ"
+        },
+        {
+          "num": "174",
+          "text": "Assessment of persons leaving India.\nJA.—Association of persons or body of individuals or artificial juridical person\nformed for a particular event or purpose",
+          "page": 18,
+          "title": "Assessment of persons leaving India.\nJA"
+        },
+        {
+          "num": "174A",
+          "text": "Assessment of association of persons or body of individuals or artificial juridical person formed\nfor a particular event or purpose.\nK.—Persons trying to alienate their assets",
+          "page": 18,
+          "title": "Assessment of association of persons or body of individuals or artificial juridical person formed\nfor a particular event or purpose.\nK"
+        },
+        {
+          "num": "175",
+          "text": "Assessment of persons likely to transfer property to avoid tax.\nL.—Discontinuance of business, or dissolution",
+          "page": 18,
+          "title": "Assessment of persons likely to transfer property to avoid tax.\nL"
+        },
+        {
+          "num": "176",
+          "text": "Discontinued business.",
+          "page": 18,
+          "title": "Discontinued business"
+        },
+        {
+          "num": "177",
+          "text": "Association dissolved or business discontinued.",
+          "page": 18,
+          "title": "Association dissolved or business discontinued"
+        },
+        {
+          "num": "178",
+          "text": "Company in liquidation.\nM.—Private companies",
+          "page": 18,
+          "title": "Company in liquidation.\nM"
+        },
+        {
+          "num": "179",
+          "text": "Liability of directors of private company in liquidation.\nN.—Special provisions for certain kinds of income",
+          "page": 18,
+          "title": "Liability of directors of private company in liquidation.\nN"
+        },
+        {
+          "num": "180",
+          "text": "Royalties or copyright fees for literary or artistic work.",
+          "page": 18,
+          "title": "Royalties or copyright fees for literary or artistic work"
+        },
+        {
+          "num": "180A",
+          "text": "Consideration for know-how.\n18\nO.—[Omitted]\nSECTIONS",
+          "page": 18,
+          "title": "Consideration for know-how.\n18\nO"
+        },
+        {
+          "num": "181",
+          "text": "[Omitted.].\nCHAPTER XVI\nSPECIAL PROVISIONS APPLICABLE TO FIRMS\nA.—Assessment of firms",
+          "page": 19,
+          "title": "[Omitted.].\nCHAPTER XVI\nSPECIAL PROVISIONS APPLICABLE TO FIRMS\nA"
+        },
+        {
+          "num": "182",
+          "text": "[Omitted.].",
+          "page": 19,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "183",
+          "text": "[Omitted.].",
+          "page": 19,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "184",
+          "text": "Assessment as a firm.",
+          "page": 19,
+          "title": "Assessment as a firm"
+        },
+        {
+          "num": "185",
+          "text": "Assessment when section 184 not complied with.\nC.—Changes in constitution, succession and dissolution",
+          "page": 19,
+          "title": "Assessment when section 184 not complied with.\nC"
+        },
+        {
+          "num": "187",
+          "text": "Change in constitution of a firm.",
+          "page": 19,
+          "title": "Change in constitution of a firm"
+        },
+        {
+          "num": "188",
+          "text": "Succession of one firm by another firm.",
+          "page": 19,
+          "title": "Succession of one firm by another firm"
+        },
+        {
+          "num": "188A",
+          "text": "Joint and several liability of partners for tax payable by firm.",
+          "page": 19,
+          "title": "Joint and several liability of partners for tax payable by firm"
+        },
+        {
+          "num": "189",
+          "text": "Firm dissolved or business discontinued.",
+          "page": 19,
+          "title": "Firm dissolved or business discontinued"
+        },
+        {
+          "num": "189A",
+          "text": "Provisions applicable to past assessments of firms.\nCHAPTER XVII\nCOLLECTION AND RECOVERY OF TAX\nA.—General",
+          "page": 19,
+          "title": "Provisions applicable to past assessments of firms.\nCHAPTER XVII\nCOLLECTION AND RECOVERY OF TAX\nA"
+        },
+        {
+          "num": "190",
+          "text": "Deduction at source and advance payment.",
+          "page": 19,
+          "title": "Deduction at source and advance payment"
+        },
+        {
+          "num": "191",
+          "text": "Direct payment.\nB.—Deduction at source",
+          "page": 19,
+          "title": "Direct payment.\nB"
+        },
+        {
+          "num": "192",
+          "text": "Salary.",
+          "page": 19,
+          "title": "Salary"
+        },
+        {
+          "num": "192A",
+          "text": "Payment of accumulated balance due to an employee.",
+          "page": 19,
+          "title": "Payment of accumulated balance due to an employee"
+        },
+        {
+          "num": "193",
+          "text": "Interest on securities.",
+          "page": 19,
+          "title": "Interest on securities"
+        },
+        {
+          "num": "194",
+          "text": "Dividends.",
+          "page": 19,
+          "title": "Dividends"
+        },
+        {
+          "num": "194A",
+          "text": "Interest other than “Interest on securities”.",
+          "page": 19,
+          "title": "Interest other than “Interest on securities”"
+        },
+        {
+          "num": "194B",
+          "text": "Winnings from lottery or crossword puzzle.\n194BB.Winnings from horse race.",
+          "page": 19,
+          "title": "Winnings from lottery or crossword puzzle.\n194BB.Winnings from horse race"
+        },
+        {
+          "num": "194C",
+          "text": "Payments to contractors.",
+          "page": 19,
+          "title": "Payments to contractors"
+        },
+        {
+          "num": "194D",
+          "text": "Insurance commission.",
+          "page": 19,
+          "title": "Insurance commission"
+        },
+        {
+          "num": "194DA",
+          "text": "Payment in respect of life insurance policy.",
+          "page": 19,
+          "title": "Payment in respect of life insurance policy"
+        },
+        {
+          "num": "194E",
+          "text": "Payments to non-resident sportsmen or sports associations.",
+          "page": 19,
+          "title": "Payments to non-resident sportsmen or sports associations"
+        },
+        {
+          "num": "194EE",
+          "text": "Payments in respect of deposits under National Savings Scheme, etc.",
+          "page": 19,
+          "title": "Payments in respect of deposits under National Savings Scheme, etc"
+        },
+        {
+          "num": "194F",
+          "text": "Payments on account of repurchase of units by Mutual Fund or Unit Trust of India.",
+          "page": 19,
+          "title": "Payments on account of repurchase of units by Mutual Fund or Unit Trust of India"
+        },
+        {
+          "num": "194G",
+          "text": "Commission, etc., on the sale of lottery tickets.",
+          "page": 19,
+          "title": "Commission, etc., on the sale of lottery tickets"
+        },
+        {
+          "num": "194H",
+          "text": "Commission or brokerage.\n194-I. Rent.\n194-IA. Payment on transfer of certain immovable property other than agricultural land.\n19\nSECTIONS\n194-IB. Payment of rent by certain individuals or Hindu undivided family.\n194-IC. Payment under specified agreement.",
+          "page": 19,
+          "title": "Commission or brokerage"
+        },
+        {
+          "num": "194J",
+          "text": "Fees for professional or technical services.",
+          "page": 20,
+          "title": "Fees for professional or technical services"
+        },
+        {
+          "num": "194K",
+          "text": "[Omitted.].",
+          "page": 20,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "194L",
+          "text": "[Omitted.].",
+          "page": 20,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "194LA",
+          "text": "Payment of compensation on acquisition of certain immovable property.",
+          "page": 20,
+          "title": "Payment of compensation on acquisition of certain immovable property"
+        },
+        {
+          "num": "194LB",
+          "text": "Income by way of interest from infrastructure debt fund.\n194LBA. Certain income from units of a business trust.\n194LBB. Income in respect of units of investment fund.\n194LBC. Income in respect of investment in securitization trust.",
+          "page": 20,
+          "title": "Income by way of interest from infrastructure debt fund"
+        },
+        {
+          "num": "194LC",
+          "text": "Income by way of interest from Indian company.",
+          "page": 20,
+          "title": "Income by way of interest from Indian company"
+        },
+        {
+          "num": "194LD",
+          "text": "Income by way of interest on certain bonds and Government securities.",
+          "page": 20,
+          "title": "Income by way of interest on certain bonds and Government securities"
+        },
+        {
+          "num": "195",
+          "text": "Other sums.",
+          "page": 20,
+          "title": "Other sums"
+        },
+        {
+          "num": "195A",
+          "text": "Income payable net of tax.",
+          "page": 20,
+          "title": "Income payable net of tax"
+        },
+        {
+          "num": "196",
+          "text": "Interest or dividend or other sums payable to Government, Reserve Bank or certain Corporations.",
+          "page": 20,
+          "title": "Interest or dividend or other sums payable to Government, Reserve Bank or certain Corporations"
+        },
+        {
+          "num": "196A",
+          "text": "Income in respect of units of non-residents.",
+          "page": 20,
+          "title": "Income in respect of units of non-residents"
+        },
+        {
+          "num": "196B",
+          "text": "Income from units.",
+          "page": 20,
+          "title": "Income from units"
+        },
+        {
+          "num": "196C",
+          "text": "Income from foreign currency bonds or shares of Indian company.",
+          "page": 20,
+          "title": "Income from foreign currency bonds or shares of Indian company"
+        },
+        {
+          "num": "196D",
+          "text": "Income of Foreign Institutional Investors from securities.",
+          "page": 20,
+          "title": "Income of Foreign Institutional Investors from securities"
+        },
+        {
+          "num": "197",
+          "text": "Certificate for deduction at lower rate.",
+          "page": 20,
+          "title": "Certificate for deduction at lower rate"
+        },
+        {
+          "num": "197A",
+          "text": "No deduction to be made in certain cases.",
+          "page": 20,
+          "title": "No deduction to be made in certain cases"
+        },
+        {
+          "num": "198",
+          "text": "Tax deducted is income received.",
+          "page": 20,
+          "title": "Tax deducted is income received"
+        },
+        {
+          "num": "199",
+          "text": "Credit for tax deducted.",
+          "page": 20,
+          "title": "Credit for tax deducted"
+        },
+        {
+          "num": "200",
+          "text": "Duty of person deducting tax.",
+          "page": 20,
+          "title": "Duty of person deducting tax"
+        },
+        {
+          "num": "200A",
+          "text": "Processing of statements of tax deducted at source.",
+          "page": 20,
+          "title": "Processing of statements of tax deducted at source"
+        },
+        {
+          "num": "201",
+          "text": "Consequences of failure to deduct or pay.",
+          "page": 20,
+          "title": "Consequences of failure to deduct or pay"
+        },
+        {
+          "num": "202",
+          "text": "Deduction only one mode of recovery.",
+          "page": 20,
+          "title": "Deduction only one mode of recovery"
+        },
+        {
+          "num": "203",
+          "text": "Certificate for tax deducted.\n203A.Tax deduction and collection account number.",
+          "page": 20,
+          "title": "Certificate for tax deducted.\n203A.Tax deduction and collection account number"
+        },
+        {
+          "num": "203AA",
+          "text": "Furnishing of statement of tax deducted.",
+          "page": 20,
+          "title": "Furnishing of statement of tax deducted"
+        },
+        {
+          "num": "204",
+          "text": "Meaning of “person responsible for paying”.",
+          "page": 20,
+          "title": "Meaning of “person responsible for paying”"
+        },
+        {
+          "num": "205",
+          "text": "Bar against direct demand on assessee.",
+          "page": 20,
+          "title": "Bar against direct demand on assessee"
+        },
+        {
+          "num": "206",
+          "text": "Persons deducting tax to furnish prescribed returns.",
+          "page": 20,
+          "title": "Persons deducting tax to furnish prescribed returns"
+        },
+        {
+          "num": "206A",
+          "text": "Furnishing of quarterly return in respect of payment of interest to residents without\ndeduction of tax.",
+          "page": 20,
+          "title": "Furnishing of quarterly return in respect of payment of interest to residents without\ndeduction of tax"
+        },
+        {
+          "num": "206AA",
+          "text": "Requirement to furnish Permanent Account Number.",
+          "page": 20,
+          "title": "Requirement to furnish Permanent Account Number"
+        },
+        {
+          "num": "206B",
+          "text": "[Omitted.].\nBB.—Collection at source",
+          "page": 20,
+          "title": "[Omitted.].\nBB"
+        },
+        {
+          "num": "206C",
+          "text": "Profits and gains from the business of trading in alcoholic liquor, forest produce, scrap, etc.",
+          "page": 20,
+          "title": "Profits and gains from the business of trading in alcoholic liquor, forest produce, scrap, etc"
+        },
+        {
+          "num": "206CA",
+          "text": "Tax collection account number.\n20\nSECTIONS",
+          "page": 20,
+          "title": "Tax collection account number.\n20\nSECTIONS"
+        },
+        {
+          "num": "206CB",
+          "text": "Processing of statements of tax collected at source.",
+          "page": 21,
+          "title": "Processing of statements of tax collected at source"
+        },
+        {
+          "num": "206CC",
+          "text": "Requirement to furnish Permanent Account Number by collectee.\nC.—Advance payment of tax",
+          "page": 21,
+          "title": "Requirement to furnish Permanent Account Number by collectee.\nC"
+        },
+        {
+          "num": "207",
+          "text": "Liability for payment of advance tax.",
+          "page": 21,
+          "title": "Liability for payment of advance tax"
+        },
+        {
+          "num": "208",
+          "text": "Conditions of liability to pay advance tax.",
+          "page": 21,
+          "title": "Conditions of liability to pay advance tax"
+        },
+        {
+          "num": "209",
+          "text": "Computation of advance tax.",
+          "page": 21,
+          "title": "Computation of advance tax"
+        },
+        {
+          "num": "209A",
+          "text": "[Omitted.].",
+          "page": 21,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "210",
+          "text": "Payment of advance tax by the assessee of his own accord or in pursuance of order of Assessing\nOfficer.",
+          "page": 21,
+          "title": "Payment of advance tax by the assessee of his own accord or in pursuance of order of Assessing\nOfficer"
+        },
+        {
+          "num": "211",
+          "text": "Instalments of advance tax and due dates.",
+          "page": 21,
+          "title": "Instalments of advance tax and due dates"
+        },
+        {
+          "num": "212",
+          "text": "[Omitted.].",
+          "page": 21,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "213",
+          "text": "[Omitted.].",
+          "page": 21,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "214",
+          "text": "Interest payable by Government.",
+          "page": 21,
+          "title": "Interest payable by Government"
+        },
+        {
+          "num": "215",
+          "text": "Interest payable by assessee.",
+          "page": 21,
+          "title": "Interest payable by assessee"
+        },
+        {
+          "num": "216",
+          "text": "Interest payable by assessee in case of under-estimate, etc.",
+          "page": 21,
+          "title": "Interest payable by assessee in case of under-estimate, etc"
+        },
+        {
+          "num": "217",
+          "text": "Interest payable by assessee when no estimate made.",
+          "page": 21,
+          "title": "Interest payable by assessee when no estimate made"
+        },
+        {
+          "num": "218",
+          "text": "When assessee deemed to be in default.",
+          "page": 21,
+          "title": "When assessee deemed to be in default"
+        },
+        {
+          "num": "219",
+          "text": "Credit for advance tax.\nD.—Collection and recovery",
+          "page": 21,
+          "title": "Credit for advance tax.\nD"
+        },
+        {
+          "num": "220",
+          "text": "When tax payable and when assessee deemed in default.",
+          "page": 21,
+          "title": "When tax payable and when assessee deemed in default"
+        },
+        {
+          "num": "221",
+          "text": "Penalty payable when tax in default.",
+          "page": 21,
+          "title": "Penalty payable when tax in default"
+        },
+        {
+          "num": "222",
+          "text": "Certificate to Tax Recovery Officer.",
+          "page": 21,
+          "title": "Certificate to Tax Recovery Officer"
+        },
+        {
+          "num": "223",
+          "text": "Tax Recovery Officer by whom recovery is to be effected.",
+          "page": 21,
+          "title": "Tax Recovery Officer by whom recovery is to be effected"
+        },
+        {
+          "num": "224",
+          "text": "Validity of certificate and cancellation or amendment thereof.",
+          "page": 21,
+          "title": "Validity of certificate and cancellation or amendment thereof"
+        },
+        {
+          "num": "225",
+          "text": "Stay of proceedings in pursuance of certificate and amendment or cancellation thereof.",
+          "page": 21,
+          "title": "Stay of proceedings in pursuance of certificate and amendment or cancellation thereof"
+        },
+        {
+          "num": "226",
+          "text": "Other modes of recovery.",
+          "page": 21,
+          "title": "Other modes of recovery"
+        },
+        {
+          "num": "227",
+          "text": "Recovery through State Government.",
+          "page": 21,
+          "title": "Recovery through State Government"
+        },
+        {
+          "num": "228",
+          "text": "[Omitted.].",
+          "page": 21,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "228A",
+          "text": "Recovery of tax in pursuance of agreements with foreign countries.",
+          "page": 21,
+          "title": "Recovery of tax in pursuance of agreements with foreign countries"
+        },
+        {
+          "num": "229",
+          "text": "Recovery of penalties, fine, interest and other sums.",
+          "page": 21,
+          "title": "Recovery of penalties, fine, interest and other sums"
+        },
+        {
+          "num": "230",
+          "text": "Tax clearance certificate.",
+          "page": 21,
+          "title": "Tax clearance certificate"
+        },
+        {
+          "num": "230A",
+          "text": "[Omitted.].",
+          "page": 21,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "231",
+          "text": "[Omitted.].",
+          "page": 21,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "232",
+          "text": "Recovery by suit or under other law not affected.\nE.—Tax payable under provisional assessment",
+          "page": 21,
+          "title": "Recovery by suit or under other law not affected.\nE"
+        },
+        {
+          "num": "233",
+          "text": "[Omitted.].",
+          "page": 21,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "234",
+          "text": "[Omitted.].\nF.—Interest chargeable in certain cases",
+          "page": 21,
+          "title": "[Omitted.].\nF"
+        },
+        {
+          "num": "234A",
+          "text": "Interest for defaults in furnishing return of income.",
+          "page": 21,
+          "title": "Interest for defaults in furnishing return of income"
+        },
+        {
+          "num": "234B",
+          "text": "Interest for defaults in payment of advance tax.",
+          "page": 21,
+          "title": "Interest for defaults in payment of advance tax"
+        },
+        {
+          "num": "234C",
+          "text": "Interest for deferment of advance tax.",
+          "page": 21,
+          "title": "Interest for deferment of advance tax"
+        },
+        {
+          "num": "234D",
+          "text": "Interest on excess refund.\nG.—Levy of fee in certain cases",
+          "page": 21,
+          "title": "Interest on excess refund.\nG"
+        },
+        {
+          "num": "234E",
+          "text": "Fee for default in furnishing statements.",
+          "page": 21,
+          "title": "Fee for default in furnishing statements"
+        },
+        {
+          "num": "234F",
+          "text": "Fee for default in furnishing return of income.\n21\nCHAPTER XVIII\nRELIEF RESPECTING TAX ON DIVIDENDS IN CERTAIN CASES\nSECTIONS",
+          "page": 21,
+          "title": "Fee for default in furnishing return of income.\n21\nCHAPTER XVIII\nRELIEF RESPECTING TAX ON DIVIDENDS IN CERTAIN CASES\nSECTIONS"
+        },
+        {
+          "num": "235",
+          "text": "[Omitted.].",
+          "page": 22,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "236",
+          "text": "Relief to company in respect of dividend paid out of past taxed profits.",
+          "page": 22,
+          "title": "Relief to company in respect of dividend paid out of past taxed profits"
+        },
+        {
+          "num": "236A",
+          "text": "Relief to certain charitable institutions or funds in respect of certain dividends.\nCHAPTER XIX\nREFUNDS",
+          "page": 22,
+          "title": "Relief to certain charitable institutions or funds in respect of certain dividends.\nCHAPTER XIX\nREFUNDS"
+        },
+        {
+          "num": "237",
+          "text": "Refunds.",
+          "page": 22,
+          "title": "Refunds"
+        },
+        {
+          "num": "238",
+          "text": "Person entitled to claim refund in certain special cases.",
+          "page": 22,
+          "title": "Person entitled to claim refund in certain special cases"
+        },
+        {
+          "num": "239",
+          "text": "Form of claim for refund and limitation.",
+          "page": 22,
+          "title": "Form of claim for refund and limitation"
+        },
+        {
+          "num": "240",
+          "text": "Refund on appeal, etc.",
+          "page": 22,
+          "title": "Refund on appeal, etc"
+        },
+        {
+          "num": "241",
+          "text": "[Omitted.].",
+          "page": 22,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "241A",
+          "text": "Withholding of refund in certain cases.",
+          "page": 22,
+          "title": "Withholding of refund in certain cases"
+        },
+        {
+          "num": "242",
+          "text": "Correctness of assessment not to be questioned.",
+          "page": 22,
+          "title": "Correctness of assessment not to be questioned"
+        },
+        {
+          "num": "243",
+          "text": "Interest on delayed refunds.",
+          "page": 22,
+          "title": "Interest on delayed refunds"
+        },
+        {
+          "num": "244",
+          "text": "Interest on refund where no claim is needed.",
+          "page": 22,
+          "title": "Interest on refund where no claim is needed"
+        },
+        {
+          "num": "244A",
+          "text": "Interest on refunds.",
+          "page": 22,
+          "title": "Interest on refunds"
+        },
+        {
+          "num": "245",
+          "text": "Set off of refunds against tax remaining payable.\nCHAPTER XIXA\nSETTLEMENT OF CASES",
+          "page": 22,
+          "title": "Set off of refunds against tax remaining payable.\nCHAPTER XIXA\nSETTLEMENT OF CASES"
+        },
+        {
+          "num": "245A",
+          "text": "Definitions.",
+          "page": 22,
+          "title": "Definitions"
+        },
+        {
+          "num": "245B",
+          "text": "Income-tax Settlement Commission.",
+          "page": 22,
+          "title": "Income-tax Settlement Commission"
+        },
+        {
+          "num": "245BA",
+          "text": "Jurisdiction and powers of Settlement Commission.",
+          "page": 22,
+          "title": "Jurisdiction and powers of Settlement Commission"
+        },
+        {
+          "num": "245BB",
+          "text": "Vice-Chairman to act as Chairman or to discharge his functions in certain circumstances.",
+          "page": 22,
+          "title": "Vice-Chairman to act as Chairman or to discharge his functions in certain circumstances"
+        },
+        {
+          "num": "245BC",
+          "text": "Power of Chairman to transfer cases from one Bench to another.",
+          "page": 22,
+          "title": "Power of Chairman to transfer cases from one Bench to another"
+        },
+        {
+          "num": "245BD",
+          "text": "Decision to be by majority.",
+          "page": 22,
+          "title": "Decision to be by majority"
+        },
+        {
+          "num": "245C",
+          "text": "Application for settlement of cases.",
+          "page": 22,
+          "title": "Application for settlement of cases"
+        },
+        {
+          "num": "245D",
+          "text": "Procedure on receipt of an application under section 245C.",
+          "page": 22,
+          "title": "Procedure on receipt of an application under section 245C"
+        },
+        {
+          "num": "245DD",
+          "text": "Power of Settlement Commission to order provisional attachment to protect revenue.",
+          "page": 22,
+          "title": "Power of Settlement Commission to order provisional attachment to protect revenue"
+        },
+        {
+          "num": "245E",
+          "text": "Power of Settlement Commission to reopen completed proceedings.",
+          "page": 22,
+          "title": "Power of Settlement Commission to reopen completed proceedings"
+        },
+        {
+          "num": "245F",
+          "text": "Powers and procedure of Settlement Commission.",
+          "page": 22,
+          "title": "Powers and procedure of Settlement Commission"
+        },
+        {
+          "num": "245G",
+          "text": "Inspection, etc., of reports.",
+          "page": 22,
+          "title": "Inspection, etc., of reports"
+        },
+        {
+          "num": "245H",
+          "text": "Power of Settlement Commission to grant immunity from prosecution and penalty.",
+          "page": 22,
+          "title": "Power of Settlement Commission to grant immunity from prosecution and penalty"
+        },
+        {
+          "num": "245HA",
+          "text": "Abatement of proceeding before Settlement Commission.\n245HAA. Credit for tax paid in case of abatement of proceedings.\n245-I. Order of settlement to be conclusive.",
+          "page": 22,
+          "title": "Abatement of proceeding before Settlement Commission"
+        },
+        {
+          "num": "245J",
+          "text": "Recovery of sums due under order of settlement.",
+          "page": 22,
+          "title": "Recovery of sums due under order of settlement"
+        },
+        {
+          "num": "245K",
+          "text": "Bar on subsequent application for settlement.",
+          "page": 22,
+          "title": "Bar on subsequent application for settlement"
+        },
+        {
+          "num": "245L",
+          "text": "Proceedings before Settlement Commission to be judicial proceedings.\n22\nSECTIONS",
+          "page": 22,
+          "title": "Proceedings before Settlement Commission to be judicial proceedings.\n22\nSECTIONS"
+        },
+        {
+          "num": "245M",
+          "text": "[Omitted.].\nCHAPTER XIX-B\nADVANCE RULINGS",
+          "page": 23,
+          "title": "[Omitted.].\nCHAPTER XIX-B\nADVANCE RULINGS"
+        },
+        {
+          "num": "245N",
+          "text": "Definitions.\n245-O. Authority for Advance Rulings.",
+          "page": 23,
+          "title": "Definitions.\n245-O. Authority for Advance Rulings"
+        },
+        {
+          "num": "245P",
+          "text": "Vacancies, etc., not to invalidate proceedings.",
+          "page": 23,
+          "title": "Vacancies, etc., not to invalidate proceedings"
+        },
+        {
+          "num": "245Q",
+          "text": "Application for advance ruling.",
+          "page": 23,
+          "title": "Application for advance ruling"
+        },
+        {
+          "num": "245R",
+          "text": "Procedure on receipt of application.",
+          "page": 23,
+          "title": "Procedure on receipt of application"
+        },
+        {
+          "num": "245RR",
+          "text": "Appellate authority not to proceed in certain cases.",
+          "page": 23,
+          "title": "Appellate authority not to proceed in certain cases"
+        },
+        {
+          "num": "245S",
+          "text": "Applicability of advance ruling.",
+          "page": 23,
+          "title": "Applicability of advance ruling"
+        },
+        {
+          "num": "245T",
+          "text": "Advance ruling to be void in certain circumstances.",
+          "page": 23,
+          "title": "Advance ruling to be void in certain circumstances"
+        },
+        {
+          "num": "245U",
+          "text": "Powers of the Authority.",
+          "page": 23,
+          "title": "Powers of the Authority"
+        },
+        {
+          "num": "245V",
+          "text": "Procedure of Authority.\nCHAPTER XX\nAPPEALS AND REVISION\nA.—Appleas to the Deputy Commissioner (Appeals) and commissioner (Appeals)",
+          "page": 23,
+          "title": "Procedure of Authority.\nCHAPTER XX\nAPPEALS AND REVISION\nA"
+        },
+        {
+          "num": "246",
+          "text": "Appealable orders.",
+          "page": 23,
+          "title": "Appealable orders"
+        },
+        {
+          "num": "246A",
+          "text": "Appealable orders before Commissioner (Appeals).",
+          "page": 23,
+          "title": "Appealable orders before Commissioner (Appeals)"
+        },
+        {
+          "num": "247",
+          "text": "[Omitted.].",
+          "page": 23,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "248",
+          "text": "Appeal by a person denying liability to deduct tax in certain cases.",
+          "page": 23,
+          "title": "Appeal by a person denying liability to deduct tax in certain cases"
+        },
+        {
+          "num": "249",
+          "text": "Form of appeal and limitation.",
+          "page": 23,
+          "title": "Form of appeal and limitation"
+        },
+        {
+          "num": "250",
+          "text": "Procedure in appeal.",
+          "page": 23,
+          "title": "Procedure in appeal"
+        },
+        {
+          "num": "251",
+          "text": "Powers of the Commissioner (Appeals).\nB. Appeals to the Appellate Tribunal",
+          "page": 23,
+          "title": "Powers of the Commissioner (Appeals).\nB. Appeals to the Appellate Tribunal"
+        },
+        {
+          "num": "252",
+          "text": "Appellate Tribunal.",
+          "page": 23,
+          "title": "Appellate Tribunal"
+        },
+        {
+          "num": "252A",
+          "text": "Qualifications, terms and conditions of service of President, Vice-President and Member.",
+          "page": 23,
+          "title": "Qualifications, terms and conditions of service of President, Vice-President and Member"
+        },
+        {
+          "num": "253",
+          "text": "Appeals to the Appellate Tribunal.",
+          "page": 23,
+          "title": "Appeals to the Appellate Tribunal"
+        },
+        {
+          "num": "254",
+          "text": "Orders of Appellate Tribunal.",
+          "page": 23,
+          "title": "Orders of Appellate Tribunal"
+        },
+        {
+          "num": "255",
+          "text": "Procedure of Appellate Tribunal.\nC.—Reference to High Court",
+          "page": 23,
+          "title": "Procedure of Appellate Tribunal.\nC"
+        },
+        {
+          "num": "256",
+          "text": "Statement of case to the High Court.",
+          "page": 23,
+          "title": "Statement of case to the High Court"
+        },
+        {
+          "num": "257",
+          "text": "Statement of case to Supreme Court in certain cases.",
+          "page": 23,
+          "title": "Statement of case to Supreme Court in certain cases"
+        },
+        {
+          "num": "258",
+          "text": "Power of High Court or Supreme Court to require statement to be amended.",
+          "page": 23,
+          "title": "Power of High Court or Supreme Court to require statement to be amended"
+        },
+        {
+          "num": "259",
+          "text": "Case before High Court to be heard by not less than two judges.",
+          "page": 23,
+          "title": "Case before High Court to be heard by not less than two judges"
+        },
+        {
+          "num": "260",
+          "text": "Decision of High Court or Supreme Court on the case stated.\nCC.—Appeals to High Court",
+          "page": 23,
+          "title": "Decision of High Court or Supreme Court on the case stated.\nCC"
+        },
+        {
+          "num": "260A",
+          "text": "Appeal to High Court.",
+          "page": 23,
+          "title": "Appeal to High Court"
+        },
+        {
+          "num": "260B",
+          "text": "Case before High Court to be heard by not less than two Judges.\n23\nD.—Appeals to the Supreme Court\nSECTIONS",
+          "page": 23,
+          "title": "Case before High Court to be heard by not less than two Judges.\n23\nD"
+        },
+        {
+          "num": "261",
+          "text": "Appeal to Supreme Court.",
+          "page": 24,
+          "title": "Appeal to Supreme Court"
+        },
+        {
+          "num": "262",
+          "text": "Hearing before Supreme Court.\nE.—Revision by the Principal Commissioner or Commissioner",
+          "page": 24,
+          "title": "Hearing before Supreme Court.\nE"
+        },
+        {
+          "num": "263",
+          "text": "Revision of orders prejudicial to revenue.",
+          "page": 24,
+          "title": "Revision of orders prejudicial to revenue"
+        },
+        {
+          "num": "264",
+          "text": "Revision of other orders.\nF.—General",
+          "page": 24,
+          "title": "Revision of other orders.\nF"
+        },
+        {
+          "num": "265",
+          "text": "Tax to be paid notwithstanding reference, etc.",
+          "page": 24,
+          "title": "Tax to be paid notwithstanding reference, etc"
+        },
+        {
+          "num": "266",
+          "text": "Execution for costs awarded by Supreme Court.",
+          "page": 24,
+          "title": "Execution for costs awarded by Supreme Court"
+        },
+        {
+          "num": "267",
+          "text": "Amendment of assessment on appeal.",
+          "page": 24,
+          "title": "Amendment of assessment on appeal"
+        },
+        {
+          "num": "268",
+          "text": "Exclusion of time taken for copy.",
+          "page": 24,
+          "title": "Exclusion of time taken for copy"
+        },
+        {
+          "num": "268A",
+          "text": "Filing of appeal or application for reference by income-tax authority.",
+          "page": 24,
+          "title": "Filing of appeal or application for reference by income-tax authority"
+        },
+        {
+          "num": "269",
+          "text": "Definition of “High Court”.\nCHAPTER XXA\nACQUISITION OF IMMOVABLE PROPERTIES IN\nCERTAIN CASES OF TRANSFER TO COUNTERACT EVASION OF TAX",
+          "page": 24,
+          "title": "Definition of “High Court”.\nCHAPTER XXA\nACQUISITION OF IMMOVABLE PROPERTIES IN\nCERTAIN CASES OF TRANSFER TO COUNTERACT EVASION OF TAX"
+        },
+        {
+          "num": "269A",
+          "text": "Definitions.",
+          "page": 24,
+          "title": "Definitions"
+        },
+        {
+          "num": "269AB",
+          "text": "Registration of certain transactions.",
+          "page": 24,
+          "title": "Registration of certain transactions"
+        },
+        {
+          "num": "269B",
+          "text": "Competent authority.",
+          "page": 24,
+          "title": "Competent authority"
+        },
+        {
+          "num": "269C",
+          "text": "Immovable property in respect of which proceedings for acquisition may be taken.",
+          "page": 24,
+          "title": "Immovable property in respect of which proceedings for acquisition may be taken"
+        },
+        {
+          "num": "269D",
+          "text": "Preliminary notice.\n269E.Objections.",
+          "page": 24,
+          "title": "Preliminary notice.\n269E.Objections"
+        },
+        {
+          "num": "269F",
+          "text": "Hearing of objections.",
+          "page": 24,
+          "title": "Hearing of objections"
+        },
+        {
+          "num": "269G",
+          "text": "Appeal against order for acquisition.",
+          "page": 24,
+          "title": "Appeal against order for acquisition"
+        },
+        {
+          "num": "269H",
+          "text": "Appeal to High Court.",
+          "page": 24,
+          "title": "Appeal to High Court"
+        },
+        {
+          "num": "269I",
+          "text": "Vesting of property in Central Government.",
+          "page": 24,
+          "title": "Vesting of property in Central Government"
+        },
+        {
+          "num": "269J",
+          "text": "Compensation.",
+          "page": 24,
+          "title": "Compensation"
+        },
+        {
+          "num": "269K",
+          "text": "Payment or deposit of compensation.",
+          "page": 24,
+          "title": "Payment or deposit of compensation"
+        },
+        {
+          "num": "269L",
+          "text": "Assistance by Valuation Officers.",
+          "page": 24,
+          "title": "Assistance by Valuation Officers"
+        },
+        {
+          "num": "269M",
+          "text": "Powers of competent authority.",
+          "page": 24,
+          "title": "Powers of competent authority"
+        },
+        {
+          "num": "269N",
+          "text": "Rectification of mistakes.\n269-O. Appearance by authorised representative or registered valuer.",
+          "page": 24,
+          "title": "Rectification of mistakes.\n269-O. Appearance by authorised representative or registered valuer"
+        },
+        {
+          "num": "269P",
+          "text": "Statement to be furnished in respect of transfers of immovable property.",
+          "page": 24,
+          "title": "Statement to be furnished in respect of transfers of immovable property"
+        },
+        {
+          "num": "269Q",
+          "text": "Chapter not to apply to transfers to relatives.",
+          "page": 24,
+          "title": "Chapter not to apply to transfers to relatives"
+        },
+        {
+          "num": "269R",
+          "text": "Properties liable for acquisition under this Chapter not to be acquired under other laws.",
+          "page": 24,
+          "title": "Properties liable for acquisition under this Chapter not to be acquired under other laws"
+        },
+        {
+          "num": "269RR",
+          "text": "Chapter not to apply where transfer of immovable property made after a certain date.",
+          "page": 24,
+          "title": "Chapter not to apply where transfer of immovable property made after a certain date"
+        },
+        {
+          "num": "269S",
+          "text": "Chapter not to extend to State of Jammu and Kashmir.\n24\nCHAPTER XXB\nREQUIREMENT AS TO MODE OF ACCEPTANCE, PAYMENT\nOR REPAYMENT IN CERTAIN CASES TO COUNTERACT EVASION OF TAX\nSECTIONS",
+          "page": 24,
+          "title": "Chapter not to extend to State of Jammu and Kashmir"
+        },
+        {
+          "num": "269SS",
+          "text": "Mode of taking or accepting certain loans, deposits and specified sum.",
+          "page": 25,
+          "title": "Mode of taking or accepting certain loans, deposits and specified sum"
+        },
+        {
+          "num": "269ST",
+          "text": "Mode of undertaking transactions.",
+          "page": 25,
+          "title": "Mode of undertaking transactions"
+        },
+        {
+          "num": "269T",
+          "text": "Mode of repayment of certain loans or deposits.",
+          "page": 25,
+          "title": "Mode of repayment of certain loans or deposits"
+        },
+        {
+          "num": "269TT",
+          "text": "Mode of repayment of Special Bearer Bonds, 1991.\nCHAPTER XXC\nPURCHASE BY CENTRAL GOVERNMENT OF IMMOVABLE\nPROPERTIES IN CERTAIN CASES OF TRANSFER",
+          "page": 25,
+          "title": "Mode of repayment of Special Bearer Bonds, 1991"
+        },
+        {
+          "num": "269U",
+          "text": "Commencement of Chapter.",
+          "page": 25,
+          "title": "Commencement of Chapter"
+        },
+        {
+          "num": "269UA",
+          "text": "Definitions.",
+          "page": 25,
+          "title": "Definitions"
+        },
+        {
+          "num": "269UB",
+          "text": "Appropriate authority.",
+          "page": 25,
+          "title": "Appropriate authority"
+        },
+        {
+          "num": "269UC",
+          "text": "Restrictions on transfer of immovable property.",
+          "page": 25,
+          "title": "Restrictions on transfer of immovable property"
+        },
+        {
+          "num": "269UD",
+          "text": "Order by appropriate authority for purchase by Central Government of immovable\nproperty.",
+          "page": 25,
+          "title": "Order by appropriate authority for purchase by Central Government of immovable\nproperty"
+        },
+        {
+          "num": "269UE",
+          "text": "Vesting of property in Central Government.",
+          "page": 25,
+          "title": "Vesting of property in Central Government"
+        },
+        {
+          "num": "269UF",
+          "text": "Consideration for purchase of immovable property by Central Government.",
+          "page": 25,
+          "title": "Consideration for purchase of immovable property by Central Government"
+        },
+        {
+          "num": "269UG",
+          "text": "Payment or deposit of consideration.",
+          "page": 25,
+          "title": "Payment or deposit of consideration"
+        },
+        {
+          "num": "269UH",
+          "text": "Re-vesting of property in the transferor on failure of payment or deposit of consideration.",
+          "page": 25,
+          "title": "Re-vesting of property in the transferor on failure of payment or deposit of consideration"
+        },
+        {
+          "num": "269UI",
+          "text": "Powers of the appropriate authority.",
+          "page": 25,
+          "title": "Powers of the appropriate authority"
+        },
+        {
+          "num": "269UJ",
+          "text": "Rectification of mistakes.",
+          "page": 25,
+          "title": "Rectification of mistakes"
+        },
+        {
+          "num": "269UK",
+          "text": "Restrictions on revocation or alteration of certain agreements for the transfer of immovable\nproperty or on transfer of certain immovable property.",
+          "page": 25,
+          "title": "Restrictions on revocation or alteration of certain agreements for the transfer of immovable\nproperty or on transfer of certain immovable pr"
+        },
+        {
+          "num": "269UL",
+          "text": "Restrictions on registration, etc., of documents in respect of transfer of immovable\nproperty.",
+          "page": 25,
+          "title": "Restrictions on registration, etc., of documents in respect of transfer of immovable\nproperty"
+        },
+        {
+          "num": "269UM",
+          "text": "Immunity to transferor against claims of transferee for transfer.",
+          "page": 25,
+          "title": "Immunity to transferor against claims of transferee for transfer"
+        },
+        {
+          "num": "269UN",
+          "text": "Order of appropriate authority to be final and conclusive.",
+          "page": 25,
+          "title": "Order of appropriate authority to be final and conclusive"
+        },
+        {
+          "num": "269UO",
+          "text": "Chapter not to apply to certain transfers.",
+          "page": 25,
+          "title": "Chapter not to apply to certain transfers"
+        },
+        {
+          "num": "269UP",
+          "text": "Chapter not to apply where transfer of immovable property effected after certain date.\nCHAPTER XXI\nPENALTIES IMPOSABLE",
+          "page": 25,
+          "title": "Chapter not to apply where transfer of immovable property effected after certain date.\nCHAPTER XXI\nPENALTIES IMPOSABLE"
+        },
+        {
+          "num": "270",
+          "text": "[Omitted.].",
+          "page": 25,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "270A",
+          "text": "Penalty for under reporting and misreporting of income.",
+          "page": 25,
+          "title": "Penalty for under reporting and misreporting of income"
+        },
+        {
+          "num": "270AA",
+          "text": "Immunity from imposition of penalty, etc.",
+          "page": 25,
+          "title": "Immunity from imposition of penalty, etc"
+        },
+        {
+          "num": "271",
+          "text": "Failure to furnish returns, comply with notices, concealment of income, etc.",
+          "page": 25,
+          "title": "Failure to furnish returns, comply with notices, concealment of income, etc"
+        },
+        {
+          "num": "271A",
+          "text": "Failure to keep, maintain or retain books of account, documents, etc.",
+          "page": 25,
+          "title": "Failure to keep, maintain or retain books of account, documents, etc"
+        },
+        {
+          "num": "271AA",
+          "text": "Penalty for failure to keep and maintain information and document, etc., in respect of\ncertain transactions.\n25\nSECTIONS\n271AAA. Penalty where search has been initiated.\n271AAB. Penalty where search has been initiated.\n271AAC. Penalty in respect of certain income.",
+          "page": 25,
+          "title": "Penalty for failure to keep and maintain information and document, etc"
+        },
+        {
+          "num": "271B",
+          "text": "Failure to get accounts audited.",
+          "page": 26,
+          "title": "Failure to get accounts audited"
+        },
+        {
+          "num": "271BA",
+          "text": "Penalty for failure to furnish report under section 92E.",
+          "page": 26,
+          "title": "Penalty for failure to furnish report under section 92E"
+        },
+        {
+          "num": "271BB",
+          "text": "Failure to subscribe to the eligible issue of capital.",
+          "page": 26,
+          "title": "Failure to subscribe to the eligible issue of capital"
+        },
+        {
+          "num": "271C",
+          "text": "Penalty for failure to deduct tax at source.",
+          "page": 26,
+          "title": "Penalty for failure to deduct tax at source"
+        },
+        {
+          "num": "271CA",
+          "text": "Penalty for failure to collect tax at source.",
+          "page": 26,
+          "title": "Penalty for failure to collect tax at source"
+        },
+        {
+          "num": "271D",
+          "text": "Penalty for failure to comply with the provisions of section 269SS.",
+          "page": 26,
+          "title": "Penalty for failure to comply with the provisions of section 269SS"
+        },
+        {
+          "num": "271DA",
+          "text": "Penalty for failiure to comply with provisions of section 269ST.",
+          "page": 26,
+          "title": "Penalty for failiure to comply with provisions of section 269ST"
+        },
+        {
+          "num": "271E",
+          "text": "Penalty for failure to comply with the provisions of section 269T.",
+          "page": 26,
+          "title": "Penalty for failure to comply with the provisions of section 269T"
+        },
+        {
+          "num": "271F",
+          "text": "Penalty for failure to furnish return of income.",
+          "page": 26,
+          "title": "Penalty for failure to furnish return of income"
+        },
+        {
+          "num": "271FA",
+          "text": "Penalty for failure to furnish statement of financial transaction or reportable income.\n271FAA. Penalty for furnishing inaccurate statement of financial transaction or reportable\naccount.\n271FAB. Penalty for failure to furnishing statement or information or document by an eligible\ninvestment fund.",
+          "page": 26,
+          "title": "Penalty for failure to furnish statement of financial transaction or reportable income"
+        },
+        {
+          "num": "271FB",
+          "text": "Penalty for failure to furnish return of fringe benefits.",
+          "page": 26,
+          "title": "Penalty for failure to furnish return of fringe benefits"
+        },
+        {
+          "num": "271G",
+          "text": "Penalty for failure to furnish information or document under section 92D.",
+          "page": 26,
+          "title": "Penalty for failure to furnish information or document under section 92D"
+        },
+        {
+          "num": "271GA",
+          "text": "Penalty for failure to furnish information or document under section 285A.",
+          "page": 26,
+          "title": "Penalty for failure to furnish information or document under section 285A"
+        },
+        {
+          "num": "271GB",
+          "text": "Penalty for failure to furnish report or for furnishing inaccurate report under section 286.",
+          "page": 26,
+          "title": "Penalty for failure to furnish report or for furnishing inaccurate report under section 286"
+        },
+        {
+          "num": "271H",
+          "text": "Penalty for failure to furnish statements, etc.\n271-I. Penalty for failure to furnish information or furnishing inaccurate information under\nsection 195.",
+          "page": 26,
+          "title": "Penalty for failure to furnish statements, etc"
+        },
+        {
+          "num": "271J",
+          "text": "Penalty for furnishing incorrect information in reports or certificates.",
+          "page": 26,
+          "title": "Penalty for furnishing incorrect information in reports or certificates"
+        },
+        {
+          "num": "272",
+          "text": "[Omitted.].",
+          "page": 26,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "272A",
+          "text": "Penalty for failure to answer questions, sign statements, furnish information, returns or\nstatements, allow inspections, etc.",
+          "page": 26,
+          "title": "Penalty for failure to answer questions, sign statements, furnish information, returns or\nstatements, allow inspections, etc"
+        },
+        {
+          "num": "272AA",
+          "text": "Penalty for failure to comply with the provisions of section 133B.",
+          "page": 26,
+          "title": "Penalty for failure to comply with the provisions of section 133B"
+        },
+        {
+          "num": "272B",
+          "text": "Penalty for failure to comply with the provisions of section 139A.",
+          "page": 26,
+          "title": "Penalty for failure to comply with the provisions of section 139A"
+        },
+        {
+          "num": "272BB",
+          "text": "Penalty for failure to comply with the provisions of section 203A.\n272BBB. Penalty for failure to comply with the provisions of section 206CA.",
+          "page": 26,
+          "title": "Penalty for failure to comply with the provisions of section 203A"
+        },
+        {
+          "num": "273",
+          "text": "False estimate of, or failure to pay, advance tax.",
+          "page": 26,
+          "title": "False estimate of, or failure to pay, advance tax"
+        },
+        {
+          "num": "273A",
+          "text": "Power to reduce or waive penalty, etc., in certain cases.",
+          "page": 26,
+          "title": "Power to reduce or waive penalty, etc., in certain cases"
+        },
+        {
+          "num": "273AA",
+          "text": "Power of Principal Commissioner or Commissioner to grant immunity from penalty.",
+          "page": 26,
+          "title": "Power of Principal Commissioner or Commissioner to grant immunity from penalty"
+        },
+        {
+          "num": "273B",
+          "text": "Penalty not to be imposed in certain cases.",
+          "page": 26,
+          "title": "Penalty not to be imposed in certain cases"
+        },
+        {
+          "num": "274",
+          "text": "Procedure.",
+          "page": 26,
+          "title": "Procedure"
+        },
+        {
+          "num": "275",
+          "text": "Bar of limitation for imposing penalties.\nCHAPTER XXII\nOFFENCES AND PROSECUTIONS",
+          "page": 26,
+          "title": "Bar of limitation for imposing penalties.\nCHAPTER XXII\nOFFENCES AND PROSECUTIONS"
+        },
+        {
+          "num": "275A",
+          "text": "Contravention of order made under sub-section (3) of section 132.",
+          "page": 26,
+          "title": "Contravention of order made under sub-section (3) of section 132"
+        },
+        {
+          "num": "275B",
+          "text": "Failure to comply with the provisions of clause (iib) of sub-section (1) of section 132.",
+          "page": 26,
+          "title": "Failure to comply with the provisions of clause (iib) of sub-section (1) of section 132"
+        },
+        {
+          "num": "276",
+          "text": "Removal, concealment, transfer or delivery of property to thwart tax recovery.",
+          "page": 26,
+          "title": "Removal, concealment, transfer or delivery of property to thwart tax recovery"
+        },
+        {
+          "num": "276A",
+          "text": "Failure to comply with the provisions of sub-sections (1) and (3) of section 178.",
+          "page": 26,
+          "title": "Failure to comply with the provisions of sub-sections (1) and (3) of section 178"
+        },
+        {
+          "num": "276AA",
+          "text": "[Omitted.].\n26\nSECTIONS",
+          "page": 26,
+          "title": "[Omitted.].\n26\nSECTIONS"
+        },
+        {
+          "num": "276AB",
+          "text": "Failure to comply with the provisions of sections 269UC, 269UE and 269UL.",
+          "page": 27,
+          "title": "Failure to comply with the provisions of sections 269UC, 269UE and 269UL"
+        },
+        {
+          "num": "276B",
+          "text": "Failure to pay tax to the credit of Central Government under Chapter XII-D or XVII-B.",
+          "page": 27,
+          "title": "Failure to pay tax to the credit of Central Government under Chapter XII-D or XVII-B"
+        },
+        {
+          "num": "276BB",
+          "text": "Failure to pay the tax collected at source.",
+          "page": 27,
+          "title": "Failure to pay the tax collected at source"
+        },
+        {
+          "num": "276C",
+          "text": "Wilful attempt to evade tax, etc.",
+          "page": 27,
+          "title": "Wilful attempt to evade tax, etc"
+        },
+        {
+          "num": "276CC",
+          "text": "Failure to furnish returns of income.\n276CCC. Failure to furnish return of income in search cases.",
+          "page": 27,
+          "title": "Failure to furnish returns of income.\n276CCC. Failure to furnish return of income in search cases"
+        },
+        {
+          "num": "276D",
+          "text": "Failure to produce accounts and documents.",
+          "page": 27,
+          "title": "Failure to produce accounts and documents"
+        },
+        {
+          "num": "276DD",
+          "text": "[Omitted.].",
+          "page": 27,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "276E",
+          "text": "[Omitted.].",
+          "page": 27,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "277",
+          "text": "False statement in verification, etc.",
+          "page": 27,
+          "title": "False statement in verification, etc"
+        },
+        {
+          "num": "277A",
+          "text": "Falsification of books of account or document, etc.",
+          "page": 27,
+          "title": "Falsification of books of account or document, etc"
+        },
+        {
+          "num": "278",
+          "text": "Abetment of false return, etc.",
+          "page": 27,
+          "title": "Abetment of false return, etc"
+        },
+        {
+          "num": "278A",
+          "text": "Punishment for second and subsequent offences.",
+          "page": 27,
+          "title": "Punishment for second and subsequent offences"
+        },
+        {
+          "num": "278AA",
+          "text": "Punishment not to be imposed in certain cases.",
+          "page": 27,
+          "title": "Punishment not to be imposed in certain cases"
+        },
+        {
+          "num": "278AB",
+          "text": "Power of Principal Commissioner or Commissioner to grant immunity from prosecution.",
+          "page": 27,
+          "title": "Power of Principal Commissioner or Commissioner to grant immunity from prosecution"
+        },
+        {
+          "num": "278B",
+          "text": "Offences by companies.",
+          "page": 27,
+          "title": "Offences by companies"
+        },
+        {
+          "num": "278C",
+          "text": "Offences by Hindu undivided families.",
+          "page": 27,
+          "title": "Offences by Hindu undivided families"
+        },
+        {
+          "num": "278D",
+          "text": "Presumption as to assets, books of account, etc., in certain cases.",
+          "page": 27,
+          "title": "Presumption as to assets, books of account, etc., in certain cases"
+        },
+        {
+          "num": "278E",
+          "text": "Presumption as to culpable mental state.",
+          "page": 27,
+          "title": "Presumption as to culpable mental state"
+        },
+        {
+          "num": "279",
+          "text": "Prosecution to be at instance of Principal Chief Commissioner or Chief Commissioner\nor Principal Commissioner or Commissioner.",
+          "page": 27,
+          "title": "Prosecution to be at instance of Principal Chief Commissioner or Chief Commissioner\nor Principal Commissioner or Commissioner"
+        },
+        {
+          "num": "279A",
+          "text": "Certain offences to be non-cognizable.",
+          "page": 27,
+          "title": "Certain offences to be non-cognizable"
+        },
+        {
+          "num": "279B",
+          "text": "Proof of entries in records or documents.",
+          "page": 27,
+          "title": "Proof of entries in records or documents"
+        },
+        {
+          "num": "280",
+          "text": "Disclosure of particulars by public servants.",
+          "page": 27,
+          "title": "Disclosure of particulars by public servants"
+        },
+        {
+          "num": "280A",
+          "text": "Special Courts.",
+          "page": 27,
+          "title": "Special Courts"
+        },
+        {
+          "num": "280B",
+          "text": "Offences triable by Special Court.\n280C.Trial of offences as summons case.",
+          "page": 27,
+          "title": "Offences triable by Special Court.\n280C.Trial of offences as summons case"
+        },
+        {
+          "num": "280D",
+          "text": "Application of Code of Criminal Procedure, 1973 to proceedings before Special Court.\nCHAPTER XXII-A\nANNUITY DEPOSITS",
+          "page": 27,
+          "title": "Application of Code of Criminal Procedure, 1973 to proceedings before Special Court.\nCHAPTER XXII-A\nANNUITY DEPOSITS"
+        },
+        {
+          "num": "280E",
+          "text": "[Omitted.].",
+          "page": 27,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280F",
+          "text": "[Omitted.].",
+          "page": 27,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280G",
+          "text": "[Omitted.].",
+          "page": 27,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280H",
+          "text": "[Omitted.].\n280-I. [Omitted.].",
+          "page": 27,
+          "title": "[Omitted.].\n280-I. [Omitted.]"
+        },
+        {
+          "num": "280J",
+          "text": "[Omitted.].",
+          "page": 27,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280K",
+          "text": "[Omitted.].",
+          "page": 27,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280L",
+          "text": "[Omitted.].\n27\nSECTIONS",
+          "page": 27,
+          "title": "[Omitted.].\n27\nSECTIONS"
+        },
+        {
+          "num": "280M",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280N",
+          "text": "[Omitted.].\n280-O. [Omitted.].",
+          "page": 28,
+          "title": "[Omitted.].\n280-O. [Omitted.]"
+        },
+        {
+          "num": "280P",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280Q",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280R",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280S",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280T",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280U",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280V",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280W",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280X",
+          "text": "[Omitted.].\nCHAPTER XXII-B\nTAX CREDIT CERTIFICATES",
+          "page": 28,
+          "title": "[Omitted.].\nCHAPTER XXII-B\nTAX CREDIT CERTIFICATES"
+        },
+        {
+          "num": "280Y",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280Z",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280ZA",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280ZB",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280ZC",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280ZD",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "280ZE",
+          "text": "[Omitted.].\nCHAPTER XXIII\nMISCELLANEOUS",
+          "page": 28,
+          "title": "[Omitted.].\nCHAPTER XXIII\nMISCELLANEOUS"
+        },
+        {
+          "num": "281",
+          "text": "Certain transfers to be void.",
+          "page": 28,
+          "title": "Certain transfers to be void"
+        },
+        {
+          "num": "281A",
+          "text": "[Repealed.].",
+          "page": 28,
+          "title": "[Repealed.]"
+        },
+        {
+          "num": "281B",
+          "text": "Provisional attachment to protect revenue in certain cases.",
+          "page": 28,
+          "title": "Provisional attachment to protect revenue in certain cases"
+        },
+        {
+          "num": "282",
+          "text": "Service of notice generally.",
+          "page": 28,
+          "title": "Service of notice generally"
+        },
+        {
+          "num": "282A",
+          "text": "Authentication of notices and other documents.",
+          "page": 28,
+          "title": "Authentication of notices and other documents"
+        },
+        {
+          "num": "282B",
+          "text": "[Omitted.].",
+          "page": 28,
+          "title": "[Omitted.]"
+        },
+        {
+          "num": "283",
+          "text": "Service of notice when family is disrupted or firm, etc., is dissolved.",
+          "page": 28,
+          "title": "Service of notice when family is disrupted or firm, etc., is dissolved"
+        },
+        {
+          "num": "284",
+          "text": "Service of notice in the case of discontinued business.",
+          "page": 28,
+          "title": "Service of notice in the case of discontinued business"
+        },
+        {
+          "num": "285",
+          "text": "Submission of statement by a non-resident having liaison office.",
+          "page": 28,
+          "title": "Submission of statement by a non-resident having liaison office"
+        },
+        {
+          "num": "285A",
+          "text": "Furnishing of information or documents by an Indian concern in certain cases.",
+          "page": 28,
+          "title": "Furnishing of information or documents by an Indian concern in certain cases"
+        },
+        {
+          "num": "285B",
+          "text": "Submission of statements by producers of cinematograph films.",
+          "page": 28,
+          "title": "Submission of statements by producers of cinematograph films"
+        },
+        {
+          "num": "285BA",
+          "text": "Obligation to furnish statement of financial transaction or reportable account.",
+          "page": 28,
+          "title": "Obligation to furnish statement of financial transaction or reportable account"
+        },
+        {
+          "num": "286",
+          "text": "Furnishing of report in respect of international group.",
+          "page": 28,
+          "title": "Furnishing of report in respect of international group"
+        },
+        {
+          "num": "287",
+          "text": "Publication of information respecting assessees in certain cases.",
+          "page": 28,
+          "title": "Publication of information respecting assessees in certain cases"
+        },
+        {
+          "num": "287A",
+          "text": "Appearance by registered valuer in certain matters.",
+          "page": 28,
+          "title": "Appearance by registered valuer in certain matters"
+        },
+        {
+          "num": "288",
+          "text": "Appearance by authorised representative.",
+          "page": 28,
+          "title": "Appearance by authorised representative"
+        },
+        {
+          "num": "288A",
+          "text": "Rounding off of income.",
+          "page": 28,
+          "title": "Rounding off of income"
+        },
+        {
+          "num": "288B",
+          "text": "Rounding off amount payable and refund due.",
+          "page": 28,
+          "title": "Rounding off amount payable and refund due"
+        },
+        {
+          "num": "289",
+          "text": "Receipt to be given.",
+          "page": 28,
+          "title": "Receipt to be given"
+        },
+        {
+          "num": "290",
+          "text": "Indemnity.\n28\nSECTIONS",
+          "page": 28,
+          "title": "Indemnity.\n28\nSECTIONS"
+        },
+        {
+          "num": "291",
+          "text": "Power to tender immunity from prosecution.",
+          "page": 29,
+          "title": "Power to tender immunity from prosecution"
+        },
+        {
+          "num": "292",
+          "text": "Cognizance of offences.",
+          "page": 29,
+          "title": "Cognizance of offences"
+        },
+        {
+          "num": "292A",
+          "text": "Section 360 of the Code of Criminal Procedure, 1973, and the Probation of Offenders\nAct, 1958, not to apply.",
+          "page": 29,
+          "title": "Section 360 of the Code of Criminal Procedure, 1973, and the Probation of Offenders\nAct, 1958, not to apply"
+        },
+        {
+          "num": "292B",
+          "text": "Return of income, etc., not to be invalid on certain grounds.",
+          "page": 29,
+          "title": "Return of income, etc., not to be invalid on certain grounds"
+        },
+        {
+          "num": "292BB",
+          "text": "Notice deemed to be valid in certain circumstances.",
+          "page": 29,
+          "title": "Notice deemed to be valid in certain circumstances"
+        },
+        {
+          "num": "292C",
+          "text": "Presumption as to assets, books of account, etc.",
+          "page": 29,
+          "title": "Presumption as to assets, books of account, etc"
+        },
+        {
+          "num": "292CC",
+          "text": "Authorisation and assessment in case of search or requisition.",
+          "page": 29,
+          "title": "Authorisation and assessment in case of search or requisition"
+        },
+        {
+          "num": "293",
+          "text": "Bar of suits in civil courts.",
+          "page": 29,
+          "title": "Bar of suits in civil courts"
+        },
+        {
+          "num": "293A",
+          "text": "Power to make exemption, etc., in relation to participation in the business of prospecting for,\nextraction, etc., of mineral oils.",
+          "page": 29,
+          "title": "Power to make exemption, etc., in relation to participation in the business of prospecting for,\nextraction, etc., of mineral oils"
+        },
+        {
+          "num": "293B",
+          "text": "Power of Central Government or Board to condone delays in obtaining approval.",
+          "page": 29,
+          "title": "Power of Central Government or Board to condone delays in obtaining approval"
+        },
+        {
+          "num": "293C",
+          "text": "Power to withdraw approval.",
+          "page": 29,
+          "title": "Power to withdraw approval"
+        },
+        {
+          "num": "294",
+          "text": "Act to have effect pending legislative provision for charge of tax.",
+          "page": 29,
+          "title": "Act to have effect pending legislative provision for charge of tax"
+        },
+        {
+          "num": "294A",
+          "text": "Power to make exemption, etc., in relation to certain Union territories.",
+          "page": 29,
+          "title": "Power to make exemption, etc., in relation to certain Union territories"
+        },
+        {
+          "num": "295",
+          "text": "Power to make rules.",
+          "page": 29,
+          "title": "Power to make rules"
+        },
+        {
+          "num": "296",
+          "text": "Rules and certain notifications to be placed before Parliament.",
+          "page": 29,
+          "title": "Rules and certain notifications to be placed before Parliament"
+        },
+        {
+          "num": "297",
+          "text": "Repeals and savings.",
+          "page": 29,
+          "title": "Repeals and savings"
+        },
+        {
+          "num": "298",
+          "text": "Power to remove difficulties.\nTHE FIRST SCHEDULE.\nTHE SECOND SCHEDULE.\nTHE THIRD SCHEDULE.\nTHE FOURTH SCHEDULE.\nTHE FIFTH SCHEDULE.\nTHE SIXTH SCHEDULE—[Omitted.].\nTHE SEVENTH SCHEDULE.\nTHE EIGHTH SCHEDULE.\nTHE NINTH SCHEDULE.\nTHE TENTH SCHEDULE.\nTHE ELEVENTH SCHUDULE.\nTHE TWELFTH SCHUDELE.\nTHE THIRTEENTH SCHEDULE.\nTHE FOURTEENTH SCHEDULE.\n29\nTHE INCOME-TAX ACT, 1961\nACT NO. 43 OF 1961\n[13th September, 1961.]\nAn Act to consolidate and amend the law relating to income-tax and super-tax.\nBE it enacted by Parliament in the Twelfth Year of the Republic of India as follows:—\nCHAPTER I\nPRELIMINARY",
+          "page": 29,
+          "title": "Power to remove difficulties"
+        }
+      ],
+      "note": "Repealed w.e.f. 01-04-2026 by the Income-tax Act, 2025 (30 of 2025); pending proceedings continue under transitional provisions.",
+      "repealed_by": "Income-tax Act, 2025"
+    }
+  ]
+}

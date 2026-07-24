@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notifications &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .notif-wrap { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .notif-item { display:flex; gap:.9rem; align-items:flex-start; padding:.95rem 1.1rem;
+      border:1px solid var(--border); border-radius:var(--radius); background:var(--surface);
+      margin-bottom:.6rem; transition:border-color .15s, background .15s; }
+    .notif-item.unread { border-left:3px solid var(--gold); background:var(--gold-dim); }
+    .notif-item:hover { border-color:var(--gold-border); }
+    .notif-dot { width:9px; height:9px; border-radius:50%; background:var(--gold); margin-top:.45rem; flex-shrink:0; }
+    .notif-dot.read { background:var(--text-4); opacity:.4; }
+    .notif-body { flex:1; min-width:0; }
+    .notif-title { font-weight:700; font-size:.9rem; color:var(--text); }
+    .notif-sub { font-size:.8rem; color:var(--text-2); margin-top:.2rem; line-height:1.5; }
+    .notif-time { font-size:.72rem; color:var(--text-3); margin-top:.3rem; }
+    .notif-link { font-size:.74rem; color:var(--gold); font-weight:700; text-decoration:none; flex-shrink:0; align-self:center; }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary">Court Diary</a>
+    <a href="/library">Legal Library</a>
+    <a href="/assistant">AI Assistant</a>
+    <a href="/drafting">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<div class="notif-wrap">
+  <div class="page-header">
+    <div>
+      <h1>Notifications</h1>
+      <div class="sub">Hearing &amp; deadline reminders and firm alerts</div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-ghost btn-sm" onclick="markAllRead()" id="btn-allread">Mark all read</button>
+    </div>
+  </div>
+  <div id="notif-list"><div class="empty-state"><p>Loading…</p></div></div>
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>requireAuth();</script>
+<script>
+async function loadNotifs() {
+  const wrap = document.getElementById('notif-list');
+  let items;
+  try { items = await api.get('/api/notifications/'); }
+  catch (_) { wrap.innerHTML = '<div class="empty-state"><p>Could not load notifications.</p></div>'; return; }
+  if (!items.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon" style="color:var(--text-4)"><svg class="lc lc-lg" aria-hidden="true"><use href="/static/lucide.svg#lc-bell"/></svg></div><p>You’re all caught up — no notifications.</p></div>';
+    return;
+  }
+  wrap.innerHTML = items.map(n => `
+    <div class="notif-item ${n.is_read ? '' : 'unread'}" id="n-${n.id}">
+      <div class="notif-dot ${n.is_read ? 'read' : ''}"></div>
+      <div class="notif-body">
+        <div class="notif-title">${esc(n.title)}</div>
+        ${n.body ? `<div class="notif-sub">${esc(n.body)}</div>` : ''}
+        <div class="notif-time">${esc((n.created_at || '').slice(0,16).replace('T',' '))}</div>
+      </div>
+      ${n.link ? `<a class="notif-link" href="${esc(n.link)}" onclick="markRead(${n.id})">Open →</a>`
+               : (n.is_read ? '' : `<button class="mbtn" onclick="markRead(${n.id})" style="border:1px solid var(--border);background:transparent;color:var(--text-2);border-radius:7px;padding:.3rem .6rem;font-size:.72rem;font-weight:700;cursor:pointer">Mark read</button>`)}
+    </div>`).join('');
+}
+async function markRead(id) {
+  try { await api.post(`/api/notifications/${id}/read`, {}); const el = document.getElementById('n-'+id);
+    if (el) el.classList.remove('unread'); refreshBell?.(); } catch (_) {}
+}
+async function markAllRead() {
+  try { await api.post('/api/notifications/read-all', {}); toast('All marked read.', 'success'); loadNotifs(); refreshBell?.(); }
+  catch (_) { toast('Could not update.', 'error'); }
+}
+loadNotifs();
+</script>
+</body>
+</html>

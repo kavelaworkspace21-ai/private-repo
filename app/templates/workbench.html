@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workbench — Juriscite</title>
+  <link rel="manifest" href="/manifest.webmanifest"/>
+  <meta name="theme-color" content="#0B0F14"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="/">Juris<span>cite</span></a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary">Court Diary</a>
+    <a href="/library">Legal Library</a>
+    <a href="/assistant">AI Assistant</a>
+    <a href="/drafting">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<main class="page" style="max-width:1180px;">
+
+  <!-- ── HUB ── -->
+  <section id="wb-hub">
+    <div class="page-head" style="margin-bottom:.4rem;">
+      <div>
+        <h1 style="margin:0;">Advocate <span style="color:var(--gold);">Workbench</span></h1>
+        <p class="muted" style="margin:.35rem 0 0;max-width:640px;">
+          Six guided, source-grounded tools. Question-first, every output cited,
+          everything lands in your review queue — nothing is final without you.
+        </p>
+      </div>
+    </div>
+    <div id="wb-tiles" class="wb-grid"></div>
+    <p class="muted" style="font-size:.72rem;margin-top:1.1rem;">
+      Workbench outputs are preparation aids for advocates and begin as
+      <b>DRAFT — FOR ADVOCATE REVIEW</b>. No forecasts of how a matter will end — ever.
+      Generations count against your plan's AI limits.
+    </p>
+
+    <!-- WB-08: Artifact Library -->
+    <div class="section-label" style="margin-top:2rem;">Artifact Library</div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem;">
+      <select id="lib-type" onchange="loadLibrary()" style="background:var(--surface-2);
+              border:1.5px solid var(--border-2);border-radius:8px;padding:.4rem .55rem;
+              font-size:.76rem;color:var(--text);">
+        <option value="">All tools</option>
+      </select>
+      <select id="lib-matter" onchange="loadLibrary()" style="background:var(--surface-2);
+              border:1.5px solid var(--border-2);border-radius:8px;padding:.4rem .55rem;
+              font-size:.76rem;color:var(--text);max-width:200px;">
+        <option value="">All matters</option>
+      </select>
+    </div>
+    <div id="lib-rows"></div>
+  </section>
+
+  <!-- ── FILE TOOL (Chat with Case File · WB-02) ── -->
+  <section id="wb-filetool" style="display:none;">
+    <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;">
+      <button class="btn btn-ghost btn-sm" onclick="backToHubFromFile()">← Workbench</button>
+      <h2 style="margin:0;font-size:1.15rem;">Chat with Case File</h2>
+    </div>
+
+    <div class="card" style="max-width:840px;" id="ft-uploadbox">
+      <div class="section-label" style="margin-top:0;">Upload a case file (PDF or TXT, up to 20 MB)</div>
+      <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;">
+        <input type="file" id="ft-file" accept=".pdf,.txt"
+               style="font-size:.8rem;color:var(--text-2);"/>
+        <button class="btn btn-gold btn-sm" id="ft-upload-btn" onclick="uploadCaseFile()">Upload &amp; extract</button>
+      </div>
+      <p class="muted" style="font-size:.72rem;margin:.7rem 0 0;">
+        Privacy: files uploaded here auto-delete after <b>7 days</b> unless you save them to a
+        matter. Answers come only from this file — nothing is invented beyond it.
+      </p>
+    </div>
+
+    <div id="ft-work" style="display:none;max-width:840px;">
+      <div class="card" style="margin-top:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;">
+          <div><b id="ft-name"></b> <span class="muted" id="ft-meta" style="font-size:.75rem;"></span></div>
+          <div style="display:flex;gap:.5rem;align-items:center;">
+            <select id="ft-case" style="background:var(--surface-2);border:1.5px solid var(--border-2);
+                    border-radius:8px;padding:.4rem .5rem;font-size:.76rem;color:var(--text);max-width:180px;">
+              <option value="">Save file to matter…</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" onclick="saveFileToMatter()">Save</button>
+            <button class="btn btn-gold btn-sm" onclick="generateDates()">📅 List of Dates</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="ft-dates" class="card" style="display:none;margin-top:1rem;overflow-x:auto;"></div>
+
+      <div class="card" style="margin-top:1rem;">
+        <div class="section-label" style="margin-top:0;">Ask this file</div>
+        <div id="ft-thread"></div>
+        <div style="display:flex;gap:.6rem;margin-top:.6rem;">
+          <input id="ft-q" type="text" placeholder="e.g. What did the complainant allege on 12 June?"
+                 style="flex:1;background:var(--surface-2);border:1.5px solid var(--border-2);
+                        border-radius:8px;padding:.55rem .7rem;font-size:.84rem;color:var(--text);"
+                 onkeydown="if(event.key==='Enter')askFile()"/>
+          <button class="btn btn-gold btn-sm" id="ft-ask" onclick="askFile()">Ask</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SESSION (intake → confirm → generating → artifact) ── -->
+  <section id="wb-session" style="display:none;">
+    <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;">
+      <button class="btn btn-ghost btn-sm" onclick="backToHub()">← Workbench</button>
+      <h2 id="ws-title" style="margin:0;font-size:1.15rem;"></h2>
+      <span id="ws-state" class="format-chip" style="display:inline-block;"></span>
+    </div>
+
+    <!-- entry step (Argument Studio: Matter / upload / selected citations) -->
+    <div id="ws-argstep" class="card" style="max-width:760px;display:none;">
+      <div class="section-label" style="margin-top:0;">Build from — choose your starting point</div>
+      <div style="font-size:.8rem;color:var(--text-3);margin-bottom:.5rem;">
+        Link this argument pack to a matter (optional), and/or ground it in specific judgments
+        you've picked. Leave both blank to argue purely from the facts you'll type next.
+      </div>
+      <label style="display:block;font-size:.76rem;color:var(--text-2);margin:.5rem 0 .25rem;">Matter (optional)</label>
+      <select id="arg-matter" style="width:100%;background:var(--surface-2);border:1.5px solid var(--border-2);
+              border-radius:8px;padding:.45rem .6rem;font-size:.8rem;color:var(--text);margin-bottom:.8rem;">
+        <option value="">No matter</option>
+      </select>
+      <label style="display:block;font-size:.76rem;color:var(--text-2);margin:.25rem 0 .25rem;">
+        Selected judgments — Indian Kanoon links or ids, one per line (optional)</label>
+      <textarea id="arg-citations" rows="3" placeholder="https://indiankanoon.org/doc/110270205/&#10;34556456"
+                style="width:100%;background:var(--surface-2);border:1.5px solid var(--border-2);
+                       border-radius:8px;padding:.5rem .7rem;font-size:.8rem;color:var(--text);
+                       font-family:var(--font-mono,monospace);resize:vertical;"></textarea>
+      <div style="margin-top:1rem;">
+        <button class="btn btn-gold" onclick="startArgSession()">Continue to intake</button>
+      </div>
+    </div>
+
+    <!-- upload step (upload-first workflows, e.g. Case File Analysis) -->
+    <div id="ws-uploadstep" class="card" style="max-width:760px;display:none;">
+      <div class="section-label" style="margin-top:0;">Step 0 — attach the case file</div>
+      <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;">
+        <input type="file" id="ws-file" accept=".pdf,.txt" style="font-size:.8rem;color:var(--text-2);"/>
+        <button class="btn btn-gold btn-sm" id="ws-upload-btn" onclick="uploadForSession()">Upload &amp; continue</button>
+      </div>
+      <div id="ws-kanoon-row" style="display:none;margin-top:.9rem;padding-top:.9rem;
+           border-top:1px solid var(--border);">
+        <div style="font-size:.76rem;color:var(--text-3);margin-bottom:.4rem;">
+          …or pick the judgment from Indian Kanoon (paste the doc link or id):</div>
+        <div style="display:flex;gap:.6rem;">
+          <input id="ws-kanoon" type="text" placeholder="https://indiankanoon.org/doc/110270205/"
+                 style="flex:1;background:var(--surface-2);border:1.5px solid var(--border-2);
+                        border-radius:8px;padding:.5rem .7rem;font-size:.8rem;color:var(--text);"/>
+          <button class="btn btn-ghost btn-sm" id="ws-kanoon-btn" onclick="pickFromKanoon()">Fetch &amp; continue</button>
+        </div>
+      </div>
+      <p class="muted" style="font-size:.72rem;margin:.7rem 0 0;">
+        PDF or TXT, up to 20 MB. Auto-deletes in 7 days unless saved to a matter.
+        The analysis cites this file by page — facts it can't anchor are withheld.
+      </p>
+    </div>
+
+    <!-- intake -->
+    <div id="ws-intake" class="card" style="max-width:760px;">
+      <div class="section-label" style="margin-top:0;">Intake — answer before anything generates</div>
+      <div id="ws-questions"></div>
+      <label id="ws-assume-row" style="display:none;align-items:center;gap:.5rem;margin:.6rem 0 0;font-size:.8rem;color:var(--text-2);cursor:pointer;">
+        <input type="checkbox" id="ws-assume"/> Proceed with stated assumptions —
+        unanswered questions will be listed in the output as assumptions.
+      </label>
+      <div style="margin-top:1rem;display:flex;gap:.6rem;">
+        <button class="btn btn-gold" id="ws-continue" onclick="submitAnswers()">Continue</button>
+      </div>
+    </div>
+
+    <!-- confirm -->
+    <div id="ws-confirm" class="card" style="max-width:760px;display:none;">
+      <div class="section-label" style="margin-top:0;">Confirm & generate</div>
+      <div id="ws-recap" style="font-size:.85rem;line-height:1.65;"></div>
+      <div id="ws-assumptions" style="display:none;margin-top:.6rem;padding:.6rem .8rem;
+           background:rgba(245,158,11,.08);border-left:2px solid #F59E0B;border-radius:0 6px 6px 0;
+           font-size:.8rem;color:var(--text-2);"></div>
+      <div style="margin-top:1rem;display:flex;gap:.6rem;">
+        <button class="btn btn-gold" id="ws-generate" onclick="generateArtifact()">Generate</button>
+        <button class="btn btn-ghost" onclick="editIntake()">Edit answers</button>
+      </div>
+    </div>
+
+    <!-- generating -->
+    <div id="ws-generating" class="card" style="max-width:760px;display:none;text-align:center;padding:2.2rem;">
+      <div class="spinner" style="margin:0 auto .9rem;"></div>
+      <div style="font-weight:600;">Generating — grounded on retrieved law only…</div>
+      <div class="muted" style="font-size:.78rem;margin-top:.35rem;">
+        Sections that assert law without a retrieved citation are withheld, not guessed.
+      </div>
+    </div>
+
+    <!-- artifact -->
+    <div id="ws-artifact" style="display:none;">
+      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem;">
+        <span style="display:inline-flex;align-items:center;font-size:.66rem;font-weight:700;
+              letter-spacing:.04em;padding:.15rem .5rem;border-radius:20px;color:#F59E0B;
+              background:rgba(245,158,11,.12);">DRAFT — FOR ADVOCATE REVIEW</span>
+        <span id="wa-conf" class="format-chip" style="display:inline-block;"></span>
+        <span id="wa-ver" class="muted" style="font-size:.72rem;"></span>
+      </div>
+      <div id="wa-refused" style="display:none;margin-bottom:.9rem;padding:.7rem .9rem;
+           background:rgba(224,69,76,.08);border-left:2px solid #DC4C64;border-radius:0 6px 6px 0;
+           font-size:.82rem;"></div>
+      <div id="wa-sections"></div>
+      <div class="card" style="margin-top:1rem;">
+        <div class="section-label" style="margin-top:0;">Next steps</div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+          <select id="wa-case" style="background:var(--surface-2);border:1.5px solid var(--border-2);
+                  border-radius:8px;padding:.45rem .6rem;font-family:inherit;font-size:.8rem;
+                  color:var(--text);max-width:220px;">
+            <option value="">No matter (unlinked)</option>
+          </select>
+          <button class="btn btn-gold btn-sm" onclick="saveToReview()">💾 Save to review queue</button>
+          <button class="btn btn-ghost btn-sm" onclick="saveArtifactToMatter()">📁 Save to matter</button>
+          <button class="btn btn-ghost btn-sm" onclick="createTasksFromArtifact()">📅 Diary tasks from strategy</button>
+          <button class="btn btn-ghost btn-sm" onclick="exportArtifact('docx')">Word</button>
+          <button class="btn btn-ghost btn-sm" onclick="exportArtifact('pdf')">PDF</button>
+          <button class="btn btn-ghost btn-sm" id="wa-approve" onclick="approveArtifact()">✓ Approve</button>
+          <button class="btn btn-ghost btn-sm" onclick="regenerate()">↻ Regenerate</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<style>
+  .wb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1rem;margin-top:1.2rem;}
+  .wb-tile{position:relative;background:var(--surface);border:1.5px solid var(--border);
+    border-radius:var(--radius);padding:1.15rem 1.2rem;cursor:pointer;transition:all .18s;}
+  .wb-tile:hover{border-color:var(--gold-border);transform:translateY(-2px);}
+  .wb-tile .t{font-weight:700;font-size:.98rem;margin:.15rem 0 .3rem;}
+  .wb-tile .d{font-size:.8rem;color:var(--text-3);line-height:1.5;}
+  .wb-tile .meta{font-size:.68rem;color:var(--text-4);margin-top:.7rem;
+    font-family:var(--font-mono,monospace);}
+  .wb-tile.locked{opacity:.55;cursor:default;}
+  .wb-tile.locked:hover{transform:none;border-color:var(--border);}
+  .wb-tile .lock{position:absolute;top:.8rem;right:.9rem;font-size:.62rem;font-weight:700;
+    color:#F59E0B;background:rgba(245,158,11,.12);padding:.14rem .5rem;border-radius:12px;}
+  .ws-q{margin-bottom:.9rem;}
+  .ws-q label{display:block;font-size:.78rem;font-weight:600;color:var(--text-2);margin-bottom:.3rem;}
+  .ws-q textarea{width:100%;min-height:58px;background:var(--surface-2);
+    border:1.5px solid var(--border-2);border-radius:8px;padding:.55rem .7rem;
+    font-family:inherit;font-size:.84rem;color:var(--text);resize:vertical;}
+  .ws-q textarea:focus{outline:none;border-color:var(--gold-border);}
+  .ws-q.missing textarea{border-color:#DC4C64;}
+  .ws-q .req{color:var(--gold);}
+  .wa-sec{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+    padding:1rem 1.2rem;margin-bottom:.8rem;}
+  .wa-sec h3{margin:0 0 .5rem;font-size:.9rem;color:var(--gold);}
+  .wa-sec .body{font-size:.85rem;line-height:1.7;white-space:pre-wrap;}
+  .wa-sec.blocked{border-left:3px solid #DC4C64;}
+  .wa-sec .gtag{float:right;font-size:.6rem;font-weight:700;letter-spacing:.05em;
+    color:var(--sapphire,#3B82F6);opacity:.8;}
+  .spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--gold);
+    border-radius:50%;animation:spin 1s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+
+<script src="/static/utils.js"></script>
+<script src="/static/workbench.js"></script>
+</body>
+</html>

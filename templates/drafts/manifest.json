@@ -1,0 +1,317 @@
+{
+  "_about": "Reference format skeletons for the AI Drafting Engine. Standard Indian drafting structure with [●] placeholders. The engine injects the matching skeleton as a FORMAT REFERENCE so generated drafts follow authentic structure instead of improvising. Formats follow common professional convention (structure, not copyrighted expression).",
+  "_review": {
+    "advocate_approved": false,
+    "gate": "G8 — senior-advocate sign-off pending; structures to be confirmed before public launch"
+  },
+  "templates": {
+    "legal_notice_cpc": {
+      "file": "legal_notice_cpc.txt",
+      "label": "Legal Notice (s.80 CPC)",
+      "keywords": [
+        "legal notice",
+        "notice before suit",
+        "section 80",
+        "government notice"
+      ]
+    },
+    "cheque_dishonour": {
+      "file": "cheque_dishonour.txt",
+      "label": "Cheque Dishonour Notice (s.138 NI Act)",
+      "keywords": [
+        "cheque",
+        "dishonour",
+        "138",
+        "bounce",
+        "demand notice"
+      ]
+    },
+    "anticipatory_bail": {
+      "file": "anticipatory_bail.txt",
+      "label": "Anticipatory Bail (s.482 BNSS)",
+      "keywords": [
+        "anticipatory bail",
+        "482",
+        "438",
+        "pre-arrest"
+      ]
+    },
+    "regular_bail": {
+      "file": "regular_bail.txt",
+      "label": "Bail Application (s.480 BNSS)",
+      "keywords": [
+        "bail",
+        "480",
+        "437",
+        "custody",
+        "release"
+      ]
+    },
+    "affidavit": {
+      "file": "affidavit.txt",
+      "label": "Affidavit",
+      "keywords": [
+        "affidavit",
+        "sworn",
+        "deponent",
+        "declaration"
+      ]
+    },
+    "rti_application": {
+      "file": "rti_application.txt",
+      "label": "RTI Application (RTI Act 2005)",
+      "keywords": [
+        "rti",
+        "right to information",
+        "public information officer",
+        "pio"
+      ]
+    },
+    "consumer_complaint": {
+      "file": "consumer_complaint.txt",
+      "label": "Consumer Complaint (CPA 2019)",
+      "keywords": [
+        "consumer",
+        "deficiency in service",
+        "defective goods",
+        "refund",
+        "unfair trade"
+      ]
+    },
+    "vakalatnama": {
+      "file": "vakalatnama.txt",
+      "label": "Vakalatnama",
+      "keywords": [
+        "vakalatnama",
+        "vakalat",
+        "authorise advocate",
+        "appearance"
+      ]
+    },
+    "writ_petition": {
+      "file": "writ_petition.txt",
+      "label": "Writ Petition (Art. 226)",
+      "keywords": [
+        "writ",
+        "226",
+        "mandamus",
+        "certiorari",
+        "habeas",
+        "quo warranto",
+        "prohibition"
+      ]
+    },
+    "divorce_petition": {
+      "file": "divorce_petition.txt",
+      "label": "Divorce Petition (s.13B HMA)",
+      "keywords": [
+        "divorce",
+        "13b",
+        "mutual consent",
+        "dissolution of marriage",
+        "hma"
+      ]
+    },
+    "civil_plaint": {
+      "file": "civil_plaint.txt",
+      "label": "Civil Plaint (Order VII CPC)",
+      "keywords": [
+        "plaint",
+        "suit",
+        "recovery",
+        "order 7",
+        "civil suit",
+        "damages"
+      ]
+    },
+    "reply_legal_notice": {
+      "file": "reply_legal_notice.txt",
+      "label": "Reply to Legal Notice",
+      "keywords": [
+        "reply to notice",
+        "reply to legal notice",
+        "response to notice",
+        "rebuttal"
+      ]
+    },
+    "complaint_138_ni": {
+      "file": "complaint_138_ni.txt",
+      "label": "Complaint u/s 138 NI Act (Magistrate)",
+      "keywords": [
+        "138 complaint",
+        "cheque bounce case",
+        "complaint under section 138",
+        "magistrate cheque"
+      ]
+    },
+    "criminal_complaint_magistrate": {
+      "file": "criminal_complaint_magistrate.txt",
+      "label": "Criminal Complaint (s.223 BNSS)",
+      "keywords": [
+        "criminal complaint",
+        "private complaint",
+        "223 bnss",
+        "200 crpc",
+        "complaint to magistrate"
+      ]
+    },
+    "maintenance_application": {
+      "file": "maintenance_application.txt",
+      "label": "Maintenance Application (s.144 BNSS)",
+      "keywords": [
+        "maintenance",
+        "125 crpc",
+        "144 bnss",
+        "alimony",
+        "wife maintenance"
+      ]
+    },
+    "dv_application_12": {
+      "file": "dv_application_12.txt",
+      "label": "DV Act Application (s.12 PWDVA)",
+      "keywords": [
+        "domestic violence application",
+        "protection order",
+        "residence order",
+        "dv act",
+        "section 12"
+      ]
+    },
+    "written_statement": {
+      "file": "written_statement.txt",
+      "label": "Written Statement (O.VIII CPC)",
+      "keywords": [
+        "written statement",
+        "defence to suit",
+        "reply to plaint",
+        "order 8"
+      ]
+    },
+    "interim_injunction": {
+      "file": "interim_injunction.txt",
+      "label": "Temporary Injunction (O.XXXIX CPC)",
+      "keywords": [
+        "injunction",
+        "order 39",
+        "stay against",
+        "restrain",
+        "temporary injunction"
+      ]
+    },
+    "caveat_148a": {
+      "file": "caveat_148a.txt",
+      "label": "Caveat (s.148A CPC)",
+      "keywords": [
+        "caveat",
+        "148a",
+        "no order without notice"
+      ]
+    },
+    "quash_petition": {
+      "file": "quash_petition.txt",
+      "label": "Quashing Petition (s.528 BNSS)",
+      "keywords": [
+        "quash",
+        "quashing",
+        "482 crpc",
+        "528 bnss",
+        "quash fir"
+      ]
+    },
+    "rent_agreement": {
+      "file": "rent_agreement.txt",
+      "label": "Rent / Leave & Licence Agreement",
+      "keywords": [
+        "rent agreement",
+        "lease",
+        "leave and licence",
+        "tenancy",
+        "rental"
+      ]
+    },
+    "power_of_attorney": {
+      "file": "power_of_attorney.txt",
+      "label": "General Power of Attorney",
+      "keywords": [
+        "power of attorney",
+        "poa",
+        "attorney holder",
+        "authorise on my behalf"
+      ]
+    },
+    "will_simple": {
+      "file": "will_simple.txt",
+      "label": "Will / Testament",
+      "keywords": [
+        "last will",
+        "testament",
+        "bequeath",
+        "estate distribution",
+        "testator"
+      ]
+    },
+    "partnership_deed": {
+      "file": "partnership_deed.txt",
+      "label": "Partnership Deed",
+      "keywords": [
+        "partnership deed",
+        "partnership agreement",
+        "firm deed",
+        "profit sharing"
+      ]
+    },
+    "sale_agreement": {
+      "file": "sale_agreement.txt",
+      "label": "Agreement to Sell (Property)",
+      "keywords": [
+        "agreement to sell",
+        "sale agreement",
+        "property sale",
+        "earnest money",
+        "agreement of sale"
+      ]
+    },
+    "succession_certificate": {
+      "file": "succession_certificate.txt",
+      "label": "Succession Certificate (s.372 ISA)",
+      "keywords": [
+        "succession certificate",
+        "372",
+        "legal heir",
+        "deceased bank account"
+      ]
+    },
+    "crpc_application": {
+      "file": "criminal_misc_application.txt",
+      "label": "Criminal Misc. Application (any BNSS/CrPC section)",
+      "keywords": [
+        "application under section",
+        "crpc application",
+        "bnss application",
+        "recall witness",
+        "misc criminal",
+        "311",
+        "319",
+        "superdari",
+        "condone delay criminal",
+        "modify condition"
+      ]
+    },
+    "cpc_application": {
+      "file": "civil_misc_application.txt",
+      "label": "Civil Misc. Application (any CPC Order/Section)",
+      "keywords": [
+        "application under order",
+        "cpc application",
+        "interlocutory application",
+        "court commissioner",
+        "amend plaint",
+        "set aside ex parte",
+        "restoration",
+        "order 26",
+        "order 6 rule 17",
+        "order 9"
+      ]
+    }
+  }
+}

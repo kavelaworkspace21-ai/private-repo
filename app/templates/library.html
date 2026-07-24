@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Legal Library &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .lib-wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+    .lib-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; flex-wrap:wrap; }
+    .lib-head h1 { font-size:1.3rem; font-weight:800; letter-spacing:-.03em; color:var(--text); margin:0; }
+    .lib-search { flex:1; min-width:200px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);
+      color:var(--text); border-radius:9px; padding:.55rem .85rem; font-size:.85rem; outline:none; }
+    .crumbs { font-size:.8rem; color:var(--text-3); margin-bottom:1rem; }
+    .crumbs a { color:var(--gold,#C8A96A); cursor:pointer; text-decoration:none; }
+    .acts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.75rem; }
+    .act-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+      padding:1rem 1.1rem; cursor:pointer; transition:border-color .15s, transform .12s; }
+    .act-card:hover { border-color:rgba(200,169,106,.35); transform:translateY(-1px); }
+    .act-title { font-weight:700; color:var(--text); font-size:.92rem; line-height:1.3; }
+    .act-meta { font-size:.72rem; color:var(--text-3); margin-top:.4rem; display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+    .vbadge { font-size:.6rem; font-weight:800; letter-spacing:.04em; padding:.12rem .45rem; border-radius:20px; }
+    .v-yes { background:rgba(5,150,105,.13); color:#059669; }
+    .v-no  { background:rgba(156,163,175,.13); color:#9ca3af; }
+    .repealed { font-size:.6rem; font-weight:800; padding:.12rem .45rem; border-radius:20px; background:rgba(220,76,100,.12); color:#DC4C64; }
+    .sec-row { display:flex; gap:.7rem; padding:.6rem .7rem; border:1px solid var(--border); border-radius:10px;
+      margin-bottom:.4rem; cursor:pointer; background:var(--surface); transition:border-color .12s; }
+    .sec-row:hover { border-color:rgba(200,169,106,.35); }
+    .sec-num { font-weight:800; color:var(--gold,#C8A96A); min-width:46px; font-size:.85rem; }
+    .sec-title { font-size:.84rem; color:var(--text); }
+    .sec-detail { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem 1.4rem; }
+    .sec-detail h2 { font-size:1.05rem; color:var(--text); margin:0 0 .3rem; }
+    .sec-body { font-family:'Georgia',serif; font-size:.9rem; line-height:1.75; color:var(--text-2); white-space:pre-wrap; margin-top:.9rem; }
+    .sec-actions { display:flex; gap:.5rem; margin-top:1rem; flex-wrap:wrap; }
+    .lib-btn { border:1px solid var(--border); background:transparent; color:var(--text-2); border-radius:8px;
+      padding:.45rem .85rem; font-size:.78rem; font-weight:700; cursor:pointer; }
+    .lib-btn.primary { background:linear-gradient(135deg,var(--gold-bright,#F2D47A),var(--gold,#C8A96A)); color:#0B0F14; border:none; }
+    .summary-box { margin-top:1rem; background:rgba(200,169,106,.06); border:1px solid rgba(200,169,106,.18);
+      border-radius:10px; padding:.85rem 1rem; font-size:.84rem; color:var(--text); line-height:1.6; }
+    .summary-box .disc { font-size:.7rem; color:var(--text-3); margin-top:.5rem; }
+    .src-link { font-size:.76rem; color:var(--gold,#C8A96A); }
+    .muted { color:var(--text-3); font-size:.85rem; padding:1.5rem 0; }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/"><span class="name">Juris</span><span class="ai">cite</span></a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/cases">Cases</a>
+    <a href="/diary">Court Diary</a>
+    <a href="/library" class="active">Legal Library</a>
+    <a href="/assistant">AI Assistant</a>
+    <a href="/drafting">Drafting Engine</a>
+    <a href="/drafts">Drafts</a>
+    <a href="/firm">Firm</a>
+  </div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<div class="lib-wrap">
+  <div class="lib-head">
+    <h1>Legal Library</h1>
+    <input class="lib-search" id="lib-search" placeholder="Search sections across all acts (e.g. cheating, anticipatory bail, 138)…"/>
+  </div>
+  <div class="crumbs" id="crumbs"></div>
+  <div id="lib-view"><div class="muted">Loading the bookshelf&hellip;</div></div>
+</div>
+
+<div id="toast"></div>
+<script src="/static/utils.js"></script>
+<script>requireAuth();</script>
+<script src="/static/library.js"></script>
+</body>
+</html>

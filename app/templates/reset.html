@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reset Password &mdash; Juriscite</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    body { display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100vh; background:#0B0F14;
+      background-image:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(200,169,106,.08) 0%, transparent 70%);
+      padding:2rem 1rem; }
+    .auth-wrap { width:95%; max-width:400px; }
+    .auth-brand { text-align:center; margin-bottom:1.5rem; }
+    .auth-brand-logo { font-size:1.55rem; font-weight:800; letter-spacing:-.03em; color:#fff; }
+    .auth-brand-logo .ai { color:var(--gold,#C8A96A); }
+    .auth-card { background:#111116; border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:2rem 1.75rem; }
+    .auth-card h2 { font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:.4rem; }
+    .auth-card p.sub { color:rgba(255,255,255,.4); font-size:.82rem; margin-bottom:1.3rem; }
+    label { display:block; color:rgba(255,255,255,.5); font-size:.72rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; margin-bottom:.35rem; }
+    input { width:100%; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:#fff;
+      border-radius:9px; padding:.7rem .9rem; font-size:.9rem; margin-bottom:1rem; outline:none; }
+    input:focus { border-color:rgba(200,169,106,.5); }
+    .btn-auth { width:100%; background:linear-gradient(135deg,var(--gold,#C8A96A),#C8A96A); color:#0B0F14;
+      font-weight:800; font-size:.92rem; border:none; border-radius:9px; padding:.8rem; cursor:pointer; }
+    .auth-foot { text-align:center; margin-top:1.2rem; font-size:.83rem; color:rgba(255,255,255,.35); }
+    .auth-foot a { color:var(--gold,#C8A96A); font-weight:600; text-decoration:none; }
+    .msg { font-size:.82rem; padding:.7rem .85rem; border-radius:8px; margin-bottom:1rem; display:none; }
+    .msg.ok { background:rgba(16,185,129,.12); color:#34d399; display:block; }
+    .msg.err { background:rgba(220,76,100,.12); color:#f87171; display:block; }
+  </style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-brand"><div class="auth-brand-logo">Juris<span class="ai">cite</span></div></div>
+  <div class="auth-card">
+    <div id="msg" class="msg"></div>
+
+    <!-- Step 1: request a reset link (no token in URL) -->
+    <div id="panel-request">
+      <h2>Forgot your password?</h2>
+      <p class="sub">Enter your email and we&#39;ll send a reset link.</p>
+      <label>Email</label>
+      <input id="email" type="email" placeholder="you@example.com"/>
+      <button class="btn-auth" onclick="requestReset()" id="req-btn">Send reset link</button>
+    </div>
+
+    <!-- Step 2: set a new password (token in URL) -->
+    <div id="panel-reset" style="display:none">
+      <h2>Set a new password</h2>
+      <p class="sub">Choose a strong password (at least 8 characters).</p>
+      <label>New password</label>
+      <input id="new-pw" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"/>
+      <button class="btn-auth" onclick="doReset()" id="reset-btn">Reset password</button>
+    </div>
+
+    <div class="auth-foot"><a href="/login">&larr; Back to sign in</a></div>
+  </div>
+</div>
+
+<script src="/static/utils.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const token = params.get("token");
+  if (token) {
+    document.getElementById("panel-request").style.display = "none";
+    document.getElementById("panel-reset").style.display = "";
+  }
+  function showMsg(text, ok) {
+    const m = document.getElementById("msg");
+    m.textContent = text; m.className = "msg " + (ok ? "ok" : "err");
+  }
+  async function requestReset() {
+    const email = document.getElementById("email").value.trim();
+    if (!email) return showMsg("Enter your email.", false);
+    const btn = document.getElementById("req-btn"); btn.disabled = true; btn.textContent = "Sending…";
+    try {
+      const r = await api.post("/api/auth/forgot-password", { email });
+      if (r.dev_token) {
+        showMsg("Email isn't configured (dev). Use this link to reset now.", true);
+        setTimeout(() => location.href = "/reset-password?token=" + r.dev_token, 1200);
+      } else {
+        showMsg("If that email is registered, a reset link has been sent.", true);
+      }
+    } catch { showMsg("Something went wrong. Try again.", false); }
+    finally { btn.disabled = false; btn.textContent = "Send reset link"; }
+  }
+  async function doReset() {
+    const pw = document.getElementById("new-pw").value;
+    if (pw.length < 8) return showMsg("Password must be at least 8 characters.", false);
+    const btn = document.getElementById("reset-btn"); btn.disabled = true; btn.textContent = "Resetting…";
+    try {
+      await api.post("/api/auth/reset-password", { token, new_password: pw });
+      showMsg("Password reset! Redirecting to sign in…", true);
+      setTimeout(() => location.href = "/login", 1400);
+    } catch { showMsg("This reset link is invalid or expired.", false); btn.disabled = false; btn.textContent = "Reset password"; }
+  }
+</script>
+</body>
+</html>
