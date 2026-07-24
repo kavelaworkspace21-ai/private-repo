@@ -30,7 +30,8 @@ def test_live_status_never_leaks_secret_values():
     # config reports presence booleans only, never values
     assert set(live["config"].values()) <= {True, False}
     for key in ("app_version", "corpus_fingerprint", "migration_head", "chroma_count",
-                "embedding_model", "python", "disk_free_mb", "config"):
+                "embedding_model", "commit", "branch", "tree_dirty", "python",
+                "disk_free_mb", "config"):
         assert key in live
 
 
@@ -90,6 +91,57 @@ def test_preflight_blocks_low_disk():
     live = _good_live(r)
     live["disk_free_mb"] = 100
     assert any("low disk" in i for i in rel.preflight(live=live, release=r))
+
+
+# ── Source identity: commit pin + dirty tree (Phase 0) ──────────────────────────
+def test_preflight_blocks_dirty_working_tree():
+    r = rel.load_release()
+    live = _good_live(r)
+    live["tree_dirty"] = True
+    assert any("uncommitted changes" in i for i in rel.preflight(live=live, release=r))
+    # local checks may waive it; a prod deploy never should
+    assert rel.preflight(live=live, release=r, require_clean_tree=False) == []
+
+
+def test_preflight_blocks_tree_that_is_not_the_pinned_commit():
+    r = copy.deepcopy(rel.load_release())
+    r["commit"] = "aaaaaaa"
+    live = _good_live(r)
+    live["commit"] = "bbbbbbb"
+    assert any("not the audited release" in i for i in rel.preflight(live=live, release=r))
+
+
+def test_pinned_commit_tolerates_the_release_json_stamp_commit(monkeypatch):
+    """freeze() stamps HEAD into RELEASE.json; committing that stamp advances HEAD by
+    one commit. That single RELEASE.json-only step must still satisfy the pin."""
+    monkeypatch.setattr(rel, "_git", lambda *a: "RELEASE.json")
+    assert rel._commit_matches("aaaaaaa", "bbbbbbb") is True
+    # anything else in the diff fails the match
+    monkeypatch.setattr(rel, "_git", lambda *a: "RELEASE.json\napp/main.py")
+    assert rel._commit_matches("aaaaaaa", "bbbbbbb") is False
+
+
+def test_source_identity_checks_degrade_when_git_is_unavailable(monkeypatch):
+    """A production tarball deploy has no .git — status and preflight must still work."""
+    monkeypatch.setattr(rel, "_git", lambda *a: None)
+    ident = rel._git_identity()
+    assert ident == {"commit": None, "branch": None, "tree_dirty": None}
+    r = copy.deepcopy(rel.load_release())
+    r["commit"] = "aaaaaaa"
+    live = _good_live(r)
+    live.update(ident)
+    assert rel.preflight(live=live, release=r) == []
+
+
+def test_release_json_pins_the_commit_it_was_frozen_from():
+    r = rel.load_release()
+    live = rel.live_status()
+    if live["commit"] is None:
+        return  # not a git checkout (tarball / CI export) — nothing to pin against
+    assert r.get("commit"), (
+        "RELEASE.json has no commit — run `python -m app.ops.release freeze`")
+    assert rel._commit_matches(r["commit"], live["commit"]), (
+        f"RELEASE.json pins {r['commit']} but HEAD is {live['commit']} — re-freeze")
 
 
 # ── CLI ─────────────────────────────────────────────────────────────────────────
