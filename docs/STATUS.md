@@ -58,9 +58,32 @@ authorised establishing version control, closing the long-standing owner decisio
   the gate is open. Same reasoning drove
   `test_no_external_payload_is_built_or_sent_without_consent`: a 403 is not proof, so it asserts
   the LLM client is never even constructed.
-- **Still open in Phase 1** (not done, not claimed): purpose-specific consent separate from the
-  privacy policy; consent withdrawal + `purpose`/`scope` fields + audit events on grant/withdraw;
-  Kanoon daily/tenant quota, cost telemetry and audit events; timeout/provider-error tests.
+- **CONSENT WITHDRAWAL + purpose/scope + audit events.** Migration `c7f4a2e8b103` adds `purpose`,
+  `scope`, `withdrawn_at` (all nullable — existing rows predate the concept; NULL `withdrawn_at`
+  correctly reads as "not withdrawn"). `POST /api/auth/consent/withdraw`; audit events on grant
+  AND withdrawal. **Withdrawal is a timestamp, never a delete** — erasing the grant would destroy
+  the evidence that consent existed while it was relied on, which is the audit trail the
+  regulation exists to produce. It stops authorising immediately: the gate reads consent per
+  request, so the NEXT AI call is refused, no grace period.
+- **CERTIFIED: 608 passed / 0 failed** (15m50s, 2 third-party warnings) = 585 baseline + 7 Kanoon
+  + 16 consent. Migration head now `c7f4a2e8b103`; `RELEASE.json` re-frozen (commit `ab5ad3c`);
+  **preflight PASSING in prod mode**; fingerprint `2965aab084ff` / 8,646 chunks re-verified live
+  and unchanged (this work touched schema and gating, not the corpus).
+- **Process lesson (my error):** I edited `privacy.py`/`consent.py` while a full certification run
+  was in flight, assuming imported modules were frozen. This codebase uses lazy local imports, so
+  the edits leaked in and produced a spurious failure at 59%. That run was void; the 608 above is
+  a clean run with no concurrent edits. **Never edit during a certification run.**
+- **Pre-existing dev-DB drift found and reconciled.** `legal_server.db` was stamped
+  `3a7a23076413` while already holding much later tables (`workflow_artifacts`,
+  `workbench_uploads`) — it was built by `create_all`, not migrations, and predates this work.
+  Production path verified independently first: the **full chain applies cleanly to a fresh DB**
+  through `c7f4a2e8b103`. Dev DB then reconciled to the models + stamped to head, `.bak` taken,
+  all 37 users / 56 consent rows preserved. `create_all` lives only in `db/migrate_tenancy.py`
+  (a one-off helper), NOT the boot path — so no production implication.
+- **Still open in Phase 1** (not done, not claimed): purpose-*separated* consent — the mechanism
+  is in (`purpose`/`scope` recorded) but splitting "statutory research" from "client-data
+  processing" needs the owner/counsel to define the purposes (logged in OWNER_QUEUE); Kanoon
+  daily/tenant quota, cost telemetry and audit events; timeout/provider-error tests.
 
 ## DASHBOARD CUBE + BUG HUNT (owner-directed 2026-07-22)
 - **3D cube fixed → Juriscite logo.** The hero cube showed a `§` placeholder on all 6 faces. New
