@@ -6,6 +6,23 @@ what the build work has actually surfaced and hands off. Newest sprint on top.
 
 ---
 
+## From the Vision-Alignment Program — Phase 0 (2026-07-24)
+
+- **ROTATE THE INDIAN KANOON API KEY.** `INDIAN_KANOON_API_KEY` in the local `.env` is a live
+  **paid** key. It is correctly gitignored and was verified **absent** from the baseline commit —
+  but I displayed it in plaintext in the 24 July session while tracing the Kanoon call path (my
+  error; I should have matched on the variable name only). Treat it as exposed-to-transcript and
+  rotate it at Indian Kanoon. Owner-only. Nothing else was exposed — `.env`, `*.pem`, token temp
+  files, local databases and `data/uploads/` are all excluded from version control and verified
+  absent from the commit.
+- **`git init` — DONE, no longer an owner decision.** The vision-alignment prompt (Phase 0)
+  explicitly authorised it, so it was taken: baseline commit `1b7e99b`, 437 files, secrets scanned
+  first. This supersedes the "Decide on `git init`" item below.
+- **Set an upstream remote (optional).** The repo is local-only. If you want off-machine history
+  (and a rollback that survives a disk failure), create a **private** repo and push. Do not make it
+  public — the corpus fulltext and draft templates are versioned. Owner decision; I have not
+  created or pushed to any remote.
+
 ## AGENT AWS ACCESS REVOKED (owner-directed 2026-07-22)
 
 Owner instruction: *"cut your access to any Amazon AWS service we are currently using."* Done at the
@@ -49,11 +66,9 @@ agent level; **AWS-side revocation is owner-only and still open.**
   AWS Secrets Manager — not a `.env` file) and set it BEFORE any real client data. Note: this is
   the right time (pre-G6/G7, no real data), so nothing needs re-encrypting. Key rotation later
   requires decrypt-then-re-encrypt of `totp_secret` rows (see `app/db/crypto.py`).
-- **Decide on `git init`.** The project is not a version-controlled repo, so there's no commit
-  to pin the "audited release", no history, and no safe rollback/bisect. The remaining-gaps
-  prompt assumes an "exact audited commit". Recommend initializing git (the folder is no longer
-  OneDrive-synced after the D: move, removing the earlier concern). Owner decision — not taken
-  by the agent.
+- ~~**Decide on `git init`.**~~ **RESOLVED 2026-07-24** — authorised by the vision-alignment
+  prompt and done (baseline `1b7e99b`; release pinned at `af1774d`). See the Phase 0 section
+  at the top.
 - **Aurora / prod infra** (unchanged, still blocking Phase 2): start the cluster; provide
   trusted HTTPS + DNS, restricted networking, least-privilege IAM, KMS/secret-manager, and
   durable encrypted object storage for uploads/backups. The release artifact is now reproducible
