@@ -102,12 +102,35 @@ def needs_consent(current_user: User = Depends(get_current_user), db: Session = 
 def give_consent(request: Request, current_user: User = Depends(get_current_user),
                  db: Session = Depends(get_db)):
     """Record the current user's consent (terms + privacy) at the current versions."""
+    from app.services.privacy import PRIVACY_VERSION, TERMS_VERSION
     record_consents(db, tenant_id=current_user.tenant_id, user_id=current_user.id,
                     source_ip=(request.client.host if request.client else None),
                     user_agent=request.headers.get("user-agent"),
                     acceptance_source="consent_page")
     db.commit()
+    write_audit(db, tenant_id=current_user.tenant_id, user_id=current_user.id,
+                action="consent_granted", entity="ConsentRecord",
+                detail=f"privacy {PRIVACY_VERSION} / terms {TERMS_VERSION}")
     return {"status": "ok"}
+
+
+@router.post("/consent/withdraw")
+def withdraw_my_consent(current_user: User = Depends(get_current_user),
+                        db: Session = Depends(get_db)):
+    """Withdraw consent (DPDP — withdrawal must be as easy as granting).
+
+    Takes effect on the NEXT AI request: the gate reads consent per request, so nothing
+    further is sent to an external model. The grant rows are marked withdrawn, never
+    deleted — erasing them would destroy the evidence that consent existed while it was
+    relied on. Non-AI practice management is unaffected.
+    """
+    from app.services.privacy import withdraw_consent
+    n = withdraw_consent(db, user_id=current_user.id, consent_type="privacy_policy")
+    db.commit()
+    write_audit(db, tenant_id=current_user.tenant_id, user_id=current_user.id,
+                action="consent_withdrawn", entity="ConsentRecord",
+                detail=f"{n} privacy grant(s) withdrawn; AI processing now refused")
+    return {"status": "withdrawn", "grants_withdrawn": n}
 
 
 # ── Login (step 1) ────────────────────────────────────────

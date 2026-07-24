@@ -1,5 +1,20 @@
 # Juriscite — Gap Matrix (Phase 0)
 
+> **SUPERSEDED IN PART — updated 2026-07-24.** This document is a snapshot of 2026-07-21 and is
+> kept as the historical record; the header figures below are stale. Current state: alembic head
+> `81665ba86789` (14 migrations) · 26 model modules · 73 test files · **601+ tests passing** ·
+> **now a git repo** (baseline `1b7e99b`). Three gaps listed here are closed:
+> - Gap 5 *"No git / no commit traceability"* → **CLOSED**. Version control established;
+>   `RELEASE.json` pins the commit and preflight blocks dirty/unaudited trees.
+> - *"Tenant/consent boundary"* → consent is now **enforced** at the AI boundary across 13
+>   handlers (`docs/AI_DATA_BOUNDARY.md`). Cache/job/file propagation remains PARTIAL.
+> - Kanoon cost exposure (raised in STATUS, not listed here) → **CLOSED**; `KANOON_ENABLED`
+>   defaults off and the dashboard no longer auto-fires the paid call.
+>
+> Gap 3 *"AI answer integrity not gated"* is **confirmed still open and understated**: the
+> citation "hard-gate" only appends a warning and returns the answer. See
+> `docs/AUDIT_CLAIM_VERIFICATION_2026-07-24.md`.
+
 **Built:** 2026-07-21 · **Against:** `JURISCITE_REMAINING_GAPS_PROMPT_2026-07-20.md` + `AUDIT_REPORT_2026-07-20.md`
 **Verified state (runtime/repo, not the report):** root `D:\MASTER CLAUDE PROJECT FOLDER` · app `0.2.0` ·
 corpus fingerprint `2965aab084ff` · alembic head `ea94773ec007` (single) · 13 migration files ·

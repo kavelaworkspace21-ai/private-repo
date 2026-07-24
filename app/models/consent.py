@@ -21,3 +21,11 @@ class ConsentRecord(Base):
     user_agent: Mapped[str | None] = mapped_column(String(400))             # provable receipt (DPDP)
     acceptance_source: Mapped[str | None] = mapped_column(String(40))       # registration | consent_page | policy_update
     created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
+
+    # DPDP: consent must be purpose-limited and withdrawable.
+    purpose: Mapped[str | None] = mapped_column(String(60))                 # what the data is used FOR
+    scope: Mapped[str | None] = mapped_column(String(60))                   # what data it covers
+    # Withdrawal is a NEW ROW STATE, never a delete: the grant remains as audit evidence that
+    # consent existed for the period it was relied on. A withdrawn row stops authorising
+    # immediately (see has_current_consent) but is still provable after the fact.
+    withdrawn_at: Mapped[DateTime | None] = mapped_column(DateTime, nullable=True)

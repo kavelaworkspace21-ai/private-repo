@@ -141,6 +141,82 @@ def test_no_external_payload_is_built_or_sent_without_consent(client, monkeypatc
     assert attempts == [], f"an LLM client was constructed without consent: {attempts}"
 
 
+# ── Withdrawal (DPDP: as easy to withdraw as to grant) ──────────────────────────
+def test_withdrawal_blocks_the_next_ai_request_immediately(client):
+    tok = register_and_login(client, "withdraw@firm.com")
+    # consented at registration → past the gate
+    assert client.post("/api/ai/chat", headers=auth(tok),
+                       json={"message": "hello"}).status_code != 403
+
+    r = client.post("/api/auth/consent/withdraw", headers=auth(tok))
+    assert r.status_code == 200
+    assert r.json()["grants_withdrawn"] >= 1
+
+    # no grace period, no cached decision — the very next request is refused
+    assert client.post("/api/ai/chat", headers=auth(tok),
+                       json={"message": "hello"}).status_code == 403
+
+
+def test_withdrawal_preserves_the_grant_as_evidence(client):
+    """Withdrawal must not erase legally required audit evidence."""
+    tok = register_and_login(client, "evidence@firm.com")
+    client.post("/api/auth/consent/withdraw", headers=auth(tok))
+
+    db = _db()
+    rows = db.query(ConsentRecord).filter(
+        ConsentRecord.user_id == _uid(db, "evidence@firm.com"),
+        ConsentRecord.consent_type == "privacy_policy").all()
+    assert rows, "the grant row was deleted — that destroys the audit trail"
+    assert all(r.granted for r in rows), "granted must stay true; withdrawal is a separate fact"
+    assert all(r.withdrawn_at is not None for r in rows)
+    # and it still shows up in the user's own consent history
+    assert client.get("/api/auth/consents", headers=auth(tok)).status_code == 200
+
+
+def test_withdrawal_does_not_break_non_ai_features(client):
+    tok = register_and_login(client, "withdraw-read@firm.com")
+    client.post("/api/auth/consent/withdraw", headers=auth(tok))
+    assert client.get("/api/cases/", headers=auth(tok)).status_code == 200
+    assert client.get("/api/auth/needs-consent", headers=auth(tok)).json()["needs"] is True
+
+
+def test_re_granting_after_withdrawal_restores_access(client):
+    tok = register_and_login(client, "regrant2@firm.com")
+    client.post("/api/auth/consent/withdraw", headers=auth(tok))
+    assert client.post("/api/ai/chat", headers=auth(tok),
+                       json={"message": "hi"}).status_code == 403
+
+    client.post("/api/auth/consent", headers=auth(tok))
+    assert client.post("/api/ai/chat", headers=auth(tok),
+                       json={"message": "hi"}).status_code != 403
+
+
+def test_grant_records_purpose_and_scope(client):
+    """A bare 'accepted v2026-06-20' is not purpose-limited consent."""
+    from app.services.privacy import AI_PURPOSE, AI_SCOPE
+    register_and_login(client, "purpose@firm.com")
+    db = _db()
+    row = db.query(ConsentRecord).filter(
+        ConsentRecord.user_id == _uid(db, "purpose@firm.com"),
+        ConsentRecord.consent_type == "privacy_policy").first()
+    assert row.purpose == AI_PURPOSE
+    assert row.scope == AI_SCOPE
+
+
+def test_consent_actions_are_audited(client):
+    """Grant and withdrawal must both leave an audit event."""
+    from app.models.audit import AuditLog
+    tok = register_and_login(client, "audited@firm.com")
+    client.post("/api/auth/consent", headers=auth(tok))
+    client.post("/api/auth/consent/withdraw", headers=auth(tok))
+
+    db = _db()
+    uid = _uid(db, "audited@firm.com")
+    actions = {a.action for a in db.query(AuditLog).filter(AuditLog.user_id == uid).all()}
+    assert "consent_granted" in actions
+    assert "consent_withdrawn" in actions
+
+
 # ── Structural guards: the invariant, not a path list ───────────────────────────
 def _endpoint_deps():
     """(handler name, {dependency names}) for every route, walking included routers."""

@@ -6,6 +6,27 @@ what the build work has actually surfaced and hands off. Newest sprint on top.
 
 ---
 
+## From the Vision-Alignment Program — Phase 1 consent policy (2026-07-24)
+
+Consent enforcement itself was **not** put to you — the prompt is explicit that for a legal
+product handling client data the safe default is enforcement, so it is enforced (see
+`docs/AI_DATA_BOUNDARY.md`). What genuinely needs a human decision is the *wording and shape*
+of the policy, which is a counsel question:
+
+- **Final consent wording** for AI processing. The gate currently keys off the existing
+  privacy-policy consent. The text an advocate accepts should say plainly that matter text and
+  uploaded documents are sent to a third-party model. Needs G6 counsel sign-off.
+- **Purpose granularity.** One acceptance currently authorises all AI processing. DPDP favours
+  specific, purpose-limited consent — e.g. separating "statutory research" (no client data)
+  from "send my client's matter/documents to an external model". Building it is engineering;
+  deciding the purposes is policy. **This is the largest remaining Phase 1 item.**
+- **Whose consent.** The advocate consents; their *client* — whose data is actually in the
+  prompt — is not a party to it. Whether the advocate's professional authority covers this, or
+  a client-facing notice/consent is required, is a legal question I cannot answer.
+- **Re-consent policy.** Bumping `PRIVACY_VERSION` currently invalidates prior consent and
+  forces re-acceptance. Confirm that is the behaviour you want on every policy edit, or whether
+  only material changes should re-trigger it.
+
 ## From the Vision-Alignment Program — Phase 0 (2026-07-24)
 
 - **ROTATE THE INDIAN KANOON API KEY.** `INDIAN_KANOON_API_KEY` in the local `.env` is a live

@@ -61,7 +61,31 @@ def has_current_consent(db: Session, user_id: int) -> bool:
         ConsentRecord.consent_type == "privacy_policy",
         ConsentRecord.policy_version == PRIVACY_VERSION,
         ConsentRecord.granted == True,          # noqa: E712 — SQL boolean, not Python
+        ConsentRecord.withdrawn_at.is_(None),   # withdrawal stops authorising immediately
     ).first() is not None
+
+
+# What the AI consent authorises. Recorded on the grant so the record is purpose-limited
+# rather than a bare "accepted v2026-06-20".
+AI_PURPOSE = "ai_processing"
+AI_SCOPE = "matter_text_and_uploads_to_external_model"
+
+
+def withdraw_consent(db: Session, *, user_id: int, consent_type: str = "privacy_policy") -> int:
+    """Withdraw a user's consent. Returns the number of grants withdrawn.
+
+    Marks rather than deletes: the grant stays as evidence that consent existed while it was
+    relied on (erasing it would destroy the very audit trail DPDP requires), but it stops
+    authorising from this moment — `has_current_consent` filters on `withdrawn_at IS NULL`,
+    and the AI gate reads it per request, so the next AI call is refused. Caller commits.
+    """
+    from app.util.time import utcnow
+    return (db.query(ConsentRecord)
+            .filter(ConsentRecord.user_id == user_id,
+                    ConsentRecord.consent_type == consent_type,
+                    ConsentRecord.granted == True,        # noqa: E712
+                    ConsentRecord.withdrawn_at.is_(None))
+            .update({"withdrawn_at": utcnow()}, synchronize_session=False))
 
 
 def record_consents(db: Session, *, tenant_id: int, user_id: int, source_ip: str | None,
@@ -76,5 +100,9 @@ def record_consents(db: Session, *, tenant_id: int, user_id: int, source_ip: str
             policy_version=versions[ctype], granted=granted, source_ip=source_ip,
             user_agent=(user_agent[:400] if user_agent else None),
             acceptance_source=acceptance_source,
+            # Only the privacy consent authorises AI processing, so only it carries the
+            # AI purpose/scope. Recording it on terms_of_service would overstate the grant.
+            purpose=(AI_PURPOSE if ctype == "privacy_policy" else None),
+            scope=(AI_SCOPE if ctype == "privacy_policy" else None),
         ))
     # caller commits
