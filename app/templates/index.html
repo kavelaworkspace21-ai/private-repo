@@ -445,11 +445,19 @@
 })();
 </script>
 <script>
-/* Latest from the courts — recent judgments (live via Indian Kanoon, cached). Hidden if unavailable. */
+/* Latest from the courts — recent judgments (live via Indian Kanoon, cached).
+   Indian Kanoon bills PER CALL, so this must never fire automatically: firing it on load
+   billed one call per user per dashboard visit, on the highest-traffic page in the app.
+   It now asks the free /status endpoint whether live case law is enabled at all, and only
+   then fetches — so with KANOON_ENABLED unset (the default) the paid API is never touched. */
 (async function latestFromCourts() {
+  try {
+    const st = await api.get('/api/research/status');
+    if (!st || !st.case_law_enabled) return;    // disabled → no paid call, no card
+  } catch (_) { return; }
   let items = [];
   try { items = await api.get('/api/research/latest-judgments'); } catch (_) { return; }
-  if (!items || !items.length) return;          // no key / no results → don't show an empty box
+  if (!items || !items.length) return;          // no results → don't show an empty box
   const card = document.createElement('div');
   card.className = 'card animate-in';
   card.style.cssText = 'margin-bottom:1.5rem';

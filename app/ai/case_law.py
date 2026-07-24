@@ -2,10 +2,14 @@
 Case-law retrieval — Indian Kanoon API connector.
 
 NO-HALLUCINATION GUARANTEE:
-  This module returns case-law context ONLY from the live Indian Kanoon API. If no
-  API key is configured (INDIAN_KANOON_API_KEY), it returns an empty string so the
-  agent abstains from citing any judgment — it NEVER invents case names, citations,
-  or holdings. Get a key at https://api.indiankanoon.org/
+  This module returns case-law context ONLY from the live Indian Kanoon API. When the
+  integration is disabled it returns empty so the agent abstains from citing any
+  judgment — it NEVER invents case names, citations, or holdings.
+
+ENABLEMENT (both required, opt-in):
+  KANOON_ENABLED=true  AND  INDIAN_KANOON_API_KEY=<key>
+  This API is billed per call, so a key alone is deliberately NOT enough to spend money.
+  Get a key at https://api.indiankanoon.org/
 
 API docs: https://api.indiankanoon.org/  (POST, header: "Authorization: Token <key>")
 """
@@ -18,6 +22,14 @@ logger = logging.getLogger(__name__)
 KANOON_API_KEY = os.getenv("INDIAN_KANOON_API_KEY", "")
 KANOON_SEARCH_URL = "https://api.indiankanoon.org/search/"
 TOP_N = 5
+
+# Indian Kanoon is the ONE genuinely billed dependency (per-call). Presence of a key is
+# NOT consent to spend: a key sitting in .env for a one-off test used to be enough to bill
+# every dashboard load. Enablement is therefore an EXPLICIT opt-in, defaulting to OFF, and
+# BOTH the flag and a key are required. Set KANOON_ENABLED=true only where the spend is
+# intended.
+_TRUTHY = {"1", "true", "yes", "on"}
+KANOON_ENABLED = os.getenv("KANOON_ENABLED", "").strip().lower() in _TRUTHY
 
 # "Is it still good law?" — we cannot verify treatment (overruled/reversed/distinguished)
 # from the basic API, so we NEVER assert a judgment is good law. We attach this honest
@@ -50,7 +62,12 @@ def _cache_put(key: str, value):
 
 
 def is_enabled() -> bool:
-    return bool(KANOON_API_KEY)
+    """Live case law is available only with an explicit opt-in AND a key.
+
+    Read through the module attributes (not the captured locals) so tests and runtime
+    toggles both take effect.
+    """
+    return bool(KANOON_ENABLED) and bool(KANOON_API_KEY)
 
 
 def retrieve_cases(query: str) -> str:
@@ -58,8 +75,8 @@ def retrieve_cases(query: str) -> str:
     Return a formatted block of real judgments for the query, or "" if unavailable.
     Only genuine API results are returned — no fabrication, ever.
     """
-    if not KANOON_API_KEY:
-        logger.info("Indian Kanoon API key not set — case-law retrieval disabled.")
+    if not is_enabled():
+        logger.info("Live case law disabled (needs KANOON_ENABLED=true + a key) — abstaining.")
         return ""
 
     cards = search_cases(query, limit=TOP_N)   # cached, no fabrication
@@ -93,7 +110,7 @@ KANOON_DOC_URL = "https://api.indiankanoon.org/doc/{tid}/"
 
 def fetch_document(tid: str) -> dict | None:
     """Fetch a full judgment by its Indian Kanoon id. Returns metadata + plain text."""
-    if not KANOON_API_KEY or not tid:
+    if not is_enabled() or not tid:
         return None
     ckey = f"doc::{tid}"
     cached = _cache_get(ckey)
@@ -194,7 +211,7 @@ def search_cases(query: str, limit: int = TOP_N) -> list[dict]:
     Structured case results for UI/API use (at-a-glance cards + verifiable link).
     Cached for 24h to limit billed API calls. Returns [] if no key/results. No fabrication.
     """
-    if not KANOON_API_KEY:
+    if not is_enabled():
         return []
     ckey = f"search::{limit}::{query.strip().lower()}"
     cached = _cache_get(ckey)
@@ -237,7 +254,7 @@ def latest_judgments(limit: int = 6) -> list[dict]:
     Kanoon results with verifiable links), cached 24h to limit billed calls, [] if no key. Never
     fabricates. Good-law status remains UNVERIFIED (caveat carried on every card).
     """
-    if not KANOON_API_KEY:
+    if not is_enabled():
         return []
     ckey = f"latest::{limit}"
     cached = _cache_get(ckey)
