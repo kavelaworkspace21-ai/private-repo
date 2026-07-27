@@ -110,6 +110,11 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/handle/123456789/2187",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2187",
+        # This print glues the body's section starts to the number ("73.Compensation for
+        # loss…") while the table of contents spaces them. Without this only 98 of 238
+        # sections parsed — s.73 (compensation for breach), the quasi-contract group
+        # (ss.68-72) and the whole of Chapter VI were missing from the corpus.
+        "glued_starts": True,
     },
     # ── Additional essential acts (download the PDF, save as <id>.pdf, then ingest) ──
     "income_tax_1961": {
@@ -189,6 +194,8 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "title": "Specific Relief Act, 1963", "short": "Specific Relief Act", "year": 1963, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/1583/1/A1963-47.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/1583",
+        # Same glued-start print as the Contract Act: s.10 (specific performance) was lost.
+        "glued_starts": True,
     },
     "partnership_1932": {
         "title": "Indian Partnership Act, 1932", "short": "Partnership Act", "year": 1932, "status": "in_force",
@@ -440,19 +447,39 @@ _SEC1_RE  = re.compile(r"^\s*(?:\d{1,3}\[)?1\.\s+[\"'A-Z(]")   # body's "1. ..."
 # Section start. Tolerates India Code's amendment-substitution prefix "N[" (e.g. "2[304B. Dowry
 # death.—…" means s.304B substituted by footnote 2) — without it, every substituted/inserted
 # section (304B, 375, 498A body, …) was invisible to the parser. Base number = group(1)+(2).
-# The `(?:\s+|(?=["'(A-Z]))` alternative accepts a section start GLUED to its number —
-# "73.Compensation for loss…" with no space. India Code prints the same provision spaced in
-# the table of contents and glued in the body, so requiring `\.\s+` silently dropped the
-# BODY of such sections: the Contract Act lost s.73 (compensation for breach) and 139 others,
-# Specific Relief lost s.10, Transfer of Property lost s.53A — all present in the source PDF,
-# all absent from the corpus, all while the act still reported source_verified: True.
-# The lookahead keeps decimals out ("73.5 per cent" cannot open a section) by requiring the
-# body to open like a statute body — the same guard _CHAIN_LOOSE_RE uses for ITA-2025.
 # `\d{1,3}\s*\[` — the amendment-substitution footnote is printed both adjacent ("2[304B.")
 # and spaced ("1 [53A. Part performance.—"). Requiring adjacency lost Transfer of Property
-# s.53A (part performance), which is heavily litigated.
+# s.53A (part performance), which is heavily litigated. Safe to apply everywhere: a
+# footnote marker followed by "[" is unambiguous.
 _START_RE = re.compile(
-    r"^\s*(?:\d{1,3}\s*\[)?(\d{1,3})([A-Z]{0,2})\.(?:\s+|(?=[\"'(A-Z]))(\S.*)$")  # "318. Heading.—body"
+    r"^\s*(?:\d{1,3}\s*\[)?(\d{1,3})([A-Z]{0,2})\.\s+(\S.*)$")  # "318. Heading.—body"
+
+# GLUED section starts — "73.Compensation for loss…" with no space after the period. India
+# Code prints the same provision spaced in the table of contents and glued in the body, so
+# the strict pattern above matched the TOC entry and missed the BODY: the Contract Act kept
+# only 98 of 238 sections (losing s.73, compensation for breach) and Specific Relief lost
+# s.10 — present in the source PDF, absent from the corpus, while both acts still reported
+# source_verified: True.
+#
+# OPT-IN per act via the registry's `glued_starts`, deliberately mirroring how
+# `chain_loose_starts` gates the same pathology for ITA-2025. Applying it globally is
+# tempting and wrong: without the chain constraint that guards the ITA-2025 path, any body
+# line shaped "NN.Capital" would open a spurious section. Enable it only for acts whose
+# source is known to print this way and whose parse has been checked afterwards.
+# The `(?=["'(A-Z])` lookahead still keeps decimals out — "100.5 per cent" can never open a
+# section — by requiring the body to begin like a statute body.
+_START_GLUED_RE = re.compile(
+    r"^\s*(?:\d{1,3}\s*\[)?(\d{1,3})([A-Z]{0,2})\.(?=[\"'(A-Z])(\S.*)$")
+
+_GLUED_STARTS = False        # set per-act by ingest(); accept glued section starts
+
+
+def _match_start(line: str):
+    """Strict section-start match, plus glued starts when the act opts in."""
+    m = _START_RE.match(line)
+    if m is None and _GLUED_STARTS:
+        m = _START_GLUED_RE.match(line)
+    return m
 
 # ITA-2025 print pathologies (opt-in via `chain_loose_starts`): a handful of section starts
 # are glued to the number ("296.63[(1)…", "427.(1)…", "480.If…") or space the number off the
@@ -510,7 +537,7 @@ def _seg_dash(lines: list[tuple[str, int]]) -> list[dict]:
     """Section starts at "N. heading—text" lines (em-dash present); de-dupe by longest."""
     sections, current = [], None
     for line, page_no in lines:
-        m = _START_RE.match(line)
+        m = _match_start(line)
         if m and "—" in line:
             if current:
                 sections.append(current)
@@ -552,7 +579,7 @@ def _seg_dash_wrapped(lines: list[tuple[str, int]]) -> list[dict]:
             current = None
 
     for line, page_no in lines:
-        m = _START_RE.match(line)
+        m = _match_start(line)
         if m and "—" in line:                       # heading + body on one line (normal)
             commit(); pending = None
             current = {"num": m.group(1) + m.group(2), "text": m.group(3).strip(), "page": page_no}
@@ -589,7 +616,7 @@ def _seg_monotonic(lines: list[tuple[str, int]]) -> list[dict]:
             current = None
 
     for line, page_no in lines:
-        m = _START_RE.match(line)
+        m = _match_start(line)
         is_start = False
         if m:
             n = int(m.group(1))
@@ -898,11 +925,12 @@ def ingest(act_id: str) -> dict:
     global _DOUBLE_ENDASH_ACTS, _BARE_SCHEDULE
     _DOUBLE_ENDASH_ACTS = bool(meta.get("double_endash"))
     _BARE_SCHEDULE = (meta.get("article_schedule") == "bare")
-    global _SINGLE_ENDASH, _CHAIN_TITLE_ABOVE, _CHAIN_HEADER_LINES, _CHAIN_LOOSE
+    global _SINGLE_ENDASH, _CHAIN_TITLE_ABOVE, _CHAIN_HEADER_LINES, _CHAIN_LOOSE, _GLUED_STARTS
     _SINGLE_ENDASH = bool(meta.get("single_endash"))
     _CHAIN_TITLE_ABOVE = bool(meta.get("chain_title_above"))
     _CHAIN_HEADER_LINES = tuple(meta.get("page_header_lines", ()))
     _CHAIN_LOOSE = bool(meta.get("chain_loose_starts"))
+    _GLUED_STARTS = bool(meta.get("glued_starts"))
     try:
         pages = _extract_pages(pdf_path)
     finally:

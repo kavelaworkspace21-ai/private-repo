@@ -397,3 +397,57 @@ def test_seeder_dedups_ids_so_one_bad_section_cant_wipe_the_corpus():
     assert len(ids) == len(set(ids)), "ids were not de-duplicated"
     assert any(i.startswith("z_1901") for i in ids), "act after the duplicate was dropped"
     assert sum(1 for i in ids if i.startswith("a_1900_s5")) == 1   # first-wins
+
+
+# ── Glued section starts (`glued_starts`, opt-in) ───────────────────────────────
+def test_glued_starts_recovers_body_sections_only_when_opted_in():
+    """India Code prints some acts' section starts GLUED to the number in the BODY
+    ("73.Compensation for loss…") while the table of contents prints them spaced. The
+    strict pattern matched the TOC and missed the body, so the Contract Act kept only 98
+    of 238 sections — s.73 (compensation for breach) among the losses.
+
+    Opt-in per act, mirroring `chain_loose_starts`: applied globally, any body line shaped
+    "NN.Capital" would open a spurious section, and the default segmenters have no chain
+    constraint to catch that.
+    """
+    import app.ai.ingest_statutes as ing
+
+    pages = [_page([
+        "1. Short title.—This Act may be called the Test Act and extends to the whole "
+        "of India, coming into force on such date as the Government may appoint.",
+        "2. Definitions.—In this Act, unless the context otherwise requires, the terms "
+        "used shall carry the meanings assigned to them by this section throughout.",
+        "73.Compensation for loss or damage caused by breach of contract.—When a contract "
+        "has been broken, the party who suffers is entitled to receive compensation for "
+        "any loss or damage caused to him thereby which naturally arose in the usual course.",
+        "The rate shall be 100.5 per cent of the amount in default under this provision.",
+    ])]
+
+    old = ing._GLUED_STARTS
+    try:
+        ing._GLUED_STARTS = False
+        strict = {s["num"] for s in _segment_sections(pages)}
+        assert "73" not in strict, "glued start recovered without the opt-in flag"
+
+        ing._GLUED_STARTS = True
+        secs = {s["num"]: s for s in _segment_sections(pages)}
+        assert "73" in secs, "glued start not recovered with the flag on"
+        assert "Compensation for loss" in secs["73"]["text"]
+        # the decimal must never open a section, flag or no flag
+        assert "100.5" not in secs
+        assert "100.5 per cent" in secs["73"]["text"], "decimal line left its parent section"
+    finally:
+        ing._GLUED_STARTS = old
+
+
+def test_spaced_footnote_bracket_is_recognised_globally():
+    """"1 [53A. Part performance" — the amendment footnote is printed both adjacent
+    ("2[304B.") and spaced. Requiring adjacency lost Transfer of Property s.53A. A footnote
+    digit followed by "[" is unambiguous, so this needs no opt-in."""
+    from app.ai.ingest_statutes import _START_RE
+
+    m = _START_RE.match("1 [53A. Part performance.—Where any person contracts to transfer")
+    assert m and m.group(1) + m.group(2) == "53A"
+    # the adjacent form IPC 304B depends on must still work
+    m2 = _START_RE.match("2[304B. Dowry death.—Where the death of a woman is caused")
+    assert m2 and m2.group(1) + m2.group(2) == "304B"

@@ -19,6 +19,7 @@ jobs:
       RATELIMIT_ENABLED: "0"
       OPENAI_API_KEY: ""
       JWT_SECRET: "ci-test-secret-not-for-prod"
+      ENVIRONMENT: test   # security_gate: CI uses throwaway secrets and must declare it
     steps:
       - uses: actions/checkout@v4
 
@@ -78,6 +79,7 @@ jobs:
       RATELIMIT_ENABLED: "0"
       OPENAI_API_KEY: ""
       JWT_SECRET: "ci-test-secret-not-for-prod"
+      ENVIRONMENT: test   # security_gate: CI uses throwaway secrets and must declare it
       # The app + Alembic read DATABASE_URL; psycopg v3 driver.
       DATABASE_URL: "postgresql+psycopg://juriscite:juriscite@localhost:5432/juriscite_ci"
     steps:

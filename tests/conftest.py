@@ -18,6 +18,11 @@ os.environ["AI_API_KEY"] = ""
 os.environ["OPENAI_API_KEY"] = ""
 # Disable IP rate limiting during tests (all requests share one host → would false-trip).
 os.environ["RATELIMIT_ENABLED"] = "0"
+# Declare the test environment EXPLICITLY. app/security_gate.py refuses to boot with weak
+# or absent signing secrets, and treats an unset ENVIRONMENT as production so that
+# forgetting it fails closed. Tests legitimately run with throwaway secrets, so they must
+# say so rather than have the gate relaxed on their behalf.
+os.environ["ENVIRONMENT"] = "test"
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

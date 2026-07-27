@@ -50,6 +50,13 @@ assert_prohibited_disabled()
 from app.soul import assert_soul_intact
 assert_soul_intact()
 
+# Secret sanity (fail-closed): refuse to boot in production with a missing/placeholder
+# JWT_SECRET or an unset FIELD_ENCRYPTION_KEY. preflight() already blocks a DEPLOY without
+# these, but nothing stopped a hand-started uvicorn from running with the published
+# placeholder and issuing forgeable tokens. This is the gate that always runs.
+from app.security_gate import assert_secrets_sane
+assert_secrets_sane()
+
 # Observability (production discipline): request IDs always; Sentry only if SENTRY_DSN is set.
 from app.observability import configure_logging, init_sentry, RequestIDMiddleware
 configure_logging()
