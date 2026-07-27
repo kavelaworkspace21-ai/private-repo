@@ -59,8 +59,27 @@ class RateLimiter:
             )
 
 
-# Shared limiter instances
-login_limiter   = RateLimiter(20, 300, "login")      # 20 / 5 min per IP
-forgot_limiter  = RateLimiter(5, 900, "forgot")      # 5 / 15 min per IP
+# Shared limiter instances.
+#
+# Credential endpoints are tightened to the pre-deploy thresholds. The previous login limit
+# (20 per 5 min) permitted a 20-request burst — enough to walk a short password list against
+# a known advocate's email before the window closed. 5 per minute keeps a mistyped password
+# workable while making online guessing useless.
+#
+# NOTE (single-node only): buckets live in this process's memory, so N app instances behind a
+# load balancer multiply every limit by N, and a restart clears them. Moving to a shared store
+# (Redis) is required before horizontal scaling — tracked in docs/OWNER_QUEUE.md.
+login_limiter   = RateLimiter(5, 60, "login")        # 5 / min per IP
+forgot_limiter  = RateLimiter(3, 3600, "forgot")     # 3 / hour per IP (reset emails)
 register_limiter = RateLimiter(10, 3600, "register")  # 10 / hour per IP
 ai_limiter      = RateLimiter(40, 60, "ai")          # 40 / min per IP (cost control)
+
+# TOTP verification was UNLIMITED. A 6-digit code is one million combinations, but a code
+# stays valid for a ~30-90s window, so an attacker who already has the password (and thus a
+# temp_token) could spray guesses at that window until one lands — defeating the second
+# factor entirely while looking like ordinary traffic. 5 attempts per 5 minutes leaves room
+# for clock drift and a fat-fingered code, and nothing else.
+otp_limiter     = RateLimiter(5, 300, "otp")         # 5 / 5 min per IP
+# Consuming a reset token was also unlimited; rate-limit the guessing surface regardless of
+# token entropy.
+reset_limiter   = RateLimiter(5, 3600, "reset")      # 5 / hour per IP

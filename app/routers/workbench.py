@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from app.observability import internal_error
 from app.db.session import get_db
 from app.models.user import User
 from app.models.workbench import WorkflowArtifact
@@ -242,7 +243,7 @@ def export_artifact(artifact_id: int, body: ArtifactExport, db: Session = Depend
         else:
             data, media = _build_pdf(text), "application/pdf"
     except Exception as e:
-        raise HTTPException(500, f"Export failed: {str(e)[:120]}")
+        raise internal_error(e, status_code=500, action="Export")
     from app.services.tenancy import write_audit
     write_audit(db, tenant_id=user.tenant_id, user_id=user.id, action="workbench_artifact_export",
                 entity="WorkflowArtifact", entity_id=a.id, detail=f"{a.artifact_type}.{body.format}")

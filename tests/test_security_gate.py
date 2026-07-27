@@ -80,6 +80,10 @@ def test_development_environments_warn_instead_of_blocking(monkeypatch, env_name
 def test_strong_secrets_pass_in_production(monkeypatch):
     _env(monkeypatch, environment="production")
     assert secret_problems() == []
+    # The boot gate also checks the database, so a production run needs a real one; the
+    # developer's ambient DATABASE_URL points at SQLite.
+    monkeypatch.setenv("DATABASE_URL",
+                       "postgresql+psycopg://u:p@host:5432/db?sslmode=require")
     assert_secrets_sane()
 
 
@@ -97,3 +101,25 @@ def test_the_raised_error_names_problems_but_not_values(monkeypatch):
     with pytest.raises(RuntimeError) as exc:
         assert_secrets_sane()
     assert "shortsecret" not in str(exc.value)
+
+
+def test_boot_gate_checks_the_database_as_well_as_the_secrets(monkeypatch):
+    """The gate composes secret_problems() + database_problems().
+
+    An earlier version folded the database checks INTO secret_problems(), so a function
+    named "secret problems" reported database configuration. Each function now reports
+    what its name says and the gate combines them — this pins that composition, since
+    dropping either half would silently narrow the gate.
+    """
+    _env(monkeypatch, environment="production")            # strong secrets
+    monkeypatch.setenv("DATABASE_URL", "sqlite:///./legal_server.db")
+    assert secret_problems() == [], "database config must not leak into secret_problems()"
+    with pytest.raises(RuntimeError, match="REFUSING TO START"):
+        assert_secrets_sane()                              # ...but the gate still refuses
+
+
+def test_gate_passes_with_strong_secrets_and_a_tls_database(monkeypatch):
+    _env(monkeypatch, environment="production")
+    monkeypatch.setenv("DATABASE_URL",
+                       "postgresql+psycopg://u:p@host:5432/db?sslmode=require")
+    assert_secrets_sane()

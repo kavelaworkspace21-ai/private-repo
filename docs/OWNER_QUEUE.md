@@ -6,6 +6,28 @@ what the build work has actually surfaced and hands off. Newest sprint on top.
 
 ---
 
+## From the pre-deploy hardening review (2026-07-25)
+
+- **Rate limiting is per-process — do NOT scale horizontally yet.** Buckets live in the app
+  process's memory, so N instances behind a load balancer multiply every limit by N (5
+  login attempts/min becomes 5N), and a restart clears them entirely. The limits are correct
+  on a single node, which is the current deployment. **Before adding a second instance or an
+  autoscaling group, move the buckets to a shared store (Redis).** `REDIS_URL` already exists
+  in the compose file; the limiter does not use it.
+- **Set `ENVIRONMENT=production` on the server.** Several protections key off it: the secret
+  boot gate, the database TLS check, and disabling the API docs. It is *safe* if you forget
+  (unset is treated as production, so it fails closed), but set it explicitly so the intent
+  is visible in the deployment config rather than inferred from a default.
+- **`DATABASE_URL` must carry `?sslmode=require`** (or `verify-full` with a CA bundle) for
+  Aurora. Without it libpq defaults to `prefer`, which silently downgrades to an
+  UNENCRYPTED connection if the server does not offer TLS — client matter data would cross
+  the network in the clear with no error. The app now refuses to boot in production without
+  it, so this is enforced rather than advisory.
+- **CSP still allows `'unsafe-inline'` for scripts.** The frontend uses inline event
+  handlers and inline `<script>` blocks, so tightening this is a real frontend refactor
+  (move handlers to addEventListener, add nonces), not a config change. Worth doing before
+  G7; it is the weakest part of an otherwise complete header set.
+
 ## From the Vision-Alignment Program — Phase 1 consent policy (2026-07-24)
 
 Consent enforcement itself was **not** put to you — the prompt is explicit that for a legal

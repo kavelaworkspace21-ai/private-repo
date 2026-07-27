@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, File
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
+from app.observability import internal_error
 from app.db.session import get_db
 from app.services.tenancy import write_audit
 from app.auth.dependencies import get_current_user, require_ai_user
@@ -50,7 +51,8 @@ async def transcribe_audio(
         resp = client.audio.transcriptions.create(**kwargs)
         return {"text": getattr(resp, "text", "") or ""}
     except Exception as e:
-        raise HTTPException(502, f"Transcription failed: {e}")
+        # Provider errors carry endpoint URLs and response bodies — log, do not publish.
+        raise internal_error(e, action="Transcription")
 
 
 @router.get("/transcribe/status")

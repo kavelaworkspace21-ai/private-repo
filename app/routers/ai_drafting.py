@@ -8,6 +8,7 @@ import os
 import io
 import json
 import re
+from app.observability import internal_error
 from app.util.time import utcnow
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse, Response
@@ -490,7 +491,7 @@ def edit_selection(body: EditRequest, user: User = Depends(require_ai_user),
             messages=[{"role": "system", "content": system}, {"role": "user", "content": user_msg}])
         out = sanitize_answer((resp.choices[0].message.content or "").strip())
     except Exception as e:
-        raise HTTPException(502, f"Edit failed ({str(e)[:120]}) — nothing was changed; retry.")
+        raise internal_error(e, action="Edit", hint="Nothing was changed; please retry.")
     write_audit(db, tenant_id=user.tenant_id, user_id=user.id, action="draft_edit_action",
                 entity="DraftEdit", detail=body.action)
     return {"replacement": out, "action": body.action}
@@ -535,7 +536,7 @@ def review_own_draft(body: ReviewOwnDraft, user: User = Depends(require_ai_user)
                       {"role": "user", "content": f"DRAFT UNDER REVIEW:\n{body.content[:30000]}"}])
         review = sanitize_answer((resp.choices[0].message.content or "").strip())
     except Exception as e:
-        raise HTTPException(502, f"Review failed ({str(e)[:120]}) — nothing was charged; retry.")
+        raise internal_error(e, action="Review", hint="Nothing was charged; please retry.")
     verified = sorted(set(extract_citations(review)) & set(extract_citations(grounding)))
     meter(db, user, KIND_RESEARCH)
     write_audit(db, tenant_id=user.tenant_id, user_id=user.id, action="draft_review_mode",

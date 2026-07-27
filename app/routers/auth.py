@@ -12,7 +12,7 @@ from app.auth.security import (
     create_access_token, create_refresh_token, decode_token, create_reset_token,
 )
 from app.services.email import send_email, email_enabled
-from app.services.ratelimit import login_limiter, forgot_limiter, register_limiter
+from app.services.ratelimit import login_limiter, forgot_limiter, register_limiter, otp_limiter, reset_limiter
 from app.auth.totp import generate_totp_secret, verify_totp_code, get_qr_code_base64
 from app.auth.dependencies import get_current_user
 from app.schemas.auth import (
@@ -175,7 +175,8 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
 
 # ── Login (step 2) — verify TOTP ─────────────────────────
 
-@router.post("/login/verify-2fa", response_model=TokenResponse)
+@router.post("/login/verify-2fa", response_model=TokenResponse,
+             dependencies=[Depends(otp_limiter)])   # TOTP brute-force guard
 def verify_2fa_login(payload: TOTPVerifyRequest, db: Session = Depends(get_db)):
     decoded = decode_token(payload.temp_token)
     if not decoded or not decoded.get("role", "").startswith("temp_"):
@@ -219,7 +220,7 @@ def setup_2fa(current_user: User = Depends(get_current_user), db: Session = Depe
 
 # ── 2FA Setup — confirm and enable ───────────────────────
 
-@router.post("/2fa/enable")
+@router.post("/2fa/enable", dependencies=[Depends(otp_limiter)])
 def enable_2fa(
     payload: TOTPEnableRequest,
     current_user: User = Depends(get_current_user),
@@ -281,7 +282,7 @@ def forgot_password(payload: ForgotPasswordRequest, db: Session = Depends(get_db
 
 # ── Reset password ────────────────────────────────────────
 
-@router.post("/reset-password")
+@router.post("/reset-password", dependencies=[Depends(reset_limiter)])
 def reset_password(payload: ResetPasswordRequest, db: Session = Depends(get_db)):
     decoded = decode_token(payload.token)
     if not decoded or decoded.get("type") != "reset":

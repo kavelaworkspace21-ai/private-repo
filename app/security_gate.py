@@ -74,13 +74,53 @@ def secret_problems() -> list[str]:
     return problems
 
 
+def database_problems() -> list[str]:
+    """Production database configuration problems. Never echoes the URL (it holds a password)."""
+    problems: list[str] = []
+    url = os.getenv("DATABASE_URL", "").strip()
+
+    if not url:
+        # app/db/config.py falls back to sqlite:///./legal_server.db. In production that is
+        # silent data loss, not an outage: the app starts, serves happily, writes client
+        # matter data to a local file, and loses it when the container is replaced.
+        problems.append(
+            "DATABASE_URL is not set — the app would silently fall back to a local SQLite "
+            "file and write production data to ephemeral container storage")
+        return problems
+
+    if url.startswith("sqlite"):
+        problems.append(
+            "DATABASE_URL points at SQLite — not a production database (no concurrent "
+            "writers, no managed backups, lost with the container)")
+        return problems
+
+    if url.startswith(("postgresql", "postgres")):
+        lowered = url.lower()
+        # libpq defaults to sslmode=prefer, which SILENTLY falls back to plaintext if the
+        # server does not offer TLS. Client matter data would then cross the network in the
+        # clear with no error. Require it explicitly.
+        if "sslmode=" not in lowered:
+            problems.append(
+                "DATABASE_URL has no sslmode — libpq defaults to 'prefer', which silently "
+                "falls back to an UNENCRYPTED connection. Append ?sslmode=require "
+                "(or verify-full with a CA bundle)")
+        elif "sslmode=disable" in lowered or "sslmode=allow" in lowered:
+            problems.append(
+                "DATABASE_URL sets sslmode=disable/allow — client data would cross the "
+                "network unencrypted. Use sslmode=require or verify-full")
+
+    return problems
+
+
 def assert_secrets_sane() -> None:
     """Refuse to boot in production with unsafe secrets. Warn loudly elsewhere.
 
     Raises RuntimeError rather than logging, because a warning at startup scrolls past and
     the failure it describes is silent, total, and unrecoverable after the fact.
     """
-    problems = secret_problems()
+    # Composed here rather than folded into secret_problems(), so each function reports
+    # exactly what its name says. The boot gate is what cares about both.
+    problems = secret_problems() + database_problems()
     if not problems:
         return
 
@@ -93,6 +133,7 @@ def assert_secrets_sane() -> None:
             "  JWT_SECRET:           python -c \"import secrets; print(secrets.token_hex(32))\"\n"
             "  FIELD_ENCRYPTION_KEY: python -c \"from cryptography.fernet import Fernet; "
             "print(Fernet.generate_key().decode())\"\n"
+            "  DATABASE_URL:         postgresql+psycopg://USER:PASS@host:5432/db?sslmode=require\n"
             "For local development set ENVIRONMENT=development to downgrade this to a warning."
         )
 

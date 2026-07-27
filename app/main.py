@@ -34,11 +34,21 @@ async def lifespan(app: FastAPI):
                 pass
 
 
+# Interactive API docs publish the full surface — 150+ routes, every request/response schema
+# and validation rule. That is a reconnaissance map, and nothing in the product needs it in
+# production. Off unless the environment explicitly says otherwise; still on in development.
+from app.security_gate import is_production as _is_production
+
+_DOCS_ENABLED = not _is_production()
+
 app = FastAPI(
     title="Juriscite",
     description="India's Legal Operating System",
     version=__version__,
     lifespan=lifespan,
+    docs_url="/docs" if _DOCS_ENABLED else None,
+    redoc_url="/redoc" if _DOCS_ENABLED else None,
+    openapi_url="/openapi.json" if _DOCS_ENABLED else None,
 )
 
 # Legal guardrail (LSAI-LEGAL-09): prohibited AI features must never be enabled.
