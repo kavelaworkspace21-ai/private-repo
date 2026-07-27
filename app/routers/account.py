@@ -109,9 +109,10 @@ def delete_my_account(body: DeleteRequest, user: User = Depends(get_current_user
                     entity="Tenant", entity_id=tid, detail="DPDP erasure"))
     db.commit()
 
-    # 1) Remove stored document files for this tenant
+    # 1) Remove stored files for this tenant — documents AND workbench extractions.
     for ver in db.query(DocumentVersion).filter(DocumentVersion.tenant_id == tid).all():
         storage.delete_file(ver.storage_path)
+    _erase_workbench_files(db, tid)
 
     # 2) Delete tenant-scoped rows (children of Case cascade via ORM relationships)
     db.query(DocumentVersion).filter(DocumentVersion.tenant_id == tid).delete(synchronize_session=False)
@@ -124,8 +125,127 @@ def delete_my_account(body: DeleteRequest, user: User = Depends(get_current_user
     # Any cases not linked through a deleted client (defensive)
     for case in db.query(Case).filter(Case.tenant_id == tid).all():
         db.delete(case)
+    # 3) AI history, activity trail, workbench, and request records.
+    #    These were previously MISSED. Chat messages and activity previews carry client
+    #    facts verbatim ("anticipatory bail for Ramesh Kumar in the Acme matter"), so an
+    #    erasure that left them behind made "your data was deleted" untrue.
+    _erase_ai_and_activity(db, tid)
+    _erase_tenant_records(db, tid)
+
+    # 4) Financial records are ANONYMISED, not deleted — Indian tax/GST rules require
+    #    invoice retention, which survives an erasure request. Stripping the identifiers
+    #    keeps the statutory record without keeping the person.
+    _anonymise_financial_records(db, tid)
+
     db.query(AuditLog).filter(AuditLog.tenant_id == tid).delete(synchronize_session=False)
     db.query(User).filter(User.tenant_id == tid).delete(synchronize_session=False)
     db.query(Tenant).filter(Tenant.id == tid).delete(synchronize_session=False)
     db.commit()
     return {"status": "deleted", "message": "Your account and all associated data were deleted."}
+
+
+# ── Erasure helpers ─────────────────────────────────────────────────────────────
+# Split out so each class of data is visible and testable. tests/test_erasure_completeness.py
+# walks the schema and fails if ANY tenant/user-scoped table still holds rows afterwards, so a
+# newly added table cannot silently inherit "kept forever".
+
+def _erase_workbench_files(db: Session, tenant_id: int) -> None:
+    """Delete extracted-text / anchor files written for workbench uploads."""
+    try:
+        from app.models.workbench import WorkbenchUpload
+    except Exception:
+        return
+    rows = db.query(WorkbenchUpload).filter(WorkbenchUpload.tenant_id == tenant_id).all()
+    for up in rows:
+        for ref in (up.extracted_text_ref, up.anchors_ref):
+            if ref:
+                try:
+                    storage.delete_file(ref)
+                except Exception:
+                    # A missing file must not abort an erasure request; the row still goes.
+                    pass
+
+
+def _erase_ai_and_activity(db: Session, tenant_id: int) -> None:
+    """Chat conversations, their messages, and the activity trail.
+
+    `Conversation.user_id` declares ondelete="CASCADE", but SQLite runs with
+    PRAGMA foreign_keys=0, so that cascade fires on PostgreSQL and silently does nothing
+    on SQLite. Deleting explicitly makes erasure behave identically on both.
+    """
+    user_ids = [u.id for u in db.query(User).filter(User.tenant_id == tenant_id).all()]
+    if not user_ids:
+        return
+
+    try:
+        from app.models.ai_chat import AiMessage, Conversation
+        conv_ids = [c.id for c in db.query(Conversation)
+                    .filter(Conversation.user_id.in_(user_ids)).all()]
+        if conv_ids:
+            db.query(AiMessage).filter(
+                AiMessage.conversation_id.in_(conv_ids)).delete(synchronize_session=False)
+        db.query(Conversation).filter(
+            Conversation.user_id.in_(user_ids)).delete(synchronize_session=False)
+    except Exception:
+        pass
+
+    try:
+        from app.models.user_activity import UserActivity
+        db.query(UserActivity).filter(
+            UserActivity.user_id.in_(user_ids)).delete(synchronize_session=False)
+    except Exception:
+        pass
+    db.commit()
+
+
+def _erase_tenant_records(db: Session, tenant_id: int) -> None:
+    """Every remaining tenant-scoped table that holds user or client data."""
+    candidates = [
+        ("app.models.workbench", "WorkflowArtifact"),
+        ("app.models.workbench", "WorkbenchUpload"),
+        ("app.models.workbench", "WorkflowSession"),
+        ("app.models.draft_version", "GeneratedDraftVersion"),
+        ("app.models.data_rights", "DataRightsRequest"),
+        ("app.models.misuse_report", "MisuseReport"),
+        ("app.models.billing", "WebhookEvent"),
+    ]
+    import importlib
+    for module_path, cls_name in candidates:
+        try:
+            model = getattr(importlib.import_module(module_path), cls_name)
+        except Exception:
+            continue
+        if hasattr(model, "tenant_id"):
+            db.query(model).filter(
+                model.tenant_id == tenant_id).delete(synchronize_session=False)
+    db.commit()
+
+
+def _anonymise_financial_records(db: Session, tenant_id: int) -> None:
+    """Strip personal identifiers from records kept for statutory financial retention.
+
+    The rows survive (tax law), the person does not. Only clears columns that identify a
+    human — amounts, dates and tax fields are the reason the record is retained at all.
+    """
+    import importlib
+
+    PII_COLUMNS = {"name", "full_name", "email", "phone", "address", "gstin",
+                   "billing_name", "billing_email", "customer_name", "customer_email",
+                   "razorpay_customer_id", "contact"}
+
+    for module_path, cls_name in (("app.models.billing", "Invoice"),
+                                  ("app.models.billing", "Subscription"),
+                                  ("app.models.billing", "UsageEvent")):
+        try:
+            model = getattr(importlib.import_module(module_path), cls_name)
+        except Exception:
+            continue
+        if not hasattr(model, "tenant_id"):
+            continue
+        updates = {c: None for c in PII_COLUMNS
+                   if hasattr(model, c) and getattr(model.__table__.c, c, None) is not None
+                   and getattr(model.__table__.c, c).nullable}
+        if updates:
+            db.query(model).filter(
+                model.tenant_id == tenant_id).update(updates, synchronize_session=False)
+    db.commit()

@@ -10,7 +10,7 @@
 // The fetch handler also runtime-caches same-origin GETs into this same versioned cache,
 // so returning PWA users keep old page JS until the version changes. (Bitten twice:
 // v1 hid the Workbench nav link; v2 served a stale workbench.js without the WB-03 flow.)
-const VERSION = 'juriscite-v11';   // v11: assistant.js honours the fail-closed citation gate (replaces provisional streamed text)
+const VERSION = 'juriscite-v12';   // v12: utils.js no longer caches email/phone in localStorage (and purges any it already cached)
 const SHELL = [
   '/static/style.css',
   '/static/utils.js',

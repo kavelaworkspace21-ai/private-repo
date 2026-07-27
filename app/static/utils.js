@@ -64,9 +64,23 @@ async function initNav() {
   }
 
   try {
+    /* Cache ONLY what the nav chip renders. /api/auth/me also returns email, phone and
+       professional_id; those were being written to localStorage and never read. Anything
+       in localStorage is readable by any script on the page — an XSS, a bad dependency, a
+       browser extension — so caching an advocate's email and phone there bought nothing
+       and widened the blast radius. Pages that genuinely need the full profile (account.html)
+       re-fetch /api/auth/me instead. */
     let user = JSON.parse(localStorage.getItem('current_user') || 'null');
-    if (!user) {
-      user = await api.get('/api/auth/me');
+    /* Purge PII an earlier build cached. Existing browsers already hold the full profile,
+       so simply writing less from now on would leave their email and phone sitting there
+       indefinitely — the stale copy has to be actively overwritten. */
+    if (user && ('email' in user || 'phone' in user || 'professional_id' in user)) {
+      user = { full_name: user.full_name, role: user.role, is_2fa_enabled: user.is_2fa_enabled };
+      localStorage.setItem('current_user', JSON.stringify(user));
+    }
+    if (!user || !user.full_name) {
+      const me = await api.get('/api/auth/me');
+      user = { full_name: me.full_name, role: me.role, is_2fa_enabled: me.is_2fa_enabled };
       localStorage.setItem('current_user', JSON.stringify(user));
     }
 
