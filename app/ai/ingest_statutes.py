@@ -440,7 +440,19 @@ _SEC1_RE  = re.compile(r"^\s*(?:\d{1,3}\[)?1\.\s+[\"'A-Z(]")   # body's "1. ..."
 # Section start. Tolerates India Code's amendment-substitution prefix "N[" (e.g. "2[304B. Dowry
 # death.—…" means s.304B substituted by footnote 2) — without it, every substituted/inserted
 # section (304B, 375, 498A body, …) was invisible to the parser. Base number = group(1)+(2).
-_START_RE = re.compile(r"^\s*(?:\d{1,3}\[)?(\d{1,3})([A-Z]{0,2})\.\s+(\S.*)$")  # "318. Heading.—body"
+# The `(?:\s+|(?=["'(A-Z]))` alternative accepts a section start GLUED to its number —
+# "73.Compensation for loss…" with no space. India Code prints the same provision spaced in
+# the table of contents and glued in the body, so requiring `\.\s+` silently dropped the
+# BODY of such sections: the Contract Act lost s.73 (compensation for breach) and 139 others,
+# Specific Relief lost s.10, Transfer of Property lost s.53A — all present in the source PDF,
+# all absent from the corpus, all while the act still reported source_verified: True.
+# The lookahead keeps decimals out ("73.5 per cent" cannot open a section) by requiring the
+# body to open like a statute body — the same guard _CHAIN_LOOSE_RE uses for ITA-2025.
+# `\d{1,3}\s*\[` — the amendment-substitution footnote is printed both adjacent ("2[304B.")
+# and spaced ("1 [53A. Part performance.—"). Requiring adjacency lost Transfer of Property
+# s.53A (part performance), which is heavily litigated.
+_START_RE = re.compile(
+    r"^\s*(?:\d{1,3}\s*\[)?(\d{1,3})([A-Z]{0,2})\.(?:\s+|(?=[\"'(A-Z]))(\S.*)$")  # "318. Heading.—body"
 
 # ITA-2025 print pathologies (opt-in via `chain_loose_starts`): a handful of section starts
 # are glued to the number ("296.63[(1)…", "427.(1)…", "480.If…") or space the number off the

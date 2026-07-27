@@ -32,6 +32,14 @@ def _sections(stem: str) -> set[str]:
     return {str(s.get("num")) for s in act["sections"]}
 
 
+def _section(stem: str, num: str) -> dict | None:
+    act = json.loads((FULL / f"{stem}.fulltext.json").read_text(encoding="utf-8"))["acts"][0]
+    for s in act["sections"]:
+        if str(s.get("num")) == num:
+            return s
+    return None
+
+
 # Provisions an Indian advocate will reach for constantly. If any of these disappears, the
 # product is quietly broken for a whole category of question.
 MUST_BE_PRESENT = [
@@ -62,9 +70,17 @@ KNOWN_MISSING = [
 @pytest.mark.parametrize("stem,num,label", MUST_BE_PRESENT,
                          ids=[f"{s}-{n}" for s, n, _ in MUST_BE_PRESENT])
 def test_landmark_provision_is_in_the_corpus(stem, num, label):
-    assert num in _sections(stem), (
+    sec = _section(stem, num)
+    assert sec is not None, (
         f"{stem} s.{num} ({label}) is missing from the corpus — retrieval for this topic "
         "will fall back to semantic search and may ground on the wrong provision")
+    # Presence of the NUMBER is not enough: the original bug produced heading-only entries
+    # while the body was captured under the previous section. Require real body text so a
+    # section cannot pass this check as an empty shell.
+    body = (sec.get("text") or "").strip()
+    assert len(body) >= 40, (
+        f"{stem} s.{num} ({label}) is present but its body is empty/stub ({len(body)} chars) "
+        "— the provision text was not captured")
 
 
 def test_known_parser_gaps_are_still_gaps():
