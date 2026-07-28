@@ -50,10 +50,25 @@ median provision text drops to heading length) and
 `test_income_tax_1961_has_real_provision_text` (asserts s.2 and s.139 carry real text from
 beyond the TOC page range). A sweep of all 50 acts found **no other poisoned act**.
 
-**Still unverified:** in the failed bulk run, `it_act_2000` (+50), `motor_vehicles_1988`
-(+40), `cpc_1908` (+30), `crpc_1973` (+24) and `companies_2013` (+23) *gained* sections
-under the current parser. Those may be the same class of stale-artifact drift in the other
-direction. They need PDF-vs-corpus comparison act by act — **never a bulk accept**.
+### Status of the acts that gained sections (audited 2026-07-25)
+
+| Act | Finding | Action |
+|---|---|---|
+| `it_act_2000` | **VERIFIED real recovery.** Gains are genuine law — s.10A (validity of electronic contracts), s.15 (secure electronic signature). Decisively, **committed s.66 (computer-related offences) holds ZERO text** where the current parser yields 546 chars. | **Re-ingest — pending** |
+| `stamp_1899` | **No action.** Run through its own dispatch (`article_schedule: "bare"` → `_segment_with_schedule`) the current parser produces 153 vs 151 committed, **loses nothing**, and s.3/s.17/s.35/s.62/Sch.1 are byte-identical. | none |
+| 14 others | Plausible recoveries; **not verified**. | verify act by act |
+
+**METHOD WARNING — this cost two wrong conclusions.** Any per-act comparison MUST route
+through the same dispatch `ingest()` uses, honouring `article_schedule`, `chain_rules`,
+`wrapped_headings` and `glued_starts`. Calling `_segment_sections()` directly on an act with
+special handling makes it look catastrophically broken: `stamp_1899` appeared to lose 86
+entries including all of Schedule I and the penalties chapter. That was entirely an artifact
+of bypassing the act's declared configuration.
+
+**A median-length drop is NOT evidence of degradation either.** `it_act_2000` falls
+917 → 535 while genuinely improving, because the parser also recovers legitimately short
+omitted sections. Counts, medians and page ranges say where to look; only reading the text
+decides.
 
 ## ✅ RESOLVED 2026-07-25 — silent parser drops (found 2026-07-24)
 
