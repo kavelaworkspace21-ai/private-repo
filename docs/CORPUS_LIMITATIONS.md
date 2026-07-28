@@ -54,9 +54,40 @@ beyond the TOC page range). A sweep of all 50 acts found **no other poisoned act
 
 | Act | Finding | Action |
 |---|---|---|
-| `it_act_2000` | **VERIFIED real recovery.** Gains are genuine law — s.10A (validity of electronic contracts), s.15 (secure electronic signature). Decisively, **committed s.66 (computer-related offences) holds ZERO text** where the current parser yields 546 chars. | **Re-ingest — pending** |
+| `it_act_2000` | **NEITHER VERSION IS COMPLETE — re-ingest attempted 2026-07-25 and REVERTED.** See below. | **parser work, not a re-ingest** |
 | `stamp_1899` | **No action.** Run through its own dispatch (`article_schedule: "bare"` → `_segment_with_schedule`) the current parser produces 153 vs 151 committed, **loses nothing**, and s.3/s.17/s.35/s.62/Sch.1 are byte-identical. | none |
 | 14 others | Plausible recoveries; **not verified**. | verify act by act |
+
+#### `it_act_2000` — the re-ingest was reverted (2026-07-25)
+
+The gains are real, but they are **not free**. Attempting the re-ingest:
+
+| | Committed | Re-ingested |
+|---|---|---|
+| Sections | 30 | 80 (+51, −1) |
+| **Total captured text** | **115,515 chars** | **65,384 chars (−43%)** |
+| s.2 Definitions | **12,720 chars** | **ABSENT** |
+| s.66 computer-related offences | **ABSENT** | 546 chars |
+| s.43A compensation for a data breach | **ABSENT** | 1,437 chars |
+| s.5 | 3,742 chars | 773 chars |
+
+The lost definitions text is **not relocated** — no section in the new parse contains the
+`"unless the context otherwise requires"` lead-in. Ten further sections shrank by more than
+10%.
+
+So neither artifact is correct. The committed one holds far more text, including
+Definitions, but is missing s.66 and s.43A — two of the most-cited provisions in the Act
+(hacking/computer offences and compensation for a data breach). The re-ingested one recovers
+those and loses nearly half the Act.
+
+**Trading 50,000 characters of statute, including Definitions, for four sections is not an
+improvement.** Reverted. `it_act_2000` needs the parser fixed so it captures both, which is
+its own slice of work.
+
+**Lesson (fifth instance of the same mistake).** I had recorded this act as a "VERIFIED real
+recovery" after confirming the GAINS were genuine — without ever checking what was LOST. A
+one-sided ledger is not verification. Any per-act accept must compare **total captured text**
+in both directions, not just the set of section numbers.
 
 **METHOD WARNING — this cost two wrong conclusions.** Any per-act comparison MUST route
 through the same dispatch `ingest()` uses, honouring `article_schedule`, `chain_rules`,
