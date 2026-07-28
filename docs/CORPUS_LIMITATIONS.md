@@ -12,7 +12,52 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
-## ⛔ P0 — SILENT PARSER DROPS (found 2026-07-24, NOT yet fixed)
+## ⛔ P0 — THE CORPUS IS NOT REPRODUCIBLE FROM THE COMMITTED PARSER (found 2026-07-25)
+
+**Re-running ingestion on the committed PDFs with the committed parser produces a
+DIFFERENT corpus than the one committed.**
+
+Found while re-ingesting to recover the dropped provisions below. A full 50-act run failed
+the acceptance gate:
+
+| Act | Committed | Produced by the current parser |
+|---|---|---|
+| `income_tax_1961` | 791 sections | **616** (−175) |
+| `partnership_1932` | 72 sections | **71** (−1) |
+
+This is **not** caused by the 2026-07-25 parser fix. The ORIGINAL pre-fix parser produces
+616 and 71 as well, and the spaced-bracket change matches **zero** lines in that PDF. The
+committed corpus was produced by a parser version that **no longer exists in the tree**.
+
+**Why the fingerprint cannot catch this.** `corpus_version()` hashes the committed fulltext
+files. A parser that has drifted away from them changes nothing it hashes, so the
+fingerprint stays perfectly stable while reproducibility is broken. It is the same blind
+spot that hid the s.73 drop, one level up.
+
+**Consequence for the release process.** `docs/RELEASE_MANIFEST.md` states that a clean
+machine can regenerate the corpus deterministically and prove it by fingerprint. That is
+true of the Chroma index (derived from the fulltext files) but **false of the fulltext
+corpus itself**.
+
+**Consequence for G1.** The corpus-authenticity gate rests on the corpus being provably
+derived from official sources by a deterministic parser. That claim is currently unproven
+for at least two acts. **This should be resolved before G1 is signed.**
+
+**Which figure is right?** Probably 791. The Income-tax Act 1961 has many lettered sections
+(80A, 80AB, 80AC …); the coverage census showed 791 parsed against a highest section number
+of 298, which is consistent. So this reads as a **lost parser capability**, not a corrected
+over-count — and deleting 175 real provisions to satisfy a consistency check would be the
+wrong trade. `income_tax_1961` was therefore left untouched.
+
+**Also unverified:** in the same failed run, `it_act_2000` (+50), `motor_vehicles_1988`
+(+40), `cpc_1908` (+30), `crpc_1973` (+24) and `companies_2013` (+23) *gained* sections.
+Those gains are the same drift in the other direction and are **not** evidence of a fix.
+They need PDF-vs-corpus comparison act by act before any of them is accepted.
+
+**Next step:** `git log` the parser to find which change lost the Income-tax capability,
+then re-establish reproducibility act by act — never as a bulk re-ingest.
+
+## ✅ RESOLVED 2026-07-25 — silent parser drops (found 2026-07-24)
 
 **The parser silently omits provisions that are plainly present in the source PDFs.** Found
 while authoring the Phase 3 evaluation set; each was confirmed by extracting the PDF text and
@@ -45,10 +90,23 @@ the three confirmed gaps asserted to *still* be missing so the defect list canno
 bug — when the parser is fixed and the acts are re-ingested, that test fails and tells you to
 remove the entry.
 
-**Not fixed here.** The fix is parser work followed by the full corpus discipline — re-ingest,
-landmark re-verification, full reseed, retrieval probes, full suite, and a NEW fingerprint
-(so `RELEASE.json` must be re-frozen). That is a deliberate, self-contained piece of work, not
-a patch to slip into an unrelated change.
+**FIXED 2026-07-25.** Two India Code print pathologies were the cause: section starts glued
+to the number in the body ("73.Compensation…", opt-in `glued_starts`) and a footnote bracket
+printed with a space ("1 [53A.", now handled globally). Targeted re-ingest of the three acts:
+
+| Act | Before | After | Provision |
+|---|---|---|---|
+| Indian Contract Act | 98 | **166** | s.73 recovered, 9,624 chars of verbatim text |
+| Specific Relief Act | 38 | **41** | s.10 recovered |
+| Transfer of Property Act | 107 | **128** | s.53A recovered, 1,312 chars |
+
+Corpus 8,442 → **8,534**; index reseeded to **8,738** chunks; fingerprint `2965aab084ff` →
+**`8a82c520a336`**. Verified by CONTENT and by deterministic retrieval
+(`retrieve_by_section()` returns s.73 exactly), with the NI 138 / Art 21 / NDPS 37
+regressions intact. 729 tests green.
+
+Deliberately TARGETED, not a full re-ingest — see the P0 above for why a 50-act run is
+currently unsafe.
 
 **A coverage census across all 50 acts is a signal, not a verdict.** CPC 1908 looked like an
 82% gap but ss. 9, 100 and 151 are all present — its numbering includes Orders/Rules, which the
