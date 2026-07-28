@@ -48,6 +48,15 @@ STATUTE_REGISTRY: dict[str, dict] = {
     "bnss_2023": {
         "title": "Bharatiya Nagarik Suraksha Sanhita, 2023", "short": "BNSS", "year": 2023,
         "status": "in_force",
+        # s.1(3) ends "...come into force on such date as the Central Government may, by
+        # notification in the Official Gazette, appoint." wrapping across lines, and the
+        # unwrapped strategies then swallowed the s.2 heading that follows it. s.2 —
+        # DEFINITIONS, which defines bail, bail bond, cognizable offence, investigation,
+        # police report and victim — was therefore absent from the corpus entirely and
+        # unretrievable by number. `_seg_dash_wrapped` already parsed it correctly and even
+        # scored HIGHEST (401,967 vs 401,210); it simply was never tried, because the wrapped
+        # strategy is opt-in. Verified additive: +1 section, +1,072 chars, nothing lost.
+        "wrapped_headings": True,
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/21544/1/the_bharatiya_nagarik_suraksha_sanhita,_2023.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/20099",
     },
