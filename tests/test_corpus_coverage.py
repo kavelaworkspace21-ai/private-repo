@@ -57,14 +57,18 @@ MUST_BE_PRESENT = [
     ("dpdp_2023", "8", "data fiduciary obligations"),
     ("consumer_protection_2019", "35", "manner of complaint"),
     ("cgst_2017", "16", "input tax credit"),
-]
-
-# CONFIRMED dropped by the parser — present in the source PDF, absent from the corpus.
-KNOWN_MISSING = [
+    # Recovered 2026-07-25 — these are the provisions the parser had silently dropped.
     ("contract_1872", "73", "compensation for breach of contract"),
     ("specific_relief_1963", "10", "specific performance"),
     ("transfer_of_property_1882", "53A", "part performance"),
 ]
+
+# CONFIRMED dropped by the parser — present in the source PDF, absent from the corpus.
+# All three were RECOVERED on 2026-07-25 (parser fix + targeted re-ingest) and are now
+# asserted present in MUST_BE_PRESENT above. The list stays, empty, because the class of
+# defect has not gone away: docs/CORPUS_LIMITATIONS.md records that five suspect acts are
+# still unprobed.
+KNOWN_MISSING: list[tuple[str, str, str]] = []
 
 
 @pytest.mark.parametrize("stem,num,label", MUST_BE_PRESENT,
