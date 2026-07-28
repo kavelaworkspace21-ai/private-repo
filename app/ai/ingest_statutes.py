@@ -774,6 +774,15 @@ def _segment_with_schedule(pages: list[str]) -> list[dict]:
         a["text"] = a["text"].strip()
         a["title"] = "Schedule, Article " + a["num"] + " — " + _derive_title(a["text"])
         a["num"] = "Sch." + a["num"]
+        # `_flat_lines` numbers pages from 1 within whatever list it is given, and it was
+        # given a SLICE starting at the Schedule. Schedule articles therefore carried a page
+        # relative to the Schedule, not to the PDF — Commercial Courts recorded its Order XI
+        # rules on "pages 4-8" when they are physically on pages 14-18. Provenance is the
+        # point of this corpus: an advocate checking a provision turns to the page we cite,
+        # and would have found something else. Shift back to absolute numbering (sched_page
+        # is a 0-based index, the relative page is 1-based, so the sum is correct).
+        if a.get("page"):
+            a["page"] += sched_page
     return body + articles
 
 

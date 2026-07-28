@@ -6,13 +6,15 @@
       "short": "DPDP Act",
       "year": 2023,
       "status": "in_force",
+      "repealed_by": "",
+      "note": "",
       "source_verified": true,
       "source": {
         "name": "India Code (indiacode.nic.in)",
         "url": "https://www.indiacode.nic.in/bitstream/123456789/22037/1/a2023-22.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/22037",
         "sha256": "d8d9a3dda426b315a034ac84f4162020bb73520349bd49442d028ce8aef725db",
-        "fetched_on": "2026-07-16",
+        "fetched_on": "2026-07-28",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -283,43 +285,43 @@
         {
           "num": "Sch.1",
           "text": "Breach in observing the obligation of Data Fiduciary to May extend to two hundred\ntake reasonable security safeguards to prevent personal and fifty crore rupees\ndata breach under sub-section (5) of section 8.",
-          "page": 1,
+          "page": 24,
           "title": "Schedule, Article 1 — Breach in observing the obligation of Data Fiduciary to May extend to two hundred\ntake reasonable security safeguards to prevent personal an"
         },
         {
           "num": "Sch.2",
           "text": "Breach in observing the obligation to give the Board or May extend to two hundred\naffected Data Principal notice of a personal data breach crore rupees.\nunder sub-section (6) of section 8.",
-          "page": 1,
+          "page": 24,
           "title": "Schedule, Article 2 — Breach in observing the obligation to give the Board or May extend to two hundred\naffected Data Principal notice of a personal data breach c"
         },
         {
           "num": "Sch.3",
           "text": "Breach in observance of additional obligations in May extend to two hundred\nrelation to children under section 9. crore rupees.",
-          "page": 1,
+          "page": 24,
           "title": "Schedule, Article 3 — Breach in observance of additional obligations in May extend to two hundred\nrelation to children under section 9. crore rupees"
         },
         {
           "num": "Sch.4",
           "text": "Breach in observance of additional obligations of May extend to one hundred\nSignificant Data Fiduciary under section 10. and fifty crore rupees.",
-          "page": 1,
+          "page": 24,
           "title": "Schedule, Article 4 — Breach in observance of additional obligations of May extend to one hundred\nSignificant Data Fiduciary under section 10"
         },
         {
           "num": "Sch.5",
           "text": "Breach in observance of the duties under section 15. May extend to ten thousand\nrupees.",
-          "page": 1,
+          "page": 24,
           "title": "Schedule, Article 5 — Breach in observance of the duties under section 15. May extend to ten thousand\nrupees"
         },
         {
           "num": "Sch.6",
           "text": "Breach of any term of voluntary undertaking accepted Up to the extent applicable for\nby the Board under section 32. the breach in respect of which\nthe proceedings under section\n28 were instituted.",
-          "page": 1,
+          "page": 24,
           "title": "Schedule, Article 6 — Breach of any term of voluntary undertaking accepted Up to the extent applicable for\nby the Board under section 32"
         },
         {
           "num": "Sch.7",
           "text": "Breach of any other provision of this Act or the rules May extend to fifty crore\nmade thereunder. rupees.\n24\nSTATEMENT OF OBJECTS AND REASONS\nDigital transactions have transformed economic as well as social interactions. Use of personal data\nfor provision of services and other purposes is a common aspect of such transactions. In this context,\nprotection of personal data has become a pre-requisite for growth of digital economy.\n2. Therefore, there is a need for enacting a legislation that provides for protection and security of\npersonal data of users and recognises the need to process such personal data for lawful purposes.\n3. The Digital Personal Data Protection Bill, 2023 confers rights on individuals to protect their\npersonal data, places obligations on entities that process personal data and lays down the compliance\nmechanism.\n4. The said Bill, inter alia, seeks—\n(a) to provide for protection of digital personal data;\n(b) to lay down grounds for processing personal data;\n(c) to place general and in certain cases special obligations on entities that process personal data;\n(d) to confer certain rights in respect of their personal down on individuals;\n(e) to provide for duties to be performed by individuals while exercising their right and providing\ntheir personal data for certain purposes;\n(f) to lay down a digital by design compliance framework for easy and faster implementation of\nthe proposed Legislation;\n(g) to enable parties to a dispute to attempt resolution of the dispute through alternate process\nand person of their choice;\n(h) to provide monetary penalties for lapses and non-compliances to the provisions of the\nproposed Legislation; and\n(i) to enable voluntary undertaking to encourage faster resolution and rectification of lapses.\n5. The Notes on Clauses explain in detail the various provisions contained in the Bill.\n6. The Bill seeks to achieve the above objectives.\nNEW DELHI; ASHWINI VAISHNAW.\nThe 19th July, 2023.\n25",
-          "page": 1,
+          "page": 24,
           "title": "Schedule, Article 7 — Breach of any other provision of this Act or the rules May extend to fifty crore\nmade thereunder"
         }
       ]

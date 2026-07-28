@@ -451,3 +451,49 @@ def test_spaced_footnote_bracket_is_recognised_globally():
     # the adjacent form IPC 304B depends on must still work
     m2 = _START_RE.match("2[304B. Dowry death.—Where the death of a woman is caused")
     assert m2 and m2.group(1) + m2.group(2) == "304B"
+
+
+# ── Schedule provenance: cited page must be the real page ───────────────────────
+def test_schedule_article_pages_are_absolute_not_schedule_relative():
+    """A Schedule article must cite the page it is actually printed on.
+
+    `_flat_lines` numbers pages from 1 within whatever list it receives, and
+    `_segment_with_schedule` hands it a SLICE beginning at the Schedule. Schedule articles
+    therefore recorded a page relative to the Schedule: the Commercial Courts Act cited its
+    Order XI rules as "pages 4-8" when they are physically on pages 14-18.
+
+    Provenance is the whole point of this corpus — an advocate verifying a provision turns
+    to the page we cite. A wrong page silently breaks that, and no count-based check can
+    see it.
+    """
+    pages = [
+        _page(["PRELIMINARY", BODY[1]]),          # p1
+        _page([BODY[2]]),                          # p2
+        _page(["THE SCHEDULE", "(See section 16)"]),   # p3  <- schedule starts here
+        _page(["1. Disclosure of documents.—Plaintiff shall file a list of all documents "
+               "and photocopies in its power, possession, control or custody, pertaining "
+               "to the suit, along with the plaint."]),                       # p4
+        _page(["2. Discovery by interrogatories.—In any suit the plaintiff or defendant "
+               "may apply for leave to deliver interrogatories in writing for the "
+               "examination of the opposite parties."]),                      # p5
+    ]
+    import app.ai.ingest_statutes as ing
+    old = ing._BARE_SCHEDULE
+    try:
+        ing._BARE_SCHEDULE = False                 # "THE SCHEDULE" form
+        secs = ing._segment_with_schedule(pages)
+    finally:
+        ing._BARE_SCHEDULE = old
+
+    sched = {s["num"]: s for s in secs if str(s["num"]).startswith("Sch.")}
+    assert sched, "no schedule articles parsed"
+    for num, s in sched.items():
+        page = s.get("page")
+        assert page, f"{num} has no page"
+        probe = " ".join(s["text"].split())[:40].lower()
+        actual = " ".join(pages[page - 1].split()).lower()
+        assert probe in actual, (
+            f"{num} cites page {page}, but its text is not on that page — the page is "
+            "relative to the Schedule instead of the PDF")
+    # and specifically: articles are on pages 4/5, never 1/2
+    assert min(s["page"] for s in sched.values()) >= 4

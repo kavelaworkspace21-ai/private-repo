@@ -200,6 +200,36 @@ yet probed: `cgst_2017`, `mediation_2023`, `ndps_1985`, `companies_2013`, `india
 
 ---
 
+## ⛔ OPEN — BNSS 2023 s.2 (Definitions) is not retrievable (found 2026-07-25)
+
+**`retrieve_by_section("Section 2 of the BNSS")` returns NOTHING.**
+
+The text is not lost — it was **absorbed into the `s.1` entry**. That entry runs from
+page 16, opens mid-sentence ("1st July, 2024, [except the provisions...") and ends with
+"...shall have the meanings respectively assigned to them in that Act and Sanhita", which is
+the tail of Definitions. The parser did not recognise
+`2. Definitions.—(1) In this Sanhita, unless the context otherwise requires,—` on page 16 as
+a section start, so ss.1-2 merged.
+
+**Impact.** BNSS s.2 defines "bail", "bail bond", "bond", "cognizable offence",
+"investigation", "police report" and "victim". An advocate asking what any of those means
+under the new criminal procedure code gets nothing from the authoritative deterministic
+path; the query falls through to semantic search. Since 2026-07-25 the fail-closed citation
+gate will withhold an answer citing BNSS s.2 rather than serve an unverifiable one — correct
+behaviour, but it surfaces as a refusal on a very common question.
+
+**Not fixed.** BNSS parses 530 sections across ss.1-531 with only this one gap, so the
+segmentation is otherwise sound. Changing the strategy to rescue s.2 risks regressing the
+other 530, which is a dedicated slice of work with its own verification — not a patch to
+attach to an unrelated change.
+
+**Related, and NOT a defect:** BNSS coverage reads 62% (pages 16-172 of 279) because pages
+173+ are the **First Schedule** (classification of offences: cognizable/bailable/trying
+court) and the Second Schedule of Forms. `crpc_1973` omits its First Schedule too, so this
+is a longstanding and CONSISTENT scope decision rather than a BNSS regression. It is still a
+real gap for criminal practice — the classification table is consulted constantly — and
+should be a deliberate acquisition decision, not an accident.
+
 ## 1. IPC 354E — duplicate section number (two distinct provisions) · `PENDING_LEGAL_REVIEW`
 
 - **What:** the source carries **two different provisions numbered 354E** — "Sextortion" and
