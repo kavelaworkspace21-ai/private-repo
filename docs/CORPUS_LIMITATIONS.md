@@ -54,11 +54,46 @@ beyond the TOC page range). A sweep of all 50 acts found **no other poisoned act
 
 | Act | Finding | Action |
 |---|---|---|
-| `it_act_2000` | **NEITHER VERSION IS COMPLETE — re-ingest attempted 2026-07-25 and REVERTED.** See below. | **parser work, not a re-ingest** |
+| `it_act_2000` | **FIXED 2026-07-25.** Root cause: the print switches from em-dash to EN-dash at ~page 17, so segmentation died at page 16 of 36 and HALF the Act was never in the corpus. Declaring `single_endash` recovers it: 30 → **102** sections, pages 5-16 → **5-35**, and ss.43A / 66 / 66C-66F / 72A go from ABSENT to present. | done |
 | `stamp_1899` | **No action.** Run through its own dispatch (`article_schedule: "bare"` → `_segment_with_schedule`) the current parser produces 153 vs 151 committed, **loses nothing**, and s.3/s.17/s.35/s.62/Sch.1 are byte-identical. | none |
 | 14 others | Plausible recoveries; **not verified**. | verify act by act |
 
-#### `it_act_2000` — the re-ingest was reverted (2026-07-25)
+#### `it_act_2000` — RESOLVED (2026-07-25), after one reverted attempt
+
+**Root cause: the source print changes dash style part-way through.** Sections up to about
+page 16 use the em-dash separator ("7. Retention of electronic records.—(1) …"); from page
+17 the Gazette amendments use an EN dash ("44. Penalty for failure…–If any person"). The
+dash segmentation strategies stopped recognising heading boundaries at that switch, so the
+parse died at page 16 of a 36-page PDF.
+
+**Half the Act was therefore never in the corpus** — including s.43A (compensation for
+failure to protect personal data), s.66 (computer related offences), ss.66C-66F (identity
+theft, cheating by personation, violation of privacy, cyber terrorism) and s.72A
+(disclosure in breach of contract): the provisions this Act is mostly consulted for.
+
+The parser already had the `single_endash` flag (it maps ".–" to ".—" in `_normalize`);
+`it_act_2000` simply never declared it. The mapping is additive, so the em-dashes on the
+early pages are untouched.
+
+| | Before | After |
+|---|---|---|
+| Sections | 30 | **102** |
+| Pages parsed | 5–16 | **5–35** (of 36) |
+| s.2 Definitions | 12,720 chars | 8,946 (no longer absorbing ss.3-9) |
+| s.43A / 66 / 66C / 72A | **ABSENT** | **present** |
+
+**Verified in both directions.** Total captured text is 108,710 vs 115,515 before, so the
+gap was checked rather than assumed: probing three windows of every committed section
+against the new parse, **zero** committed sections are entirely absent and only two (s.31,
+s.36) match partially. The difference is redistribution — the old s.2 was large *because* it
+had swallowed its neighbours.
+
+**How it stayed hidden.** Section count looked plausible, the fingerprint was stable,
+`source_verified` was True, and landmark verification passed because it sampled sections in
+the first half. The one measurement that would have exposed it: the parse ends at page 16
+and the PDF has 36 pages.
+
+<details><summary>The first attempt, reverted (kept for the reasoning)</summary>
 
 The gains are real, but they are **not free**. Attempting the re-ingest:
 
@@ -88,6 +123,12 @@ its own slice of work.
 recovery" after confirming the GAINS were genuine — without ever checking what was LOST. A
 one-sided ledger is not verification. Any per-act accept must compare **total captured text**
 in both directions, not just the set of section numbers.
+
+That revert was correct on the evidence then available: without `single_endash` the
+re-ingest genuinely destroyed 43% of the Act. Revert → diagnose → fix the cause was the
+right order.
+
+</details>
 
 **METHOD WARNING — this cost two wrong conclusions.** Any per-act comparison MUST route
 through the same dispatch `ingest()` uses, honouring `article_schedule`, `chain_rules`,
