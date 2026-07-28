@@ -29,7 +29,10 @@ def test_healthz_liveness_ok(client):
 
 def test_readyz_ready_when_index_present(client, monkeypatch):
     import app.ops.release as rel
-    monkeypatch.setattr(rel, "_chroma_count", lambda: 8646)
+    # Read the expected count from RELEASE.json rather than hardcoding it: a corpus change
+    # legitimately moves this number, and a literal here just fails later for the wrong
+    # reason. test_release_ops already guards RELEASE.json against going stale.
+    monkeypatch.setattr(rel, "_chroma_count", lambda: rel.load_release()["expected_chunk_count"])
     r = client.get("/readyz")
     assert r.status_code == 200
     body = r.json()
@@ -55,6 +58,9 @@ def test_admin_status_returns_identity_without_secrets(client):
     assert r.status_code == 200
     body = r.json()
     assert body["app_version"] == "0.2.0"
-    assert body["corpus_fingerprint"] == "2965aab084ff"
+    # Same reasoning: assert it MATCHES the pinned release, not a literal that a corpus
+    # update silently invalidates.
+    import app.ops.release as _rel
+    assert body["corpus_fingerprint"] == _rel.load_release()["corpus_fingerprint"]
     # config is presence-only booleans, never values
     assert set(body["config"].values()) <= {True, False}
