@@ -101,3 +101,50 @@ def test_known_parser_gaps_are_still_gaps():
 def test_the_corpus_still_covers_fifty_acts():
     files = sorted(FULL.glob("*.json"))
     assert len(files) == 50, f"expected 50 acts, found {len(files)}"
+
+
+# ── TOC poisoning guard ─────────────────────────────────────────────────────────
+def test_no_act_is_parsed_from_its_table_of_contents():
+    """An act's provisions must be BODY text, not Arrangement-of-Sections headings.
+
+    Found 2026-07-25: the entire committed Income-tax Act 1961 corpus was the table of
+    contents. 791 "provisions" with a median of 46 characters, every page number inside
+    1-29 of an 880-page PDF. s.2 (Definitions) was 12 characters from page 1; the real
+    provision is 62,740 characters on page 30. s.139 (Return of income) was 17 characters
+    against a real 24,495.
+
+    The act carried source_verified: True and its text was quotable as authority, so the
+    assistant could present a bare heading as the operative statutory provision.
+
+    The parser already had a TOC-skip chooser (see test_ingest_parser's C-01b); the corpus
+    file simply predated it and was never regenerated. Nothing compared the two, because the
+    fingerprint hashes the committed file and stays stable while the parser moves on.
+
+    A median under ~120 characters means the file is a list of headings, not law.
+    """
+    import statistics
+
+    poisoned = []
+    for path in sorted(FULL.glob("*.json")):
+        act = json.loads(path.read_text(encoding="utf-8"))["acts"][0]
+        lengths = [len((s.get("text") or "").strip()) for s in act["sections"]]
+        if not lengths:
+            continue
+        median = statistics.median(lengths)
+        if median < 120:
+            poisoned.append((act["id"], len(lengths), int(median)))
+
+    assert not poisoned, (
+        "these acts look parsed from their table of contents rather than their body "
+        f"(id, sections, median chars): {poisoned}")
+
+
+def test_income_tax_1961_has_real_provision_text():
+    """Explicit regression for the act that was poisoned — by content, not by count."""
+    for num, minimum in (("2", 10_000), ("139", 5_000)):
+        sec = _section("income_tax_1961", num)
+        assert sec is not None, f"income_tax_1961 s.{num} missing"
+        assert len(sec["text"]) >= minimum, (
+            f"s.{num} is {len(sec['text'])} chars — that is a heading, not the provision")
+        assert (sec.get("page") or 0) > 29, (
+            f"s.{num} came from page {sec.get('page')}, inside the table-of-contents range")

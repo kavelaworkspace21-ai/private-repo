@@ -12,50 +12,48 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
-## ⛔ P0 — THE CORPUS IS NOT REPRODUCIBLE FROM THE COMMITTED PARSER (found 2026-07-25)
+## ✅ RESOLVED 2026-07-25 — the Income-tax Act corpus was its TABLE OF CONTENTS
 
-**Re-running ingestion on the committed PDFs with the committed parser produces a
-DIFFERENT corpus than the one committed.**
+**The entire committed `income_tax_1961` corpus was Arrangement-of-Sections headings, not
+law.** 791 "provisions" with a median of **46 characters**, every page number inside 1–29 of
+an **880-page** PDF.
 
-Found while re-ingesting to recover the dropped provisions below. A full 50-act run failed
-the acceptance gate:
-
-| Act | Committed | Produced by the current parser |
+| Provision | Committed | Actual body |
 |---|---|---|
-| `income_tax_1961` | 791 sections | **616** (−175) |
-| `partnership_1932` | 72 sections | **71** (−1) |
+| s.2 Definitions | 12 chars, page 1 | **62,740 chars, page 30** |
+| s.139 Return of income | 17 chars, page 16 | **24,495 chars, page 557** |
 
-This is **not** caused by the 2026-07-25 parser fix. The ORIGINAL pre-fix parser produces
-616 and 71 as well, and the spaced-bracket change matches **zero** lines in that PDF. The
-committed corpus was produced by a parser version that **no longer exists in the tree**.
+The act carried `source_verified: True`, so this text was **quotable as authority**. An
+advocate asking about filing returns under s.139 would have been shown a 17-character
+heading as the operative statutory provision.
 
-**Why the fingerprint cannot catch this.** `corpus_version()` hashes the committed fulltext
-files. A parser that has drifted away from them changes nothing it hashes, so the
-fingerprint stays perfectly stable while reproducibility is broken. It is the same blind
-spot that hid the s.73 drop, one level up.
+**Root cause — a fix that was never applied to an already-poisoned artifact.** The parser
+already had a TOC-skip segmentation chooser (`tests/test_ingest_parser.py`, C-01b, added
+after IPC s.302 was caught parsing as 22 chars of heading). The Income-tax corpus file
+predated that fix and was never regenerated. Nothing compared the two, because the
+fingerprint hashes the committed FILE and stays stable while the parser moves on.
 
-**Consequence for the release process.** `docs/RELEASE_MANIFEST.md` states that a clean
-machine can regenerate the corpus deterministically and prove it by fingerprint. That is
-true of the Chroma index (derived from the fulltext files) but **false of the fulltext
-corpus itself**.
+**Fixed:** re-ingested → 616 sections, median **1,593** chars, body pages to 878.
+`partnership_1932` corrected 72 → 71 in the same pass.
 
-**Consequence for G1.** The corpus-authenticity gate rests on the corpus being provably
-derived from official sources by a deterministic parser. That claim is currently unproven
-for at least two acts. **This should be resolved before G1 is signed.**
+**A correction to an earlier entry in this file.** It previously argued that 791 was the
+more accurate figure and that the parser had lost a capability. That was **wrong and
+backwards** — 791 was the poisoned count and the decrease to 616 is the correction. The
+diagnosis came from noticing that every "lost" section sat in the TOC page range.
 
-**Which figure is right?** Probably 791. The Income-tax Act 1961 has many lettered sections
-(80A, 80AB, 80AC …); the coverage census showed 791 parsed against a highest section number
-of 298, which is consistent. So this reads as a **lost parser capability**, not a corrected
-over-count — and deleting 175 real provisions to satisfy a consistency check would be the
-wrong trade. `income_tax_1961` was therefore left untouched.
+**The acceptance rule this invalidates.** A re-ingest gate of "no act may lose sections"
+would have permanently blocked this fix, because the fix IS a loss of 175 entries. A
+decrease requires an EXPLANATION, not a veto.
 
-**Also unverified:** in the same failed run, `it_act_2000` (+50), `motor_vehicles_1988`
-(+40), `cpc_1908` (+30), `crpc_1973` (+24) and `companies_2013` (+23) *gained* sections.
-Those gains are the same drift in the other direction and are **not** evidence of a fix.
-They need PDF-vs-corpus comparison act by act before any of them is accepted.
+**Guarded by** `test_no_act_is_parsed_from_its_table_of_contents` (fails any act whose
+median provision text drops to heading length) and
+`test_income_tax_1961_has_real_provision_text` (asserts s.2 and s.139 carry real text from
+beyond the TOC page range). A sweep of all 50 acts found **no other poisoned act**.
 
-**Next step:** `git log` the parser to find which change lost the Income-tax capability,
-then re-establish reproducibility act by act — never as a bulk re-ingest.
+**Still unverified:** in the failed bulk run, `it_act_2000` (+50), `motor_vehicles_1988`
+(+40), `cpc_1908` (+30), `crpc_1973` (+24) and `companies_2013` (+23) *gained* sections
+under the current parser. Those may be the same class of stale-artifact drift in the other
+direction. They need PDF-vs-corpus comparison act by act — **never a bulk accept**.
 
 ## ✅ RESOLVED 2026-07-25 — silent parser drops (found 2026-07-24)
 
