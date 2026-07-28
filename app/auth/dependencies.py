@@ -22,7 +22,37 @@ def get_current_user(
     user = db.get(User, int(payload["sub"]))
     if not user or not user.is_active or getattr(user, "is_banned", False):
         raise exc            # banned = ejected from the ecosystem; every token is dead
+    if token_revoked(user, payload):
+        raise exc            # issued before the user's revocation epoch
     return user
+
+
+def token_revoked(user: User, payload: dict) -> bool:
+    """Was this token issued before the user's revocation epoch?
+
+    JWTs are stateless, so a stolen one stays valid until it expires — including after the
+    victim resets their password, which is the single action a compromised user is most
+    likely to take. Comparing the token's `iat` against `User.tokens_valid_from` revokes
+    every previously issued token with one column update, and no blacklist to grow or purge.
+
+    Fail-closed on a token with no `iat`: those predate this mechanism and cannot be proven
+    to post-date a revocation.
+    """
+    epoch = getattr(user, "tokens_valid_from", None)
+    if epoch is None:
+        return False                       # nothing has ever been revoked for this user
+    iat = payload.get("iat")
+    if iat is None:
+        return True
+    from datetime import datetime, timezone
+    issued = datetime.fromtimestamp(int(iat), tz=timezone.utc).replace(tzinfo=None)
+    # `iat` is whole seconds; the epoch carries microseconds. Comparing them directly makes
+    # a token minted in the SAME second as the revocation look older than it, so the user
+    # who just reset their password would be locked straight back out. Truncate the epoch to
+    # the same resolution. The cost is that a token issued earlier in the revocation second
+    # survives — a sub-second window that no attacker can aim at, and far better than
+    # rejecting the legitimate new session.
+    return issued < epoch.replace(microsecond=0)
 
 
 def require_role(*roles: UserRole):

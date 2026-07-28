@@ -268,7 +268,7 @@ def forgot_password(payload: ForgotPasswordRequest, db: Session = Depends(get_db
     if not user:
         return generic
 
-    token = create_reset_token(user.id)
+    token = create_reset_token(user.id, user.hashed_password)
     reset_link = f"/reset-password?token={token}"
     send_email(
         user.email, "Reset your Juriscite password",
@@ -290,12 +290,49 @@ def reset_password(payload: ResetPasswordRequest, db: Session = Depends(get_db))
     user = db.get(User, int(decoded["sub"]))
     if not user or not user.is_active:
         raise HTTPException(400, "Invalid or expired reset link")
+    # This endpoint does NOT go through get_current_user (the caller has no session yet), so
+    # it has to apply the revocation check itself. Without this the epoch bump below would
+    # not make the token single-use: a replay would decode fine and reset the password again.
+    # SINGLE-USE: the token embeds a fingerprint of the password it was issued against.
+    # Once the password changes the fingerprint stops matching, so a replayed link is dead.
+    from app.auth.security import password_fingerprint
+    if decoded.get("pwf") != password_fingerprint(user.hashed_password):
+        raise HTTPException(400, "Invalid or expired reset link")
 
     user.hashed_password = hash_password(payload.new_password)
+    # Bumping the epoch does two jobs at once:
+    #   1. makes THIS reset token single-use — replaying it fails, because its `iat` now
+    #      predates the epoch. Previously the token stayed valid for its whole lifetime, so
+    #      anyone who saw the reset email (a forwarded message, a shared device, a mail-
+    #      provider breach) could keep re-resetting the password and lock the owner out.
+    #   2. revokes every access/refresh token issued before now. A password reset is what a
+    #      compromised user does FIRST; leaving the attacker's stolen session alive for the
+    #      remaining 7 days of its refresh window defeats the point of resetting.
+    from app.auth.security import revocation_epoch
+    user.tokens_valid_from = revocation_epoch()
     db.commit()
     write_audit(db, tenant_id=user.tenant_id, user_id=user.id,
-                action="password_reset", entity="User", entity_id=user.id)
+                action="password_reset", entity="User", entity_id=user.id,
+                detail="all existing sessions revoked")
     return {"message": "Password reset successful. You can now sign in."}
+
+
+@router.post("/logout-all")
+def logout_all_sessions(current_user: User = Depends(get_current_user),
+                        db: Session = Depends(get_db)):
+    """Sign out everywhere — revoke every token issued to this user so far.
+
+    Ordinary logout is client-side (the browser drops the token), which does nothing about a
+    token already copied elsewhere. This is the server-side revocation, and it is what a user
+    who suspects compromise actually needs. Their current token is invalidated too, so the
+    client must send them back to the login screen.
+    """
+    from app.auth.security import revocation_epoch
+    current_user.tokens_valid_from = revocation_epoch()
+    db.commit()
+    write_audit(db, tenant_id=current_user.tenant_id, user_id=current_user.id,
+                action="logout_all", entity="User", entity_id=current_user.id)
+    return {"status": "ok", "message": "All sessions signed out. Please sign in again."}
 
 
 # ── Me ────────────────────────────────────────────────────

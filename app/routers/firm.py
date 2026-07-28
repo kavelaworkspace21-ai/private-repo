@@ -65,7 +65,7 @@ def invite_member(payload: MemberInvite, admin: User = Depends(require_firm_admi
     )
     db.add(member); db.flush()
 
-    token = create_reset_token(member.id)                 # invite = set-your-password link
+    token = create_reset_token(member.id, member.hashed_password)                 # invite = set-your-password link
     invite_link = f"/reset-password?token={token}"
     send_email(member.email, "You've been invited to Juriscite",
                f"{admin.full_name} added you to their firm workspace. "

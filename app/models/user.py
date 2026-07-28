@@ -46,6 +46,11 @@ class User(Base):
     banned_reason: Mapped[str | None] = mapped_column(String(200))
     banned_at: Mapped[DateTime | None] = mapped_column(DateTime)
 
+    # Revocation epoch. Any token whose `iat` predates this is refused. Bumped on password
+    # reset and on "sign out everywhere" — the only way to kill an already-issued stateless
+    # JWT without keeping a blacklist of every token ever minted.
+    tokens_valid_from: Mapped[DateTime | None] = mapped_column(DateTime, nullable=True)
+
     created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
 
     @property
