@@ -176,7 +176,16 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/15327/1/negotiable_instruments_act,_1881.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2189",
     },
+    # This print CHANGES DASH STYLE PART-WAY THROUGH. Sections up to ~page 16 use the
+    # em-dash separator ("7. Retention of electronic records.—(1) ..."); from ~page 17 the
+    # Gazette amendments use an EN dash ("44. Penalty for failure...–If any person"). Without
+    # `single_endash` the dash strategies stopped seeing heading boundaries at that switch, so
+    # segmentation died at page 16 of 36 — HALF the Act. That is why ss.43A (compensation for
+    # a data breach), 66 (computer related offences), 66C-66F and 72A were absent from the
+    # corpus entirely. `_normalize` maps ".–" to ".—", which is additive: the em-dashes on the
+    # early pages are untouched.
     "it_act_2000": {
+        "single_endash": True,
         "title": "Information Technology Act, 2000", "short": "IT Act", "year": 2000, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/13116/1/it_act_2000_updated.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/13116",
