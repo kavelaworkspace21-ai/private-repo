@@ -148,3 +148,26 @@ def test_income_tax_1961_has_real_provision_text():
             f"s.{num} is {len(sec['text'])} chars — that is a heading, not the provision")
         assert (sec.get("page") or 0) > 29, (
             f"s.{num} came from page {sec.get('page')}, inside the table-of-contents range")
+
+
+def test_repealed_acts_name_their_successor():
+    """A repeal banner that cannot say what replaced the Act is half an answer.
+
+    Found 2026-07-25: `repealed_by` and the transitional note lived in the committed
+    income_tax_1961 JSON but NOT in the registry that regenerates it, so a re-ingest
+    silently blanked them and the banner stopped naming the Income-tax Act, 2025.
+
+    That is the same artifact/generator drift that left the same act parsed from its table
+    of contents — only reversed: there the artifact was WORSE than the code could rebuild,
+    here it was RICHER. Both mean the corpus and its generator disagree, and nothing
+    compared them. This asserts the property on the artifact; the fix belongs in the
+    registry, never by hand-patching the JSON.
+    """
+    missing = []
+    for path in sorted(FULL.glob("*.json")):
+        act = json.loads(path.read_text(encoding="utf-8"))["acts"][0]
+        if act.get("status") == "repealed" and not (act.get("repealed_by") or "").strip():
+            missing.append(act["id"])
+    assert not missing, (
+        f"repealed acts with no successor recorded (add `repealed_by` to STATUTE_REGISTRY, "
+        f"then re-ingest): {missing}")

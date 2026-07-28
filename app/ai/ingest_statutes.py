@@ -122,7 +122,17 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # REPEALED w.e.f. 01-04-2026 by the Income-tax Act, 2025 (30 of 2025). Kept in the
         # corpus because pending proceedings continue under it (transitional provisions);
         # answers must flag the repeal. The 2025 Act's ingestion is a future dedicated slice.
+        #
+        # `repealed_by`/`note` were previously present in the committed fulltext JSON but
+        # ABSENT here, so the generator could not reproduce its own artifact: a re-ingest
+        # silently blanked them and the repeal banner stopped naming the successor Act. That
+        # is the same artifact/generator drift that left the Income-tax corpus parsed from
+        # its table of contents — only in the opposite direction (the artifact was RICHER
+        # than what the code could rebuild). Caught by the ita61 repeal eval.
         "status": "repealed",
+        "repealed_by": "Income-tax Act, 2025",
+        "note": "Repealed w.e.f. 01-04-2026 by the Income-tax Act, 2025 (30 of 2025); "
+                "pending proceedings continue under transitional provisions.",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2435/1/a1961-43.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2435",
     },
