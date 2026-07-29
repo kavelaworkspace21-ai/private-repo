@@ -282,6 +282,55 @@ signature; a +1/−1,924 does not.
 **Unswept:** the run was interrupted after `income_tax_1961`. Acts from `income_tax_2025`
 onwards alphabetically have not been tested, and the >300-page acts were skipped by design.
 
+## ⛔ OPEN — the flag sweep's candidates need TAIL verification, not just section counts (2026-07-25)
+
+The sweep found 19 flag/act combinations that add sections. **"Zero sections lost" does not
+mean nothing was lost** — text can be destroyed *inside* sections that survive.
+
+### `it_act_2000` + `wrapped_headings` — REJECTED
+
+It recovers nine genuinely absent provisions, including **s.67B** (publishing material
+depicting children in sexually explicit acts) and **s.69** (interception, monitoring and
+decryption powers). It also **destroys** text:
+
+| Section | Change | Probed verdict |
+|---|---|---|
+| s.68 → s.69/69A/69B | 5,310 → 612 | **redistributed** (0/4 probes missing) |
+| s.67 → s.67A/67B | 3,348 → 794 | **redistributed** (0/4 missing) |
+| s.70A → s.70B | 2,688 → 574 | **redistributed** (0/4 missing) |
+| **s.2 Definitions** | 8,946 → **547** | **DESTROYED — 9/10 probes missing** |
+| **s.90** rule-making | 2,286 → 775 | **DESTROYED — 3/4 missing** |
+
+The lost s.2 text includes the definitions of *communication device*, *computer system*,
+*computer network* and *data* — the vocabulary the entire Act is written in.
+
+**Not applied.** This is the same trap as the first `it_act_2000` re-ingest attempt: real
+recoveries paired with destruction of Definitions. The act needs the gained sections AND
+intact s.2/s.90, which is parser work, not a flag flip.
+
+### Why the sweep could not see this
+
+The sweep's filter probes chars 10-70 of each committed section and asks whether that text
+still appears somewhere. **s.2 kept its opening 547 characters**, so the probe passed while
+8,399 characters of definitions vanished. Head-sampling cannot detect tail truncation.
+
+**Every remaining candidate must be verified the same way before it is applied:** probe the
+FULL span of each shrinking section, not its head, and classify each shrink as redistributed
+or destroyed. `ipc_1860 +glued_starts` passed this test (all shrinkage traced to the exact
+parent→child splits, net −41 chars) and was applied. `it_act_2000 +wrapped_headings` failed
+it.
+
+### Remaining queue — all UNVERIFIED at this depth
+
+`ndps_1985` (ss.23, 24), `sarfaesi_2002` (s.14), `rera_2016` (s.2), `transfer_of_property_1882`,
+`specific_relief_1963`, `partnership_1932`, `mediation_2023`, `pocso_2012`, `sale_of_goods_1930`,
+`legal_services_1987`, `bsa_2023`, `arbitration_1996`, `constitution_1950`,
+`hindu_succession_1956`.
+
+Three are known-mixed and need diagnosis first: `motor_vehicles_1988` (gains s.2, loses
+ss.140-144 no-fault liability), `stamp_1899` (gains an 11,191-char s.2, loses ss.62-65),
+`ipc_1860 +wrapped_headings` (loses six sections).
+
 ## 1. IPC 354E — duplicate section number (two distinct provisions) · `PENDING_LEGAL_REVIEW`
 
 - **What:** the source carries **two different provisions numbered 354E** — "Sextortion" and
