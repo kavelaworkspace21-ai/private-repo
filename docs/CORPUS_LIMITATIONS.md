@@ -357,8 +357,32 @@ Schedule is legally live — it defines "infrastructure project" for s.20A, whic
 injunctions against such projects. s.20A itself survives intact (1,648 ch); only its Schedule
 is gone. Like the NDPS psychotropic schedule, it needs dedicated schedule handling.
 
-`OWNER_QUEUE`: schedule-aware parsing is now required by three acts (NDPS psychotropic
-substances, SRA infrastructure, Commercial Courts Order XV-A). It should be built once.
+`OWNER_QUEUE`: schedule-aware parsing is now required by FOUR acts (NDPS psychotropic
+substances, SRA infrastructure, Commercial Courts Order XV-A, Partnership Schedule I fees).
+The same cost has now been accepted four separate times. It should be built once.
+
+### A named trap: character-count deltas cannot tell law from table-of-contents
+
+`partnership_1932` was nearly rejected on its measurements. s.17 showed the worst signature
+ever recorded by the full-span probe — **12/12 probes gone, 3,308 → 1,030 ch** — which is the
+exact signature that correctly condemned `it_act_2000`. It was in fact the single largest
+improvement in the act.
+
+The old s.17 was the act's TABLE OF CONTENTS: `"...18. Partner to be agent of the firm.
+19. Implied authority of partner as agent of the firm. 20. Extension and restriction..."` —
+a run of bare headings with no bodies. s.17's operative text was verified **absent from the
+entire old parse**. The flag replaces a ToC fragment with the real provision.
+
+This is the second time table-of-contents material has produced a confidently wrong reading;
+the first was `income_tax_1961`, where an entire act's corpus turned out to be its ToC. So it
+is recorded as a standing check rather than re-derived a third time:
+
+> **Full-span probing measures how much text disappears, never what.** A large loss is a
+> question, not a verdict. Before accepting or rejecting any candidate, print the text that
+> would be deleted and read it. Losses fall into at least five classes with opposite
+> implications — operative law (reject), repeal notices (minor), schedules (record the gap),
+> state appendices (harmless), and table-of-contents runs (the loss is the *improvement*).
+> Counting cannot distinguish them.
 
 Three are known-mixed and need diagnosis first: `motor_vehicles_1988` (gains s.2, loses
 ss.140-144 no-fault liability), `stamp_1899` (gains an 11,191-char s.2, loses ss.62-65),

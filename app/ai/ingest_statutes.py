@@ -282,6 +282,25 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "title": "Indian Partnership Act, 1932", "short": "Partnership Act", "year": 1932, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2394/1/A1932-9.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2394",
+        # Recovers ss.11, 36 and 55 (all three were absent outright) and repairs s.17.
+        #
+        # READ THE -8,010 CHAR DELTA BEFORE BELIEVING IT. s.17 appeared to be the worst
+        # destruction ever measured - 12/12 full-span probes gone, 3,308 -> 1,030 ch - and
+        # it is in fact the single largest IMPROVEMENT in the act. The old s.17 was the
+        # act's TABLE OF CONTENTS ("...18. Partner to be agent of the firm. 19. Implied
+        # authority..."), a run of bare headings with no bodies; s.17's operative text
+        # ("Subject to contract between the partners,- (a) where a change occurs in the
+        # constitution of a firm...") was verified ABSENT FROM THE ENTIRE OLD PARSE. The
+        # flag replaces a ToC fragment with the real provision. ToC-poisoned sections drop
+        # from 2 to 0.
+        #
+        # The rest of the delta is a Goa Sub-Registrar jurisdiction table (state appendix).
+        # ss.4, 6, 14, 18, 19, 25, 30, 39, 48, 58, 69 and 71 are byte-identical - notably
+        # s.69 (effect of non-registration), the most litigated provision in the Act.
+        #
+        # GENUINE COST: Schedule I (maximum fees under s.71) is dropped. Fourth act owed
+        # schedule-aware parsing - see CORPUS_LIMITATIONS.md.
+        "wrapped_headings": True,
     },
     "sale_of_goods_1930": {
         "title": "Sale of Goods Act, 1930", "short": "Sale of Goods Act", "year": 1930, "status": "in_force",
