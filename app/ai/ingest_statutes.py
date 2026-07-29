@@ -232,6 +232,18 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "title": "Transfer of Property Act, 1882", "short": "TP Act", "year": 1882, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2338/1/A1882-04.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2338",
+        # Wrapped headings hid SEVEN sections, including the two that matter most in
+        # practice: s.58 (the mortgage definitions - mortgagor, mortgagee, mortgage-money,
+        # mortgage-deed, and the six mortgage types, 3,483 ch) and s.43 (feeding the
+        # estoppel). Also recovers ss.4, 27, 31, 33, 59A.
+        #
+        # ACCEPTED COST, measured not assumed: net -2,600 ch. Full-span probing shows what
+        # goes is almost entirely REPEAL NOTICES - "[Decree of foreclosure suit.] Rep. by
+        # the Code of Civil Procedure, 1908, s. 156 and V Schedule" for ss.86-88, and the
+        # same for ss.96, 98 and s.135 (repealed by the Marine Insurance Act, 1963). That
+        # is metadata about dead provisions; s.58 and s.43 are living, constantly litigated
+        # law. The trade is not close. Repeal markers are recorded in CORPUS_LIMITATIONS.md.
+        "wrapped_headings": True,
     },
     "limitation_1963": {
         "title": "Limitation Act, 1963", "short": "Limitation Act", "year": 1963, "status": "in_force",
@@ -248,6 +260,23 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "landing":    "https://www.indiacode.nic.in/handle/123456789/1583",
         # Same glued-start print as the Contract Act: s.10 (specific performance) was lost.
         "glued_starts": True,
+        # A SECOND, independent defect: wrapped headings hid ss.4, 8, 25, 28 and 33
+        # (s.28 = rescission of contracts for sale or lease of immovable property).
+        #
+        # Applied for a reason worth stating plainly: the old parse did not merely omit
+        # things, it MISATTRIBUTED. s.42 (injunction to perform a negative agreement) came
+        # out at 3,555 ch because it had swallowed the whole 2018 Infrastructure Schedule -
+        # so an advocate retrieving "SRA s.42" was served 2,855 characters about ports,
+        # shipyards and road bridges under the heading of an injunction provision. Text
+        # filed under the wrong section is worse than text that is absent, because the
+        # reader has no cue that anything is wrong. s.42 is now its correct ~727 ch.
+        #
+        # KNOWN COST: that Infrastructure Schedule is now dropped rather than misfiled. It
+        # is legally live - it defines "infrastructure project" for s.20A, which bars
+        # injunctions against such projects. Like the NDPS psychotropic schedule, it needs
+        # its own handling, which this flag does not provide. Recorded in
+        # CORPUS_LIMITATIONS.md rather than glossed.
+        "wrapped_headings": True,
     },
     "partnership_1932": {
         "title": "Indian Partnership Act, 1932", "short": "Partnership Act", "year": 1932, "status": "in_force",

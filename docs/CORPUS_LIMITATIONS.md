@@ -322,10 +322,43 @@ it.
 
 ### Remaining queue — all UNVERIFIED at this depth
 
-`ndps_1985` (ss.23, 24), `sarfaesi_2002` (s.14), `rera_2016` (s.2), `transfer_of_property_1882`,
-`specific_relief_1963`, `partnership_1932`, `mediation_2023`, `pocso_2012`, `sale_of_goods_1930`,
+`partnership_1932`, `mediation_2023`, `pocso_2012`, `sale_of_goods_1930`,
 `legal_services_1987`, `bsa_2023`, `arbitration_1996`, `constitution_1950`,
 `hindu_succession_1956`.
+
+Verified and applied at full-span depth: `ndps_1985` (ss.23, 24), `sarfaesi_2002` (s.14 +
+nine more, flags only safe in COMBINATION), `rera_2016` (s.2, purely additive),
+`transfer_of_property_1882` (s.58, s.43 + five more), `specific_relief_1963` (s.28 + four
+more). Each carries its measured evidence in the `STATUTE_REGISTRY` comment.
+
+**Definitions sections are a recurring casualty, and that is predictable rather than random.**
+Indian statutes conventionally place a commencement clause at s.1 and Definitions at s.2. When
+s.1(3) wraps across lines, the unwrapped segmentation strategies swallow the s.2 heading that
+follows. That single mechanism accounts for the lost s.2 in `bns_2023`, `bnss_2023`, `rera_2016`
+and `ndps_1985`, and is the open diagnosis in `motor_vehicles_1988`. Any act whose s.1
+commencement clause wraps should be treated as a candidate before the sweep is consulted.
+
+### Two accepted costs from the 2026-07-29 applications
+
+**`transfer_of_property_1882` — repeal notices dropped (net −2,600 ch).** Full-span probing
+shows the deleted text is almost entirely dead-provision metadata: `"[Decree of foreclosure
+suit.] Rep. by the Code of Civil Procedure, 1908, s. 156 and V Schedule"` for ss.86-88, and
+the equivalent for ss.96, 98 and s.135 (repealed by the Marine Insurance Act, 1963). Recovered
+in exchange: s.58 (mortgage definitions and the six mortgage types) and s.43 (feeding the
+estoppel). An advocate who searches for a repealed section now gets nothing rather than a
+repeal note — a real, small regression, recorded rather than hidden.
+
+**`specific_relief_1963` — the 2018 Infrastructure Schedule is now dropped (−2,855 ch).**
+Previously it was not absent but MISFILED: the whole Schedule (transport, ports, shipyards,
+road bridges) sat inside s.42, so retrieving "SRA s.42" returned 3,555 characters under the
+heading of an injunction provision. Misattributed text is worse than missing text, because
+nothing signals to the reader that it is wrong; s.42 is now its correct ~727 ch. But the
+Schedule is legally live — it defines "infrastructure project" for s.20A, which bars
+injunctions against such projects. s.20A itself survives intact (1,648 ch); only its Schedule
+is gone. Like the NDPS psychotropic schedule, it needs dedicated schedule handling.
+
+`OWNER_QUEUE`: schedule-aware parsing is now required by three acts (NDPS psychotropic
+substances, SRA infrastructure, Commercial Courts Order XV-A). It should be built once.
 
 Three are known-mixed and need diagnosis first: `motor_vehicles_1988` (gains s.2, loses
 ss.140-144 no-fault liability), `stamp_1899` (gains an 11,191-char s.2, loses ss.62-65),
