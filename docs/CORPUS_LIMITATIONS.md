@@ -230,6 +230,58 @@ is a longstanding and CONSISTENT scope decision rather than a BNSS regression. I
 real gap for criminal practice — the classification table is consulted constantly — and
 should be a deliberate acquisition decision, not an accident.
 
+## ⛔ OPEN — BNS 2023 s.2 (Definitions) is missing; the obvious fix has a cost (2026-07-25)
+
+Found by the systematic flag sweep, not by anyone noticing. **The Bharatiya Nyaya Sanhita
+2023 — the penal code that replaced the IPC — has no s.2 in the corpus.** s.2 defines
+"offence", "document", "dishonestly", "fraudulently", "good faith" and the rest of the
+vocabulary the whole Sanhita is written in.
+
+Same defect class as BNSS s.2 (fixed 2026-07-25 via `wrapped_headings`): the unwrapped
+segmentation strategies swallow the s.2 heading that follows s.1's wrapped commencement
+clause.
+
+**But the fix is NOT clean here.** Enabling `wrapped_headings` on BNS:
+
+| | baseline | wrapped_headings |
+|---|---|---|
+| Sections | 356 | 357 (**gains s.2**, 583 chars) |
+| Total text | 364,793 | 362,869 (**−1,924**) |
+| s.358 (repeal and savings) | full | **−2,507 chars** |
+
+So it recovers Definitions and damages the repeal-and-savings section. Unlike BNSS — where
+the same flag was purely additive (+1 section, +1,072 chars, nothing lost) — this is a
+trade, and neither side is acceptable on its own.
+
+**Not applied.** The right fix recovers s.2 without touching s.358, which means
+understanding why the wrapped strategy mis-terminates the final section. That is parser
+work with its own verification, not a flag flip.
+
+### The sweep's filter was too permissive — recorded so it is not trusted blindly
+
+The sweep's "candidate" rule was *loses no section, loses no section's text, adds a section
+or text*. That admitted five candidates across the eight acts it covered before it was
+interrupted, and **all five show +1 section with total text FLAT OR FALLING**:
+
+| act | flag | sections | text |
+|---|---|---|---|
+| `arbitration_1996` | glued_starts | +1 | −7 |
+| `bns_2023` | wrapped_headings | +1 | **−1,924** |
+| `bsa_2023` | wrapped_headings | +1 | **−935** |
+| `constitution_1950` | double_endash | +1 | +427 |
+| `hindu_succession_1956` | glued_starts | +1 | −4 |
+
+The text-probe sampled chars 10-70 of each section, so **tail losses slipped through** — s.358
+kept its opening and lost its ending. A corrected rule must require total captured text to be
+**non-decreasing**, and should diff per-section lengths rather than sampling.
+
+Note the contrast with the four genuine finds: Contract Act **+68 sections** with s.73
+appearing, IT Act 2000 **+72 sections** and half the Act. A real recovery has an unmistakable
+signature; a +1/−1,924 does not.
+
+**Unswept:** the run was interrupted after `income_tax_1961`. Acts from `income_tax_2025`
+onwards alphabetically have not been tested, and the >300-page acts were skipped by design.
+
 ## 1. IPC 354E — duplicate section number (two distinct provisions) · `PENDING_LEGAL_REVIEW`
 
 - **What:** the source carries **two different provisions numbered 354E** — "Sextortion" and
