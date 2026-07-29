@@ -199,6 +199,17 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/handle/123456789/11799",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/11799",
+        # Recovers s.29A (time limit for arbitral award, 2,585 ch) — the 2015 Amendment's
+        # twelve-month clock with a six-month extension, one of the most litigated
+        # provisions in Indian arbitration practice, and absent from the corpus until now.
+        # Net -7 ch, zero sections lost, zero destroyed text.
+        #
+        # `wrapped_headings` is REJECTED and is the most destructive variant measured in the
+        # whole sweep: -42,845 ch, shredding s.86 (34,858 -> 1,783), s.18 (19,140 -> 1,792),
+        # s.27 and s.2. The oversized base figures are the tell — those sections have
+        # absorbed the Act's Schedules, and the flag destroys them rather than splitting
+        # them out. See CORPUS_LIMITATIONS.md on schedule-aware parsing.
+        "glued_starts": True,
     },
     # ── Batch 2 (2026-06-25): more high-use central acts ──
     "companies_2013": {
@@ -331,6 +342,12 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "title": "Hindu Succession Act, 1956", "short": "Hindu Succession Act", "year": 1956, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/1713/1/A1956-30.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/1713",
+        # Recovers s.14 (Property of a female Hindu to be her absolute property, 1,069 ch),
+        # the provision that converted the limited widow's estate into absolute ownership
+        # and among the most cited in Indian succession law. It was absent outright.
+        # Net -4 ch, zero sections lost, zero destroyed text — one of the cleanest
+        # candidates in the sweep. `wrapped_headings` changes nothing here and is not set.
+        "glued_starts": True,
     },
     "dv_act_2005": {
         "title": "Protection of Women from Domestic Violence Act, 2005", "short": "DV Act", "year": 2005,
