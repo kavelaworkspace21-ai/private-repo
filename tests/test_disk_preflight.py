@@ -24,6 +24,18 @@ def _fake_usage(free_bytes: int):
     return lambda _path: _Usage(total=free_bytes * 4, used=free_bytes * 3, free=free_bytes)
 
 
+@pytest.fixture(autouse=True)
+def _isolate_reseed_state(monkeypatch, tmp_path):
+    """Keep these tests off the real store.
+
+    reseed() now takes a lock file and sizes its disk floor from the real store, so without
+    this a unit test fails whenever an actual reseed happens to be running — which is
+    exactly how this fixture came to exist.
+    """
+    monkeypatch.setattr(vs, "RESEED_LOCK_PATH", tmp_path / ".reseed.lock")
+    monkeypatch.setattr(vs, "_store_size_bytes", lambda: 0)
+
+
 # ── reseed refuse path ──────────────────────────────────────────────────────────
 def test_reseed_refuses_below_free_space_floor(monkeypatch):
     """Below the 500 MB floor, reseed raises BEFORE touching the collection."""

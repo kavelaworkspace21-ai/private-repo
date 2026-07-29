@@ -6,6 +6,9 @@ import os
 import json
 import logging
 import shutil
+import socket
+import time
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Optional
 
@@ -29,6 +32,17 @@ EMBEDDING_MODEL = "text-embedding-3-small"
 # warns early; reseed refuses outright rather than risk a half-written store.
 DISK_WARN_FREE_BYTES   = 2 * 1024 ** 3    # 2 GB — boot logs a warning below this
 RESEED_MIN_FREE_BYTES  = 500 * 1024 ** 2  # 500 MB — reseed refuses to start below this
+
+# Reseed atomicity. A reseed used to delete the live collection FIRST and then embed for
+# minutes; any interruption in that window left the store empty or truncated while still
+# answering queries, just with most of the law missing. It happened three times
+# (2026-07-20 disk-full, 2026-07-25 and 2026-07-29 concurrent/killed runs — the last left
+# 1,200 of 8,704 chunks). The index is now built HERE and renamed over the live collection
+# only once complete.
+BUILD_COLLECTION_NAME     = COLLECTION_NAME + "__building"
+RESEED_LOCK_PATH          = CHROMA_PATH / ".reseed.lock"
+RESEED_LOCK_STALE_SECONDS = 3600   # a full reseed takes ~2-4 min; an hour means it died
+RESEED_SHRINK_RATIO       = 0.9    # refuse to swap in a build this much smaller than live
 
 
 def disk_free_bytes(path: Optional[Path] = None) -> int:
@@ -57,6 +71,23 @@ def _get_client():
     return _client
 
 
+def _embedding_fn():
+    """The embedding function for the corpus collection.
+
+    Extracted so the reseed build collection is created with the IDENTICAL function — a
+    build embedded differently from the live collection would swap in silently and return
+    nonsense for every query.
+    """
+    import chromadb.utils.embedding_functions as ef
+    # Embeddings default to a FREE local model (ONNX MiniLM, runs on CPU, no API/cost).
+    # Only use paid OpenAI embeddings if explicitly opted in via OPENAI_EMBEDDINGS_KEY —
+    # this keeps a free LLM key (AI_API_KEY / OPENAI_API_KEY) from triggering paid embed calls.
+    emb_key = os.getenv("OPENAI_EMBEDDINGS_KEY", "").strip()
+    if emb_key:
+        return ef.OpenAIEmbeddingFunction(api_key=emb_key, model_name=EMBEDDING_MODEL)
+    return ef.DefaultEmbeddingFunction()   # free, local, no key
+
+
 def get_collection():
     """Return the ChromaDB collection, creating it if it doesn't exist."""
     global _collection
@@ -66,22 +97,11 @@ def get_collection():
     client = _get_client()
 
     try:
-        import chromadb.utils.embedding_functions as ef
-        # Embeddings default to a FREE local model (ONNX MiniLM, runs on CPU, no API/cost).
-        # Only use paid OpenAI embeddings if explicitly opted in via OPENAI_EMBEDDINGS_KEY —
-        # this keeps a free LLM key (AI_API_KEY / OPENAI_API_KEY) from triggering paid embed calls.
-        emb_key = os.getenv("OPENAI_EMBEDDINGS_KEY", "").strip()
-        if emb_key:
-            embed_fn = ef.OpenAIEmbeddingFunction(
-                api_key=emb_key,
-                model_name=EMBEDDING_MODEL,
-            )
-        else:
-            embed_fn = ef.DefaultEmbeddingFunction()   # free, local, no key
+        _adopt_orphaned_build(client)
 
         _collection = client.get_or_create_collection(
             name=COLLECTION_NAME,
-            embedding_function=embed_fn,
+            embedding_function=_embedding_fn(),
             metadata={"hnsw:space": "cosine"},
         )
 
@@ -227,34 +247,191 @@ def _seed_collection(collection):
                 f"({len(verified_act_ids)} acts source-verified).")
 
 
-def reseed():
-    """Force re-embed the entire corpus (call after updating law_index.json)."""
-    # Disk preflight (S0.2): refuse BEFORE the destructive delete. A reseed on a near-full
-    # volume is how the 2026-07-20 corruption happened — sqlite failed mid-write after the
-    # old collection was already gone. Better to keep the working store than half-write a new one.
-    free = disk_free_bytes()
-    if free < RESEED_MIN_FREE_BYTES:
-        raise RuntimeError(
-            f"reseed refused: only {free / 1024**2:.0f} MB free on the volume backing "
-            f"{CHROMA_PATH} (need >= {RESEED_MIN_FREE_BYTES // 1024**2} MB). Free space first — "
-            f"a reseed on a near-full disk can corrupt the store (2026-07-20 incident).")
+def _store_size_bytes() -> int:
+    """Bytes currently occupied by the Chroma store, 0 if it doesn't exist yet.
 
-    client = _get_client()
+    Used to size the reseed disk floor: the rebuild is a second copy that must fit beside
+    the live index. Never raises — an unreadable store must not block a reseed, it just
+    falls back to the flat floor.
+    """
     try:
-        client.delete_collection(COLLECTION_NAME)
+        return sum(f.stat().st_size for f in Path(CHROMA_PATH).rglob("*") if f.is_file())
+    except OSError:
+        return 0
+
+
+@contextmanager
+def _reseed_lock():
+    """Refuse a second concurrent reseed rather than let two writers race.
+
+    Two overlapping reseeds corrupted the store twice (2026-07-25, 2026-07-29): the second
+    process deleted the collection the first was still writing into, ChromaDB threw inside
+    upsert, and ~4,200 of 8,637 chunks survived.
+
+    Staleness is decided by MTIME, never by probing the recorded pid. On Windows
+    ``os.kill(pid, 0)`` does not test liveness — CPython maps a non-CTRL signal to
+    TerminateProcess, so the "is it alive?" check would KILL the process it asks about. The
+    pid is recorded for humans to read, nothing more.
+    """
+    RESEED_LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
+    if RESEED_LOCK_PATH.exists():
+        age = time.time() - RESEED_LOCK_PATH.stat().st_mtime
+        if age < RESEED_LOCK_STALE_SECONDS:
+            try:
+                holder = RESEED_LOCK_PATH.read_text(encoding="utf-8").strip()
+            except OSError:
+                holder = "unknown"
+            raise RuntimeError(
+                f"reseed refused: another reseed is in progress ({holder}, started "
+                f"{age:.0f}s ago). Concurrent reseeds corrupt the store. If that process is "
+                f"definitely dead, delete {RESEED_LOCK_PATH}.")
+        logger.warning(f"Reseed lock is stale ({age:.0f}s old) — taking it over.")
+        RESEED_LOCK_PATH.unlink(missing_ok=True)
+
+    try:
+        fd = os.open(str(RESEED_LOCK_PATH), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError as e:      # lost the race between the check above and here
+        raise RuntimeError(
+            f"reseed refused: another reseed took the lock at {RESEED_LOCK_PATH}.") from e
+    try:
+        os.write(fd, f"pid={os.getpid()} host={socket.gethostname()}".encode())
+    finally:
+        os.close(fd)
+    try:
+        yield
+    finally:
+        RESEED_LOCK_PATH.unlink(missing_ok=True)
+
+
+def _adopt_orphaned_build(client) -> bool:
+    """Finish a swap that was interrupted between the delete and the rename.
+
+    That window is two metadata operations wide, but a process dying inside it leaves the
+    live collection gone and a COMPLETE build collection beside it. Completing the rename
+    is strictly better than re-embedding the whole corpus.
+    """
+    try:
+        names = {c.name for c in client.list_collections()}
+    except Exception:
+        return False
+    if COLLECTION_NAME in names or BUILD_COLLECTION_NAME not in names:
+        return False
+    try:
+        build = client.get_collection(BUILD_COLLECTION_NAME)
+        n = build.count()
+        if n == 0:
+            client.delete_collection(BUILD_COLLECTION_NAME)
+            return False
+        logger.warning(
+            f"Found a build collection with {n} chunks and NO live collection — a reseed "
+            f"died mid-swap. Completing the rename instead of re-embedding.")
+        build.modify(name=COLLECTION_NAME)
+        return True
     except Exception as e:
-        # Deleting a missing collection is fine (first-ever seed). Anything else must
-        # NOT silently no-op: on 2026-07-20 a sqlite "disk full" here left the old
-        # 8,072-chunk corpus in place and reseed() returned it as if freshly seeded.
-        still = 0
+        logger.error(f"Could not adopt orphaned build collection: {e}")
+        return False
+
+
+def reseed(force: bool = False):
+    """Rebuild the corpus index, swapping it in only once it is COMPLETE.
+
+    The index is built in a SEPARATE collection and the live one is replaced by a rename
+    after the build succeeds and passes a size check, so an interrupted build cannot touch
+    the live corpus at all. The only destructive window is delete+rename, which does no
+    embedding work and is recoverable by _adopt_orphaned_build().
+
+    ``force=True`` waives the shrink check, for when the corpus genuinely got smaller.
+    """
+    # Disk preflight (S0.2): refuse before doing any work. A reseed on a near-full volume is
+    # how the 2026-07-20 corruption happened — sqlite failed mid-write.
+    #
+    # The floor is DYNAMIC, because build-then-swap changed the disk profile: the build is a
+    # second full copy of the index that must fit ALONGSIDE the live one until the rename.
+    # The old delete-first reseed freed that space before writing; this one cannot. A flat
+    # 500 MB floor would let a reseed start and then run out of room deep into the embed —
+    # safe (the live corpus is never touched) but a slow and confusing way to fail.
+    free = disk_free_bytes()
+    needed = max(RESEED_MIN_FREE_BYTES, _store_size_bytes() + RESEED_MIN_FREE_BYTES)
+    if free < needed:
+        raise RuntimeError(
+            f"reseed refused: {free / 1024**2:.0f} MB free on the volume backing "
+            f"{CHROMA_PATH}, need >= {needed / 1024**2:.0f} MB. The rebuild is written "
+            f"beside the live index and only replaces it once complete, so it needs room "
+            f"for both ({_store_size_bytes() / 1024**2:.0f} MB store + "
+            f"{RESEED_MIN_FREE_BYTES // 1024**2} MB headroom). Free space first — a reseed "
+            f"on a near-full disk can corrupt the store (2026-07-20 incident).")
+
+    with _reseed_lock():
+        client = _get_client()
+
+        live_count = 0
         try:
-            still = client.get_collection(COLLECTION_NAME).count()
+            live_count = client.get_collection(COLLECTION_NAME).count()
+        except Exception:
+            pass   # no live collection yet (first-ever seed)
+
+        # A build collection left by an earlier crash is scrap — it may be partial, and
+        # nothing distinguishes a complete one from a truncated one at this point.
+        try:
+            client.delete_collection(BUILD_COLLECTION_NAME)
         except Exception:
             pass
-        if still:
-            raise RuntimeError(
-                f"reseed aborted: could not delete '{COLLECTION_NAME}' "
-                f"({still} chunks still present): {e}") from e
+
+        build = client.create_collection(
+            name=BUILD_COLLECTION_NAME,
+            embedding_function=_embedding_fn(),
+            metadata={"hnsw:space": "cosine"},
+        )
+        try:
+            _seed_collection(build)
+            built = build.count()
+
+            if built == 0:
+                raise RuntimeError(
+                    "reseed aborted: the rebuild produced 0 chunks, so it was NOT swapped "
+                    "in — the live corpus is untouched. Check that "
+                    "app/legal_corpus/fulltext/*.json is populated.")
+            if live_count and built < live_count * RESEED_SHRINK_RATIO and not force:
+                raise RuntimeError(
+                    f"reseed aborted: the rebuild holds {built} chunks against {live_count} "
+                    f"live (below {RESEED_SHRINK_RATIO:.0%}), so it was NOT swapped in — the "
+                    f"live corpus is untouched. This is the shape of a truncated build "
+                    f"(2026-07-29 left 1,200 of 8,704). If the corpus genuinely shrank, "
+                    f"re-run with reseed(force=True).")
+        except BaseException:
+            # BaseException, not Exception: a Ctrl-C'd reseed raises KeyboardInterrupt, and
+            # leaving a partial build behind on the commonest interruption of all defeats
+            # the point. A hard kill still cannot be caught here — that is what the
+            # scrap-delete above and _adopt_orphaned_build() are for.
+            try:
+                client.delete_collection(BUILD_COLLECTION_NAME)
+            except Exception:
+                pass
+            raise
+
+        # ── swap: metadata only, no embedding work ──────────────────────────────────
+        try:
+            client.delete_collection(COLLECTION_NAME)
+        except Exception as e:
+            # Deleting a missing collection is fine (first-ever seed). Anything else must
+            # NOT silently no-op: on 2026-07-20 a sqlite "disk full" here left the old
+            # 8,072-chunk corpus in place and reseed() returned it as if freshly seeded.
+            still = 0
+            try:
+                still = client.get_collection(COLLECTION_NAME).count()
+            except Exception:
+                pass
+            if still:
+                try:
+                    client.delete_collection(BUILD_COLLECTION_NAME)
+                except Exception:
+                    pass
+                raise RuntimeError(
+                    f"reseed aborted: could not delete '{COLLECTION_NAME}' "
+                    f"({still} chunks still present): {e}") from e
+        build.modify(name=COLLECTION_NAME)
+        logger.info(f"Reseed complete: {built} chunks swapped in atomically.")
+
     global _collection
     _collection = None
     return get_collection()

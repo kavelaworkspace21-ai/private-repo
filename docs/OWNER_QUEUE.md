@@ -6,6 +6,24 @@ what the build work has actually surfaced and hands off. Newest sprint on top.
 
 ---
 
+## From the corpus flag sweep (2026-07-29)
+
+- **Schedule-aware parsing is owed by FOUR acts and should be built once.** NDPS
+  (psychotropic substances), Specific Relief (2018 infrastructure schedule), Commercial
+  Courts (Order XV-A), Partnership (Schedule I maximum fees). Each recovery so far has
+  accepted the loss of a schedule as the price of recovering operative sections, and each
+  time that was the right local call — but four times is a pattern, not a coincidence, and
+  a fifth acceptance would be a decision to keep losing schedules rather than fix them.
+  Schedules are legally live: the SRA one defines "infrastructure project" for s.20A, which
+  bars injunctions. **Agent-completable — needs a decision to prioritise it, not owner
+  credentials.**
+
+- **RESOLVED 2026-07-29 — reseed had no crash safety.** It deleted the live collection
+  first and embedded for minutes, so any interruption left a truncated index that still
+  answered queries with most of the law missing. Three occurrences (2026-07-20 disk-full,
+  -25 concurrent, -29 killed process leaving 1,200 of 8,704 chunks). Now builds into a
+  separate collection and swaps by rename, with a lock, a shrink check and orphan recovery.
+
 ## From the pre-deploy hardening review (2026-07-25)
 
 - **Rate limiting is per-process — do NOT scale horizontally yet.** Buckets live in the app
