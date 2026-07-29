@@ -82,7 +82,7 @@ def chroma(monkeypatch, tmp_path):
 
 def _seed_n(n):
     """A _seed_collection stub that fills the build collection with n chunks."""
-    def _seed(collection):
+    def _seed(collection, heartbeat=None):
         collection._store[collection.name] = n
     return _seed
 
@@ -90,7 +90,7 @@ def _seed_n(n):
 # ── the core property: a failed build must not touch the live corpus ───────────
 def test_interrupted_build_leaves_live_corpus_intact(chroma, monkeypatch):
     """The 2026-07-29 failure. A build that dies mid-embed must not be visible."""
-    def _explode(collection):
+    def _explode(collection, heartbeat=None):
         collection._store[collection.name] = 1200   # partial, as in the real incident
         raise KeyboardInterrupt("process killed mid-reseed")
     monkeypatch.setattr(vs, "_seed_collection", _explode)
@@ -166,7 +166,7 @@ def test_concurrent_reseed_is_refused(chroma, monkeypatch):
     """The 2026-07-25 / -29 failure: a second reseed while one is running."""
     monkeypatch.setattr(vs, "_seed_collection", _seed_n(8704))
 
-    def _reseed_again(collection):
+    def _reseed_again(collection, heartbeat=None):
         # Simulate a second process arriving mid-build.
         with pytest.raises(RuntimeError, match="another reseed is in progress"):
             vs.reseed()
@@ -186,6 +186,43 @@ def test_lock_is_released_after_a_failed_reseed(chroma, monkeypatch):
 
     monkeypatch.setattr(vs, "_seed_collection", _seed_n(8704))
     vs.reseed()          # must not raise "another reseed is in progress"
+
+
+def test_a_live_build_keeps_its_lock_fresh(chroma, monkeypatch):
+    """The build loop must prove liveness, or the timeout has to be uselessly long.
+
+    Without a heartbeat the only evidence a reseed is alive is the lock's age, so the
+    timeout must exceed the longest plausible reseed (an hour), and a hard-killed run wedges
+    every later reseed for that whole hour. That happened twice on 2026-07-29 and needed the
+    file deleted by hand. A live reseed now refreshes the lock every batch.
+    """
+    seen = {}
+
+    def _slow_build(collection, heartbeat=None):
+        assert heartbeat is not None, "the build must be given a heartbeat"
+        before = vs.RESEED_LOCK_PATH.stat().st_mtime
+        old = before - vs.RESEED_LOCK_STALE_SECONDS - 60      # pretend a long build
+        import os as _os
+        _os.utime(vs.RESEED_LOCK_PATH, (old, old))
+        heartbeat()
+        seen["refreshed"] = vs.RESEED_LOCK_PATH.stat().st_mtime > old
+        collection._store[collection.name] = 8704
+    monkeypatch.setattr(vs, "_seed_collection", _slow_build)
+
+    vs.reseed()
+    assert seen["refreshed"], "heartbeat() must refresh the lock's mtime"
+
+
+def test_heartbeat_never_kills_a_reseed(chroma, monkeypatch):
+    """A failing touch is not a reason to abandon a corpus rebuild."""
+    def _build(collection, heartbeat=None):
+        vs.RESEED_LOCK_PATH.unlink(missing_ok=True)   # make the touch fail
+        heartbeat()                                    # must not raise
+        collection._store[collection.name] = 8704
+    monkeypatch.setattr(vs, "_seed_collection", _build)
+
+    vs.reseed()
+    assert chroma.store[LIVE] == 8704
 
 
 def test_stale_lock_is_taken_over(chroma, monkeypatch):

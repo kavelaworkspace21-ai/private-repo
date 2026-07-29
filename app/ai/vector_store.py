@@ -41,7 +41,8 @@ RESEED_MIN_FREE_BYTES  = 500 * 1024 ** 2  # 500 MB — reseed refuses to start b
 # only once complete.
 BUILD_COLLECTION_NAME     = COLLECTION_NAME + "__building"
 RESEED_LOCK_PATH          = CHROMA_PATH / ".reseed.lock"
-RESEED_LOCK_STALE_SECONDS = 3600   # a full reseed takes ~2-4 min; an hour means it died
+RESEED_LOCK_STALE_SECONDS = 300    # a LIVE reseed touches the lock every batch (see
+                                   # _reseed_lock); 5 min of silence means the holder died
 RESEED_SHRINK_RATIO       = 0.9    # refuse to swap in a build this much smaller than live
 
 
@@ -121,7 +122,7 @@ def get_collection():
 FULLTEXT_DIR = CORPUS_DIR / "fulltext"
 
 
-def _seed_collection(collection):
+def _seed_collection(collection, heartbeat=None):
     """
     Embed sections into the vector store.
 
@@ -243,6 +244,8 @@ def _seed_collection(collection):
             metadatas=metadatas[i:i+BATCH],
             ids=ids[i:i+BATCH],
         )
+        if heartbeat:
+            heartbeat()   # prove the reseed is alive; see _reseed_lock
     logger.info(f"Seeded {len(documents)} sections "
                 f"({len(verified_act_ids)} acts source-verified).")
 
@@ -267,6 +270,12 @@ def _reseed_lock():
     Two overlapping reseeds corrupted the store twice (2026-07-25, 2026-07-29): the second
     process deleted the collection the first was still writing into, ChromaDB threw inside
     upsert, and ~4,200 of 8,637 chunks survived.
+
+    Yields a ``heartbeat()`` that the build loop calls each batch. Without it the lock can
+    only be judged stale by age, and a HARD-KILLED reseed (no finally, no cleanup) wedges
+    every later reseed until that timeout expires — which happened twice on 2026-07-29 and
+    needed the file deleted by hand. A live reseed now refreshes the lock continuously, so
+    silence is real evidence the holder is gone and the timeout can be short.
 
     Staleness is decided by MTIME, never by probing the recorded pid. On Windows
     ``os.kill(pid, 0)`` does not test liveness — CPython maps a non-CTRL signal to
@@ -297,8 +306,15 @@ def _reseed_lock():
         os.write(fd, f"pid={os.getpid()} host={socket.gethostname()}".encode())
     finally:
         os.close(fd)
+    def heartbeat():
+        """Refresh the lock's mtime; never fatal — a reseed must not die over a touch."""
+        try:
+            os.utime(RESEED_LOCK_PATH, None)
+        except OSError:
+            pass
+
     try:
-        yield
+        yield heartbeat
     finally:
         RESEED_LOCK_PATH.unlink(missing_ok=True)
 
@@ -361,7 +377,7 @@ def reseed(force: bool = False):
             f"{RESEED_MIN_FREE_BYTES // 1024**2} MB headroom). Free space first — a reseed "
             f"on a near-full disk can corrupt the store (2026-07-20 incident).")
 
-    with _reseed_lock():
+    with _reseed_lock() as heartbeat:
         client = _get_client()
 
         live_count = 0
@@ -383,7 +399,7 @@ def reseed(force: bool = False):
             metadata={"hnsw:space": "cosine"},
         )
         try:
-            _seed_collection(build)
+            _seed_collection(build, heartbeat=heartbeat)
             built = build.count()
 
             if built == 0:

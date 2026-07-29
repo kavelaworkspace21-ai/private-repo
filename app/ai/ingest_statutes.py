@@ -78,6 +78,19 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/20063/1/aa202347.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/20063",
+        # Recovers s.2 DEFINITIONS (1,554 ch), previously absent. The FIFTH act to lose s.2
+        # to one mechanism: Indian statutes put a commencement clause at s.1 and Definitions
+        # at s.2, and when s.1(3) wraps across lines the unwrapped strategies swallow the
+        # s.2 heading after it. Same as bns_2023, bnss_2023, rera_2016 and ndps_1985 — and
+        # the first act found by PREDICTING the pattern rather than reading sweep output.
+        #
+        # Net -935 ch, which is the trade working in our favour: +1,554 for s.2, -2,489 off
+        # s.170. s.170 is the last section (Repeal and savings) and measured an implausible
+        # 6,315 ch because it had absorbed the STATEMENT OF OBJECTS AND REASONS — "The
+        # experience of seven decades of Indian democracy calls for comprehensive review of
+        # our criminal laws..." — parliamentary back-matter, not enacted law. Same shape as
+        # the bns_2023 s.358 back-matter. Losing it is itself a correction.
+        "wrapped_headings": True,
     },
     "constitution_1950": {
         "title": "The Constitution of India", "short": "Constitution", "year": 1950,
