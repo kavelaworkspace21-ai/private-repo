@@ -388,6 +388,67 @@ Three are known-mixed and need diagnosis first: `motor_vehicles_1988` (gains s.2
 ss.140-144 no-fault liability), `stamp_1899` (gains an 11,191-char s.2, loses ss.62-65),
 `ipc_1860 +wrapped_headings` (loses six sections).
 
+## ✅ RESOLVED 2026-07-30 — amending text was occupying ten real sections in three acts
+
+The most serious corpus defect found so far, and it predates version control: **nine of the
+ten affected sections were already wrong at the baseline commit `1b7e99b`** and nobody had
+noticed. It was found by accident, while diagnosing a regression in a fourth.
+
+India Code prints amending material in the same PDF as the principal Act. Its clauses
+renumber from 1 — `16. In section 31 of the principal Act,—` — so with no boundary they
+parse as sections and **collide with the principal Act's numbering**. The genuine provision
+loses.
+
+**The failure mode is the dangerous one.** The section exists, has a plausible length, and
+retrieves normally. It simply is not the law. Every integrity check the project had —
+section counts, coverage, fingerprints, the citation gate — passes cleanly on a corpus in
+this state, because each of them asks whether a section is *present*, never whether its text
+is *a provision*.
+
+| Act | Section | Held instead |
+|---|---|---|
+| `arbitration_1996` | s.16 | `In section 31 of the principal Act,—` — replacing **competence-competence** |
+| `arbitration_1996` | s.6 | amendment text, 15,926 ch (Administrative assistance) |
+| `arbitration_1996` | s.18 | amendment text, 19,140 ch (Equal treatment of parties) |
+| `crpc_1973` | s.16 | `Insertion of new section 144A` (Courts of Metropolitan Magistrates) |
+| `crpc_1973` | s.38 | `Amendment of section 438` (Aid to person executing warrant) |
+| `crpc_1973` | s.44 | `Amendment of Act 45 of 1860` (**Arrest by Magistrate**) |
+| `ibc_2016` | s.6 | Companies Act amendment (**who may initiate a CIRP**) |
+| `ibc_2016` | s.19 | Companies Act amendment (Personnel to extend cooperation) |
+| `ibc_2016` | s.26 | Companies Act amendment |
+| `ibc_2016` | s.36 | Companies Act amendment (**Liquidation estate**) |
+
+Two boundary rules were needed, because the appended material differs in kind:
+
+* `drop_extracts_appendix` — cuts at an `EXTRACTS FROM THE ... (AMENDMENT) ACT, YYYY`
+  heading. Arbitration (p44), CrPC (p260).
+* `body_before_schedule: (lo, hi)` — cuts at the act's own tail sections, for **Schedules
+  that amend OTHER enactments**. IBC's Eleventh Schedule rewrites the Companies Act 2013;
+  ss.252–255 sit on p139 where `THE FIRST SCHEDULE` begins, so the body survives whole.
+
+It deliberately does **not** reuse `articles_before_schedule`, which forces `wrapped=True`
+and would have silently re-segmented an act never verified under it.
+
+`tests/test_corpus_contamination.py` scans the **shipped corpus** — not the parser — because
+that is where the damage was visible and where nobody was looking. Expected count is zero.
+
+### The lesson worth keeping
+
+Every check this project had asked *is the section there?* None asked *is this text law?*
+A corpus can be complete, fingerprinted, reproducible and fully covered while a provision
+quietly says something else entirely. Presence is not authenticity, and only reading the
+text distinguishes them.
+
+### Still open, found in passing
+
+* **`ibc_2016` s.9 is ABSENT** — initiation of a CIRP by an *operational creditor*, routine
+  practice. Absent at baseline too, so pre-existing rather than caused by this work. Needs
+  its own diagnosis.
+* The `_START_RE` bracket-prefix fix (ToP s.53A) also recovered **nine real IBC provisions**
+  — ss.10A, 12A, 25A, **29A**, 32A, 77A, 235A, 238A, 240A — including the ineligibility bar
+  on defaulting promoters. Recorded because that change was briefly mistaken for a pure
+  liability after it broke arbitration s.16.
+
 ## 1. IPC 354E — duplicate section number (two distinct provisions) · `PENDING_LEGAL_REVIEW`
 
 - **What:** the source carries **two different provisions numbered 354E** — "Sextortion" and
