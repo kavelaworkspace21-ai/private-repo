@@ -282,6 +282,20 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2079",
     },
     "sarfaesi_2002": {
+        # TWO independent print pathologies, and the flags are only safe TOGETHER.
+        # Absent from the corpus until 2026-07-25: s.14 (Chief Metropolitan Magistrate or
+        # District Magistrate to assist a secured creditor in taking possession — the
+        # provision behind every SARFAESI possession application), s.20A, s.25, s.26, s.26A,
+        # s.28, s.39, s.5A, s.17A, s.18B.
+        #
+        # Measured separately and combined, because a single-flag sweep cannot see this:
+        #   glued_starts      53 secs, gains s.20A only,        0 sections with destroyed text
+        #   wrapped_headings  56 secs, gains s.14/25/26/39,     4 sections with destroyed text
+        #   BOTH              62 secs, gains all ten,           2 (one probe each), net -57 chars
+        # The combination is strictly better than either alone: more recovered, LESS destroyed,
+        # and a net text change of -57 characters across 62 sections.
+        "glued_starts": True,
+        "wrapped_headings": True,
         "title": "Securitisation and Reconstruction of Financial Assets and Enforcement of Security Interest Act, 2002",
         "short": "SARFAESI Act", "year": 2002, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2006/1/A2002-54.pdf",
