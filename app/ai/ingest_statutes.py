@@ -142,6 +142,10 @@ STATUTE_REGISTRY: dict[str, dict] = {
                 "CrPC continues to govern proceedings for offences committed before that date.",
         "source_url": "https://www.indiacode.nic.in/handle/123456789/16225",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/16225",
+        # Drops the appended "EXTRACTS FROM THE CODE OF CRIMINAL PROCEDURE (AMENDMENT)
+        # ACT, 2005" (p260). Its clauses renumber from 1 and had overwritten ss.16, 38 and
+        # 44 with amendment stubs — present in the corpus since before version control.
+        "drop_extracts_appendix": True,
     },
     "evidence_1872": {
         "title": "Indian Evidence Act, 1872", "short": "Evidence Act", "year": 1872,
@@ -199,17 +203,30 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/handle/123456789/11799",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/11799",
-        # Recovers s.29A (time limit for arbitral award, 2,585 ch) — the 2015 Amendment's
-        # twelve-month clock with a six-month extension, one of the most litigated
-        # provisions in Indian arbitration practice, and absent from the corpus until now.
-        # Net -7 ch, zero sections lost, zero destroyed text.
+        # NO FLAGS. Both were measured and both are REJECTED. Do not re-enable either
+        # without reading the note below — the sweep harness rates `glued_starts` here as a
+        # clean win and it is not.
         #
-        # `wrapped_headings` is REJECTED and is the most destructive variant measured in the
-        # whole sweep: -42,845 ch, shredding s.86 (34,858 -> 1,783), s.18 (19,140 -> 1,792),
-        # s.27 and s.2. The oversized base figures are the tell — those sections have
-        # absorbed the Act's Schedules, and the flag destroys them rather than splitting
-        # them out. See CORPUS_LIMITATIONS.md on schedule-aware parsing.
-        "glued_starts": True,
+        # `glued_starts` REJECTED (applied 2026-07-30, reverted the same day). It recovers
+        # s.29A (time limit for arbitral award) and s.17, but this PDF has the Arbitration
+        # and Conciliation (AMENDMENT) Act appended to it, and the looser start pattern
+        # matches the amendment's own numbered clauses. They then parse as sections and
+        # OVERWRITE the principal Act:
+        #
+        #   s.16  "Competence of arbitral tribunal to rule on its jurisdiction" (3,471 ch)
+        #      -> "In section 31 of the principal Act,— Amendment"            (3,262 ch)
+        #   s.31  "Form and contents of arbitral award"  4,819 -> 2,364 ch
+        #   s.14                                         1,090 ->   872 ch
+        #
+        # Losing competence-competence to an amendment stub is far worse than missing s.29A.
+        #
+        # `wrapped_headings` REJECTED too — the most destructive variant measured anywhere in
+        # the sweep: -42,845 ch, shredding s.86 (34,858 -> 1,783), s.18 (19,140 -> 1,792),
+        # s.27 and s.2. The oversized BASE figures are the tell: those sections have absorbed
+        # the Act's Schedules and the flag destroys them instead of splitting them out.
+        #
+        # `drop_extracts_appendix` does exactly that exclusion, which is why it is set.
+        "drop_extracts_appendix": True,
     },
     # ── Batch 2 (2026-06-25): more high-use central acts ──
     "companies_2013": {
@@ -910,6 +927,32 @@ def _segment_sections(pages: list[str], *, wrapped: bool = False) -> list[dict]:
     return out
 
 
+_EXTRACTS_RE = re.compile(r"^\s*EXTRACTS?\s+FROM\s+THE\s+.{0,90}ACT,?\s*\d{4}", re.I)
+
+
+def _extracts_appendix_page(pages: list[str]) -> int | None:
+    """First page of an appended "EXTRACTS FROM THE ... (AMENDMENT) ACT, YYYY" appendix.
+
+    India Code prints the amending Act's own text after the principal Act. Its clauses are
+    numbered from 1 ("16. In section 31 of the principal Act,—"), so they parse as sections
+    and COLLIDE with the principal Act's real numbering — last one wins, and the genuine
+    provision is replaced by an amendment stub.
+
+    This was live in the corpus at the version-control baseline and unnoticed: arbitration
+    s.6 and s.18, CrPC ss.16/38/44 all held amendment text instead of law. Found 2026-07-30
+    while diagnosing a regression this cost arbitration s.16 (competence of the arbitral
+    tribunal to rule on its own jurisdiction).
+
+    Only the first ~14 lines of a page are considered, because the heading sits at the top
+    of the appendix page; the phrase can also occur mid-body in cross-references.
+    """
+    for pno, page in enumerate(pages):
+        for line in page.splitlines()[:14]:
+            if _EXTRACTS_RE.match(line):
+                return pno
+    return None
+
+
 def _last_article_page(pages: list[str], lo: int, hi: int) -> int | None:
     """Highest page index whose text opens a section numbered in [lo, hi].
 
@@ -1145,6 +1188,15 @@ def ingest(act_id: str) -> dict:
         pages = _extract_pages(pdf_path)
     finally:
         _DOUBLE_ENDASH_ACTS = False
+
+    # Drop an appended "EXTRACTS FROM THE ... (AMENDMENT) ACT" appendix BEFORE segmenting.
+    # Its clauses renumber from 1 and overwrite the principal Act's real sections — the same
+    # collision `articles_before_schedule` prevents for the Constitution's Schedules.
+    if meta.get("drop_extracts_appendix"):
+        cut = _extracts_appendix_page(pages)
+        if cut is not None:
+            pages = pages[:cut]
+
     if meta.get("chain_rules"):
         sections = _segment_chain_rules(pages)
     elif meta.get("article_schedule"):
