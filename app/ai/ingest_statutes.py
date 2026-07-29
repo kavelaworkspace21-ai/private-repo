@@ -328,6 +328,13 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2079/1/AA2012-32.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2079",
+        # Recovers s.41 (provisions of ss.3 to 13 not to apply in certain cases). Net -4 ch:
+        # s.40 1,319 -> 444 with the gained s.41 at 302, i.e. 444+302 = 746 vs 750, a clean
+        # parent/child split of a glued heading rather than any loss.
+        #
+        # `wrapped_headings` was measured and REJECTED here: it gains nothing at all and
+        # costs 426 ch off s.2 (Definitions). Not every act wants the same flag.
+        "glued_starts": True,
     },
     "sarfaesi_2002": {
         # TWO independent print pathologies, and the flags are only safe TOGETHER.
@@ -441,6 +448,21 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/19637/1/aA2023-32.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/19637",
+        # Recovers ss.13 (territorial jurisdiction to undertake mediation), 35 (removal of a
+        # Member), 63 and 65. Net +102 ch - one of the few candidates that gains both
+        # sections and text. s.34 1,319 -> 470 with the gained s.35 at 845 (470+845 = 1,315
+        # vs 1,319) is a clean parent/child split, not a loss.
+        #
+        # `wrapped_headings` is REJECTED, and only the COMBINATION test shows why:
+        #
+        #   glued_starts        s.65 = 4,917 ch    s.64 intact
+        #   glued + wrapped     s.65 =   201 ch    s.64 destroyed 9/12 probes, 5,041 -> 120
+        #
+        # Adding wrapped_headings guts s.64 AND collapses the very section glued_starts
+        # recovers. This is the exact inverse of sarfaesi_2002, where the two flags were
+        # only safe TOGETHER. Neither outcome is predictable from single-flag results, which
+        # is why combinations are tested every time.
+        "glued_starts": True,
     },
     "registration_1908": {
         "title": "Registration Act, 1908", "short": "Registration Act", "year": 1908,
