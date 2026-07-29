@@ -42,6 +42,19 @@ STATUTE_REGISTRY: dict[str, dict] = {
     "bns_2023": {
         "title": "Bharatiya Nyaya Sanhita, 2023", "short": "BNS", "year": 2023,
         "status": "in_force",
+        # Same wrapped-heading defect as the BNSS: s.1's commencement clause wraps across
+        # lines and the unwrapped strategies swallowed the s.2 heading after it, so s.2 —
+        # DEFINITIONS, which defines offence, document, dishonestly, fraudulently and good
+        # faith for the whole Sanhita — was absent from the corpus.
+        #
+        # This flag also SHRINKS s.358 by 2,507 chars, which looks like damage and is not:
+        # both parses carry the identical operative text ("Repeal and savings.—(1) The Indian
+        # Penal Code (45 of 1860) is hereby repealed…"), and what the wrapped parse drops is
+        # parliamentary BACK-MATTER that the unwrapped one had absorbed — the Statement of
+        # Objects and Reasons, Notes on Clauses, "AMIT SHAH", the date and a page number.
+        # Removing non-statutory text from a provision marked source_verified is a
+        # correction, not a loss.
+        "wrapped_headings": True,
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/20062/1/a202345.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/20062",
     },

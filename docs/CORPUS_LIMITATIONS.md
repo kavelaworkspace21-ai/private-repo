@@ -230,7 +230,7 @@ is a longstanding and CONSISTENT scope decision rather than a BNSS regression. I
 real gap for criminal practice — the classification table is consulted constantly — and
 should be a deliberate acquisition decision, not an accident.
 
-## ⛔ OPEN — BNS 2023 s.2 (Definitions) is missing; the obvious fix has a cost (2026-07-25)
+## ✅ RESOLVED 2026-07-25 — BNS 2023 s.2 (Definitions) recovered
 
 Found by the systematic flag sweep, not by anyone noticing. **The Bharatiya Nyaya Sanhita
 2023 — the penal code that replaced the IPC — has no s.2 in the corpus.** s.2 defines
