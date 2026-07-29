@@ -441,6 +441,24 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # ss.252-255 sit on p139 where THE FIRST SCHEDULE also begins, so cutting there
         # keeps the whole body and drops every amending schedule.
         "body_before_schedule": (250, 255),
+        # s.9's heading WRAPS - "Application for initiation of corporate insolvency
+        # resolution process by operational | creditor.—(1)" - so the ".—" separator never
+        # lands on the number's line and the unwrapped strategies never opened the section.
+        # s.9 (the operational creditor's route into CIRP, routine practice) was swallowed
+        # into s.8, which is why s.8 measured an inflated 4,670 ch.
+        #
+        # A clean parent/child split, confirmed by arithmetic: s.8 4,670 -> 1,236 with s.9
+        # at 3,430 (1,236+3,430 = 4,666 vs 4,670). 269 -> 280 sections, ZERO lost, net
+        # -293 ch. Also recovers ss.54B/54E/54F (the 2021 pre-packaged insolvency regime
+        # for MSMEs), 11A, 67A, 72, 194, 199, 218, 219.
+        #
+        # The five shrinking sections were each read, not merely counted: s.1 sheds a
+        # Jammu & Kashmir Reorganisation adaptation notification and becomes its correct
+        # 280 ch "Short title, extent and commencement"; s.67 and s.193 shed the HEADINGS
+        # of s.67A and s.194, which are now sections in their own right.
+        #
+        # ss.7, 10, 14 (moratorium), 29A, 31 and 53 are byte-identical.
+        "wrapped_headings": True,
     },
     # ── Batch 3 (2026-07-16, owner-directed corpus expansion): litigation staples + new laws ──
     "ndps_1985": {
