@@ -303,6 +303,13 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "wrapped_headings": True,
     },
     "sale_of_goods_1930": {
+        # s.21 had swallowed s.22 ("Specific goods in a deliverable state, when the seller
+        # has to do anything thereto in order to ascertain price"), one of the ss.20-24
+        # passing-of-property rules. A clean parent/child split, confirmed by arithmetic
+        # rather than assumed: s.21 742 -> 304 with the gained s.22 at 433 (304+433 = 737).
+        # Net -10 ch across the act; also picks up s.65, a bare repeal marker.
+        # `glued_starts` was measured and changes nothing, so it is not set.
+        "wrapped_headings": True,
         "title": "Sale of Goods Act, 1930", "short": "Sale of Goods Act", "year": 1930, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2390/1/193003.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2390",

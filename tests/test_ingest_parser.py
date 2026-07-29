@@ -332,23 +332,51 @@ def test_chain_loose_starts_recovers_glued_and_spaced_sections():
         ing._CHAIN_LOOSE = old
 
 
-def test_reseed_raises_when_the_old_corpus_cannot_be_deleted():
+def test_reseed_raises_when_the_old_corpus_cannot_be_deleted(monkeypatch, tmp_path):
     """Regression (2026-07-20): sqlite "disk full" made delete_collection fail; the old
     except-pass swallowed it and reseed() returned the STALE 8,072-chunk corpus as if
-    freshly seeded. If the old collection survives the delete, reseed must raise."""
+    freshly seeded. If the old collection survives the delete, reseed must raise.
+
+    Updated 2026-07-29 for build-then-swap: the delete now happens AFTER a successful
+    build, so the stub has to get through the build phase to reach the case under test.
+    The property being pinned is unchanged.
+    """
     import pytest as _pytest
 
     import app.ai.vector_store as vs
 
     class StubCol:
+        def __init__(self, name, n):
+            self.name, self._n = name, n
         def count(self):
-            return 8072
+            return self._n
+        def modify(self, name=None, **kw):
+            self.name = name
 
     class StubClient:
-        def delete_collection(self, name):
-            raise RuntimeError("database or disk is full")
+        def __init__(self):
+            self.built = {}
+        def list_collections(self):
+            return []
+        def create_collection(self, name, **kw):
+            self.built[name] = StubCol(name, 0)
+            return self.built[name]
         def get_collection(self, name):
-            return StubCol()
+            if name in self.built:
+                return self.built[name]
+            return StubCol(name, 8072)          # the live collection survives the delete
+        def delete_collection(self, name):
+            if name == vs.BUILD_COLLECTION_NAME:
+                raise ValueError("no such collection")   # nothing to scrap; harmless
+            raise RuntimeError("database or disk is full")
+
+    monkeypatch.setattr(vs, "RESEED_LOCK_PATH", tmp_path / ".reseed.lock")
+    monkeypatch.setattr(vs, "_store_size_bytes", lambda: 0)
+    monkeypatch.setattr(vs, "disk_free_bytes", lambda *a, **k: 50 * 1024 ** 3)
+    monkeypatch.setattr(vs, "_embedding_fn", lambda: None)
+    # A build that is complete, so the shrink guard passes and we reach the delete.
+    monkeypatch.setattr(vs, "_seed_collection",
+                        lambda col: setattr(col, "_n", 8072))
 
     old_client, old_col = vs._client, vs._collection
     try:
