@@ -105,6 +105,17 @@ STATUTE_REGISTRY: dict[str, dict] = {
     },
     "ipc_1860": {
         "title": "Indian Penal Code, 1860", "short": "IPC", "year": 1860,
+        # Amendment-inserted sections are printed glued to their number, so they were
+        # absorbed into the preceding section instead of parsed as their own provisions.
+        # ABSENT from the corpus until 2026-07-25: s.376AB (rape of a woman under twelve),
+        # s.376DA (gang rape, under sixteen), s.376DB (gang rape, under twelve) — the 2018
+        # Criminal Law Amendment provisions — plus s.174A (non-appearance under a s.82
+        # proclamation) and s.379B (snatching with preparation to cause death or hurt).
+        # Verified additive: 577 -> 582 sections, ZERO lost, net text -41 chars. The four
+        # sections that shrink are exactly the parents the children were split out of
+        # (174->174A, 376A->376AB, 376D->376DA/DB, 379A->379B); each keeps its own heading
+        # and operative text. ss.302/376/420/304B/498A byte-identical.
+        "glued_starts": True,
         "status": "repealed", "repealed_by": "Bharatiya Nyaya Sanhita, 2023",
         "note": "Repealed w.e.f. 01-07-2024 by the Bharatiya Nyaya Sanhita, 2023; the IPC "
                 "continues to govern offences committed before that date.",
