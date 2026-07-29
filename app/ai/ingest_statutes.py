@@ -299,6 +299,25 @@ STATUTE_REGISTRY: dict[str, dict] = {
     },
     # ── Batch 3 (2026-07-16, owner-directed corpus expansion): litigation staples + new laws ──
     "ndps_1985": {
+        # s.2's commencement/definitions run wraps, so the unwrapped strategies swallowed the
+        # headings that follow it. ABSENT from the corpus until 2026-07-25: s.23 (punishment
+        # for illegal import into/export from India or transhipment), s.24 (external dealings
+        # in contravention of s.12), plus ss.4, 13, 33, 44, 51, 53, 59, 70, 71.
+        #
+        # Verified: 116 -> 129 sections, ZERO lost, and every shrinking section probed across
+        # its FULL span (head-sampling cannot see tail truncation — that is how the
+        # it_act_2000 candidate hid the destruction of its Definitions). Nine of twelve
+        # shrinks are clean redistribution; s.2 keeps 28 of 29 probes with its bloat correctly
+        # split into the gained ss.4/13. ss.8/20/21/37 byte-identical, so the bail-restriction
+        # regression probe is unaffected.
+        #
+        # KNOWN COST, accepted: the psychotropic-substances SCHEDULE is malformed in BOTH
+        # parses — it appears as bogus "sections" 110H/110K holding chemical names — and this
+        # flag drops ~3.6k more of that region (s.83 "Power to remove difficulties" is
+        # 10,384 chars in the old parse, which is absurd for that provision; it had absorbed
+        # the Schedule). Trading a already-broken chemical table for two missing offence
+        # provisions is the right way round, but the Schedule needs its own handling.
+        "wrapped_headings": True,
         "title": "Narcotic Drugs and Psychotropic Substances Act, 1985", "short": "NDPS Act",
         "year": 1985, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/18974/1/narcotic-drugs-and-psychotropic-substances-act-1985.pdf",
