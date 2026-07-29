@@ -13,9 +13,10 @@ Magistrates), s.44 (Arrest by Magistrate) and IBC s.6 (who may initiate a corpor
 insolvency resolution process).
 
 This test scans the SHIPPED corpus, not the parser, because that is where the damage was
-visible and where nobody was looking. `drop_extracts_appendix` fixed six; the four IBC
-sections are a KNOWN, RECORDED exception with a different cause (no "EXTRACTS FROM"
-heading). They are pinned here so the number can only go down: any new contamination fails
+visible and where nobody was looking. All ten are fixed, by two different boundary
+rules: `drop_extracts_appendix` for appended amendment Acts (arbitration, CrPC) and
+`body_before_schedule` for Schedules that amend OTHER enactments (IBC's Eleventh Schedule
+rewrites the Companies Act). The expected count is zero, and any new contamination fails
 the suite immediately.
 """
 import json
@@ -32,11 +33,12 @@ AMENDING_TEXT = re.compile(
     re.I,
 )
 
-# Known and recorded — see docs/CORPUS_LIMITATIONS.md. IBC's appended amendments carry no
-# "EXTRACTS FROM THE ... ACT" heading, so the page-boundary fix cannot find them. Shrink
-# this set; never grow it.
-KNOWN_CONTAMINATED = {("ibc_2016", "6"), ("ibc_2016", "19"),
-                      ("ibc_2016", "26"), ("ibc_2016", "36")}
+# EMPTY, and it must stay that way. All ten contaminated sections are fixed:
+# `drop_extracts_appendix` handled arbitration and CrPC (appended amendment Acts), and
+# `body_before_schedule` handled IBC (Schedules that amend OTHER enactments — the Eleventh
+# Schedule rewrites the Companies Act). Anything appearing here is a new defect, not a
+# tolerated one.
+KNOWN_CONTAMINATED: set[tuple[str, str]] = set()
 
 
 def _contaminated():
@@ -65,15 +67,12 @@ def test_no_new_amendment_text_masquerading_as_a_provision():
     )
 
 
-def test_known_contamination_does_not_silently_regrow():
-    """Pin the exceptions so a fix cannot be quietly reverted."""
-    found = _contaminated()
-    assert found <= KNOWN_CONTAMINATED, "unexpected contamination outside the known set"
-    still_broken = found & KNOWN_CONTAMINATED
-    assert still_broken == KNOWN_CONTAMINATED or not still_broken, (
-        "Some known-contaminated sections were fixed — good. Update KNOWN_CONTAMINATED "
-        f"to match reality; still contaminated: {sorted(still_broken)}"
-    )
+def test_the_corpus_is_entirely_clean():
+    """No tolerated exceptions. All ten known cases are fixed; keep it at zero."""
+    assert _contaminated() == set(), (
+        "The corpus is supposed to be free of amending text masquerading as provisions. "
+        "If a new act legitimately cannot be cleaned, add it to KNOWN_CONTAMINATED with a "
+        "recorded reason — do not delete this test.")
 
 
 def test_the_detector_actually_detects():
@@ -91,6 +90,9 @@ def test_the_detector_actually_detects():
 def test_restored_provisions_are_actually_the_provisions():
     """Spot-check the six sections the boundary fix recovered."""
     expected = {
+        ("ibc_2016", "6"): "persons who may initiate",
+        ("ibc_2016", "19"): "personnel to extend cooperation",
+        ("ibc_2016", "36"): "liquidation estate",
         ("arbitration_1996", "16"): "competence of arbitral tribunal",
         ("arbitration_1996", "6"): "administrative assistance",
         ("arbitration_1996", "18"): "equal treatment of parties",

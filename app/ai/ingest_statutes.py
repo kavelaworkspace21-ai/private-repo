@@ -428,6 +428,19 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "title": "Insolvency and Bankruptcy Code, 2016", "short": "IBC", "year": 2016, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2154/5/A2016-31.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2154",
+        # The Code runs to s.255, then twelve Schedules AMEND OTHER ENACTMENTS. The
+        # Eleventh Schedule rewrites the Companies Act 2013, and its numbered paragraphs
+        # parsed as IBC sections and overwrote real ones (found 2026-07-30, present since
+        # before version control):
+        #
+        #   s.19  "Personnel to extend cooperation to interim resolution professional"
+        #      -> "For section 326, the following section shall be substituted"  (p152)
+        #   s.26  -> "In section 343, for sub-section (1)..."                    (p154)
+        #   s.36  "Liquidation estate" -> "In section 468, for sub-section (2)..." (p156)
+        #
+        # ss.252-255 sit on p139 where THE FIRST SCHEDULE also begins, so cutting there
+        # keeps the whole body and drops every amending schedule.
+        "body_before_schedule": (250, 255),
     },
     # ── Batch 3 (2026-07-16, owner-directed corpus expansion): litigation staples + new laws ──
     "ndps_1985": {
@@ -1196,6 +1209,18 @@ def ingest(act_id: str) -> dict:
         cut = _extracts_appendix_page(pages)
         if cut is not None:
             pages = pages[:cut]
+
+    # Same collision, different source: Schedules that AMEND OTHER ENACTMENTS. IBC's
+    # Eleventh Schedule rewrites the Companies Act, and its numbered paragraphs ("19. For
+    # section 326, the following section shall be substituted") parsed as IBC sections,
+    # overwriting real ones. Cut the body at its own tail sections, like
+    # `articles_before_schedule` does for the Constitution — but WITHOUT forcing
+    # wrapped=True, so the act keeps whatever segmentation it was verified with.
+    if meta.get("body_before_schedule"):
+        lo, hi = meta["body_before_schedule"]
+        end = _last_article_page(pages, lo, hi)
+        if end is not None:
+            pages = pages[: end + 1]
 
     if meta.get("chain_rules"):
         sections = _segment_chain_rules(pages)
