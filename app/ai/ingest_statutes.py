@@ -302,6 +302,15 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2006",
     },
     "rera_2016": {
+        # s.1's commencement clause wraps, so the unwrapped strategies swallowed the s.2
+        # heading after it — the same defect as BNS/BNSS. s.2 DEFINITIONS (allottee, carpet
+        # area, promoter, real estate project, agreement for sale) was absent from the corpus.
+        #
+        # The cleanest candidate the sweep produced: PURELY ADDITIVE — 91 -> 92 sections AND
+        # +2,510 characters, with zero sections lost and zero destroyed text under full-span
+        # probing. `glued_starts` was measured too and changes nothing here, so it is not set:
+        # a flag that buys nothing is one more thing to be wrong later.
+        "wrapped_headings": True,
         "title": "Real Estate (Regulation and Development) Act, 2016", "short": "RERA", "year": 2016, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/15131/1/the_real_estate_(regulation_and_development)_act,_2016.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2158",
