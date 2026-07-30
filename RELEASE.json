@@ -1,12 +1,12 @@
 {
   "app_version": "0.2.0",
-  "corpus_fingerprint": "efec9f97655c",
+  "corpus_fingerprint": "baa2715589bc",
   "migration_head": "e2b7c9d40a15",
   "chroma_collection": "indian_law_sections",
   "embedding_model": "onnx-default-minilm",
-  "expected_chunk_count": 8794,
+  "expected_chunk_count": 8789,
   "verified_acts": 50,
   "generated_at": "2026-07-30",
   "note": "Pinned identity of the verified release. The Chroma index is DERIVED from the versioned app/legal_corpus/fulltext/*.json; a clean build regenerates it via reseed() and MUST match corpus_fingerprint. Preflight fails closed on any mismatch. Regenerate this file with: python -m app.ops.release freeze",
-  "commit": "7ec54b3"
+  "commit": "bced5e5"
 }
