@@ -105,6 +105,22 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # Schedules + the abrogated Art. 370 appendix get their own "Sch." slice later.
         "articles_before_schedule": (392, 399),
         "max_section": 395,
+        # Recovers five printed articles that were absent: 124C (Parliament's power to
+        # regulate NJAC procedure), 131A, and the omitted 242 (Coorg), 272 and 306.
+        # 466 -> 471 articles, ZERO lost, +1,342 ch.
+        #
+        # DEFERRED ONCE ON TWO OBJECTIONS, BOTH OF WHICH WERE ARTEFACTS OF THE TEST
+        # HARNESS RATHER THAN FACTS ABOUT THE ACT:
+        #   * "it invents an article 831D" - the harness did not apply `max_section`,
+        #     which filters it during real ingest.
+        #   * "the Schedules were never tested" - they were then tested: the Seventh
+        #     and Tenth Schedule slices are BYTE-IDENTICAL, 218 entries either way.
+        # `single_endash` acts inside _normalize, so it touches Schedule pages too;
+        # that had to be measured rather than assumed.
+        #
+        # `glued_starts` REJECTED: -19,757 ch, damaging 20 articles including 67
+        # (President's term), 324 (Election Commission), 344 and 40.
+        "single_endash": True,
         # Also ingest the Seventh Schedule (Union/State/Concurrent Lists) into a Sch7 namespace,
         # and the Tenth Schedule (anti-defection paragraphs) into a Sch10 namespace.
         "seventh_schedule": True,
