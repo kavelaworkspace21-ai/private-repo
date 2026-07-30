@@ -197,6 +197,38 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/handle/123456789/1798",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/1798",
+        # Recovers s.2 DEFINITIONS (2,207 ch, previously absent) - "adapted vehicle" and
+        # the rest of the vocabulary every motor-accident claim is pleaded in. Also strips
+        # the Statement of Objects and Reasons out of s.217A ("...Various Committees like
+        # National Transport Policy Committee ... RAJESH PILOT."), leaving the real
+        # provision: renewal of permits, driving licences and registration.
+        #
+        # THE SWEEP CALLED THIS A LOSS OF ss.140-144 AND THAT READING IS WRONG. Those are
+        # not the no-fault liability provisions; they are OMISSION MARKERS left after the
+        # Motor Vehicles (Amendment) Act 2019 repealed Chapter X w.e.f. 1-4-2022:
+        #
+        #   s.140  121 ch  "[Liability to pay compensation ... no fault.] Omitted by ..."
+        #   s.142   67 ch  "[Permanent disablement.] Omitted by s. 50, ibid."
+        #   s.144  130 ch  "[Overriding effect.] Omitted by s. 50, ibid."
+        #
+        # Seven such markers in total (ss.140-144, 191, 195), ~877 ch. Inferring operative
+        # content from a section NUMBER is exactly the error CORPUS_LIMITATIONS.md warns
+        # against; the text has to be read.
+        #
+        # AND THERE IS NO COST AT ALL, which only the ground-truth diff showed. Those seven
+        # markers were ALREADY ABSENT from the shipped corpus and stay absent: they existed
+        # only in a hypothetical unwrapped parse of the CURRENT parser, which has never been
+        # what shipped. Measured against the committed fulltext this change is purely
+        # additive - 216 -> 250 sections, ZERO lost - and also recovers ss.2A, 2B, 12, 19,
+        # 26, 43, 44, 52, 62, 63, 71, 99, 101, 129, 150, 178, 192 and sixteen more.
+        #
+        # The wider lesson, paid for twice today: compare against WHAT SHIPPED, not against
+        # a fresh parse of the same PDF. The corpus on disk was written by older parser
+        # versions, so a harness baseline can differ from reality in both directions - it
+        # invented a cost here, and it hid real damage in arbitration_1996.
+        #
+        # glued_starts and both dash flags were measured and change nothing.
+        "wrapped_headings": True,
     },
     "arbitration_1996": {
         "title": "Arbitration and Conciliation Act, 1996", "short": "Arbitration Act", "year": 1996,
