@@ -82,7 +82,7 @@ def chroma(monkeypatch, tmp_path):
 
 def _seed_n(n):
     """A _seed_collection stub that fills the build collection with n chunks."""
-    def _seed(collection, heartbeat=None):
+    def _seed(collection, **kw):
         collection._store[collection.name] = n
     return _seed
 
@@ -90,7 +90,7 @@ def _seed_n(n):
 # ── the core property: a failed build must not touch the live corpus ───────────
 def test_interrupted_build_leaves_live_corpus_intact(chroma, monkeypatch):
     """The 2026-07-29 failure. A build that dies mid-embed must not be visible."""
-    def _explode(collection, heartbeat=None):
+    def _explode(collection, **kw):
         collection._store[collection.name] = 1200   # partial, as in the real incident
         raise KeyboardInterrupt("process killed mid-reseed")
     monkeypatch.setattr(vs, "_seed_collection", _explode)
@@ -166,7 +166,7 @@ def test_concurrent_reseed_is_refused(chroma, monkeypatch):
     """The 2026-07-25 / -29 failure: a second reseed while one is running."""
     monkeypatch.setattr(vs, "_seed_collection", _seed_n(8704))
 
-    def _reseed_again(collection, heartbeat=None):
+    def _reseed_again(collection, **kw):
         # Simulate a second process arriving mid-build.
         with pytest.raises(RuntimeError, match="another reseed is in progress"):
             vs.reseed()
@@ -198,7 +198,7 @@ def test_a_live_build_keeps_its_lock_fresh(chroma, monkeypatch):
     """
     seen = {}
 
-    def _slow_build(collection, heartbeat=None):
+    def _slow_build(collection, heartbeat=None, **kw):
         assert heartbeat is not None, "the build must be given a heartbeat"
         before = vs.RESEED_LOCK_PATH.stat().st_mtime
         old = before - vs.RESEED_LOCK_STALE_SECONDS - 60      # pretend a long build
@@ -215,13 +215,79 @@ def test_a_live_build_keeps_its_lock_fresh(chroma, monkeypatch):
 
 def test_heartbeat_never_kills_a_reseed(chroma, monkeypatch):
     """A failing touch is not a reason to abandon a corpus rebuild."""
-    def _build(collection, heartbeat=None):
+    def _build(collection, heartbeat=None, **kw):
         vs.RESEED_LOCK_PATH.unlink(missing_ok=True)   # make the touch fail
         heartbeat()                                    # must not raise
         collection._store[collection.name] = 8704
     monkeypatch.setattr(vs, "_seed_collection", _build)
 
     vs.reseed()
+    assert chroma.store[LIVE] == 8704
+
+
+# ── the corpus must not move underneath a build ────────────────────────────────
+def test_build_reads_a_snapshot_not_the_live_corpus(chroma, monkeypatch, tmp_path):
+    """The 2026-07-30 failure: ingest() rewrote an act while a reseed was reading.
+
+    A build reads ~50 JSON files progressively over minutes. Rewriting one partway through
+    yields an index blending two corpus versions — matching no fingerprint, with a
+    completely normal chunk count. Build-then-swap does not help: the build never dies, it
+    just reads something that changed.
+    """
+    corpus = tmp_path / "legal_corpus"
+    fulltext = corpus / "fulltext"
+    fulltext.mkdir(parents=True)
+    act = fulltext / "demo_1900.fulltext.json"
+    act.write_text("ORIGINAL", encoding="utf-8")
+    monkeypatch.setattr(vs, "CORPUS_DIR", corpus)
+    monkeypatch.setattr(vs, "FULLTEXT_DIR", fulltext)
+
+    seen = {}
+
+    def _build(collection, heartbeat=None, fulltext_dir=None, corpus_dir=None):
+        # Simulate ingest() rewriting the act mid-build.
+        act.write_text("REWRITTEN BY INGEST", encoding="utf-8")
+        snap = (fulltext_dir or vs.FULLTEXT_DIR) / "demo_1900.fulltext.json"
+        seen["read"] = snap.read_text(encoding="utf-8")
+        seen["isolated"] = fulltext_dir is not None and fulltext_dir != vs.FULLTEXT_DIR
+        collection._store[collection.name] = 8704
+    monkeypatch.setattr(vs, "_seed_collection", _build)
+
+    vs.reseed()
+
+    assert seen["isolated"], "the build must be pointed at a snapshot, not the live corpus"
+    assert seen["read"] == "ORIGINAL", (
+        "the build read the REWRITTEN file — a concurrent ingest() can still poison the "
+        "index with a blend of two corpus versions")
+
+
+def test_snapshot_is_cleaned_up(chroma, monkeypatch, tmp_path):
+    """15 MB per reseed left behind would accumulate silently."""
+    corpus = tmp_path / "legal_corpus"
+    (corpus / "fulltext").mkdir(parents=True)
+    monkeypatch.setattr(vs, "CORPUS_DIR", corpus)
+    monkeypatch.setattr(vs, "FULLTEXT_DIR", corpus / "fulltext")
+
+    captured = {}
+
+    def _build(collection, heartbeat=None, fulltext_dir=None, corpus_dir=None):
+        captured["dir"] = corpus_dir
+        collection._store[collection.name] = 8704
+    monkeypatch.setattr(vs, "_seed_collection", _build)
+
+    vs.reseed()
+    assert captured["dir"] is not None and not captured["dir"].exists(), \
+        "the snapshot directory must be removed once the build finishes"
+
+
+def test_snapshot_failure_falls_back_to_live_paths(chroma, monkeypatch):
+    """A snapshot is a safety margin, not a precondition — never block a reseed on it."""
+    def _boom(*a, **k):
+        raise OSError("no space for a snapshot")
+    monkeypatch.setattr(vs.tempfile, "mkdtemp", _boom)
+    monkeypatch.setattr(vs, "_seed_collection", _seed_n(8704))
+
+    vs.reseed()      # must not raise
     assert chroma.store[LIVE] == 8704
 
 

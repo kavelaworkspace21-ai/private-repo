@@ -376,7 +376,7 @@ def test_reseed_raises_when_the_old_corpus_cannot_be_deleted(monkeypatch, tmp_pa
     monkeypatch.setattr(vs, "_embedding_fn", lambda: None)
     # A build that is complete, so the shrink guard passes and we reach the delete.
     monkeypatch.setattr(vs, "_seed_collection",
-                        lambda col, heartbeat=None: setattr(col, "_n", 8072))
+                        lambda col, **kw: setattr(col, "_n", 8072))
 
     old_client, old_col = vs._client, vs._collection
     try:

@@ -7,6 +7,7 @@ import json
 import logging
 import shutil
 import socket
+import tempfile
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -122,9 +123,15 @@ def get_collection():
 FULLTEXT_DIR = CORPUS_DIR / "fulltext"
 
 
-def _seed_collection(collection, heartbeat=None):
+def _seed_collection(collection, heartbeat=None, fulltext_dir=None, corpus_dir=None):
     """
     Embed sections into the vector store.
+
+    ``fulltext_dir`` / ``corpus_dir`` override the module-level paths so a reseed can read
+    from a frozen SNAPSHOT instead of the live corpus. A full build takes minutes and reads
+    the JSON files progressively; if ingest() rewrites one partway through, the index mixes
+    two corpus versions and matches no fingerprint. Nothing about that is visible in the
+    chunk count. Defaults keep the live paths for the boot-time first seed.
 
     Priority: any Act that has a SOURCE-VERIFIED full-text file in legal_corpus/fulltext/
     is indexed from that file (verbatim text, quotable, with provenance). For every other
@@ -133,10 +140,12 @@ def _seed_collection(collection, heartbeat=None):
     """
     documents, metadatas, ids = [], [], []
     verified_act_ids: set[str] = set()
+    ft_dir = fulltext_dir or FULLTEXT_DIR
+    cp_dir = corpus_dir or CORPUS_DIR
 
     # ── Pass 1: source-verified full-text files (preferred) ──────────────────────
-    if FULLTEXT_DIR.exists():
-        for ft_file in sorted(FULLTEXT_DIR.glob("*.fulltext.json")):
+    if ft_dir.exists():
+        for ft_file in sorted(ft_dir.glob("*.fulltext.json")):
             try:
                 with open(ft_file, "r", encoding="utf-8") as f:
                     index = json.load(f)
@@ -175,7 +184,7 @@ def _seed_collection(collection, heartbeat=None):
                     ids.append(doc_id)
 
     # ── Pass 2: heading-only index files (fallback for non-verified acts) ─────────
-    for corpus_file in sorted(CORPUS_DIR.glob("*.json")):
+    for corpus_file in sorted(cp_dir.glob("*.json")):
         try:
             with open(corpus_file, "r", encoding="utf-8") as f:
                 index = json.load(f)
@@ -248,6 +257,42 @@ def _seed_collection(collection, heartbeat=None):
             heartbeat()   # prove the reseed is alive; see _reseed_lock
     logger.info(f"Seeded {len(documents)} sections "
                 f"({len(verified_act_ids)} acts source-verified).")
+
+
+@contextmanager
+def _corpus_snapshot():
+    """Freeze the corpus JSON for the duration of a build.
+
+    A reseed reads ~50 fulltext files PROGRESSIVELY over several minutes. If ingest()
+    rewrites one partway through — re-parsing an act while a reseed runs — the resulting
+    index mixes two corpus versions. It matches no fingerprint, the chunk count looks
+    entirely normal, and every guard added on 2026-07-29 passes it: build-then-swap only
+    protects against a build DYING, not against one reading a corpus that changes
+    underneath it. Hit for real on 2026-07-30.
+
+    ~15 MB, so the copy is cheap next to a store measured in hundreds. On failure it falls
+    back to the live paths rather than refusing to reseed — a snapshot is a safety margin,
+    not a precondition.
+    """
+    tmp = None
+    try:
+        tmp = Path(tempfile.mkdtemp(prefix="juriscite-corpus-"))
+        snap_ft = tmp / "fulltext"
+        snap_ft.mkdir()
+        for f in CORPUS_DIR.glob("*.json"):
+            shutil.copy2(f, tmp / f.name)
+        if FULLTEXT_DIR.exists():
+            for f in FULLTEXT_DIR.glob("*.fulltext.json"):
+                shutil.copy2(f, snap_ft / f.name)
+        logger.info(f"Corpus snapshot taken for this reseed ({tmp}).")
+        yield snap_ft, tmp
+    except OSError as e:
+        logger.warning(f"Could not snapshot the corpus ({e}); reading it live instead. "
+                       f"Do NOT run ingest() until this reseed finishes.")
+        yield None, None
+    finally:
+        if tmp:
+            shutil.rmtree(tmp, ignore_errors=True)
 
 
 def _store_size_bytes() -> int:
@@ -399,7 +444,9 @@ def reseed(force: bool = False):
             metadata={"hnsw:space": "cosine"},
         )
         try:
-            _seed_collection(build, heartbeat=heartbeat)
+            with _corpus_snapshot() as (snap_ft, snap_cp):
+                _seed_collection(build, heartbeat=heartbeat,
+                                 fulltext_dir=snap_ft, corpus_dir=snap_cp)
             built = build.count()
 
             if built == 0:
