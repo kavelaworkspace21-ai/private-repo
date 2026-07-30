@@ -629,6 +629,29 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # SCHEDULE 1 (stamp-duty rate table, entries 1-65) collides with body sections
         # (its entry "17. CANCELLATION" clobbered s.17) — split at the bare heading.
         "status": "in_force", "article_schedule": "bare",
+        # Recovers s.2 DEFINITIONS (11,191 ch), which was absent entirely — "banker",
+        # "bill of exchange", "instrument", "conveyance", "duly stamped". Every stamp
+        # question turns on these, so an absent s.2 is the worst single gap in this act.
+        #
+        # ACCEPTED COST, and this one is genuinely close. ss.8B, 8E, 8F and 23A lose their
+        # section KEYS: their text survives but merges into the preceding section
+        # (8B -> 8A, 8E/8F -> 8D, 23A -> 23), so `retrieve_by_section("Section 8B of the
+        # Stamp Act")` no longer resolves. Two further "losses" are inert markers -
+        # s.3A "[Instruments chargeable with additional duty.] Omitted" and s.79 "[Repealed.]".
+        #
+        # Applied on a distinction worth stating, because elsewhere in this registry the
+        # opposite call was made: ABSENT text is unreachable by any query, whereas MERGED
+        # text is still reachable semantically, just imprecisely addressed. s.2's content is
+        # in neither the corpus nor the index today. It is also far less misleading than the
+        # specific_relief_1963 case - ss.8A-8F are all stamp-duty exemptions for financial
+        # instruments, so a reader who gets 8A+8B together gets adjacent law on one subject,
+        # not ports and shipyards under an injunction heading.
+        #
+        # `single_endash` REJECTED: gains the same s.2 but loses 23 sections including the
+        # entire ss.62-75 run. `glued_starts` and `wrapped_headings` change nothing.
+        # ss.17, 33, 35, 48 and 56 - the impounding and admissibility machinery - are
+        # byte-identical.
+        "double_endash": True,
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/20095/1/the_indian_stamp_act%2C_1899.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/15510",
     },

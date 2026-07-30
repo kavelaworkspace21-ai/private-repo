@@ -449,6 +449,43 @@ text distinguishes them.
   on defaulting promoters. Recorded because that change was briefly mistaken for a pure
   liability after it broke arbitration s.16.
 
+## ⚠️ Stamp Act ss.8B, 8E, 8F, 23A are not addressable by number · `GOVERNED (accepted 2026-07-30)`
+
+`double_endash` recovers the Stamp Act's **s.2 Definitions (11,191 ch)** — *banker, bill of
+exchange, instrument, conveyance, duly stamped* — which was absent from the corpus entirely.
+Every stamp question turns on those definitions, so its absence was the single worst gap in
+the act.
+
+The price: four provisions lose their section **keys**. Their text survives but merges into
+the preceding section, so `retrieve_by_section` cannot reach them by number.
+
+| Provision | Now lives inside |
+|---|---|
+| s.8B — corporatisation and demutualisation schemes | s.8A |
+| s.8E — conversion of a bank branch into a subsidiary | s.8D |
+| s.8F — assignment of rights in financial assets | s.8D |
+| s.23A — mortgages of marketable securities | s.23 |
+
+(Two further "losses" are inert: s.3A `[Instruments chargeable with additional duty.] Omitted`
+and s.79 `[Repealed.]`.)
+
+**Why this was accepted when the specific_relief_1963 misattribution was called worse than
+absence.** Two distinctions carried it:
+
+1. **Absent text is unreachable; merged text is reachable but imprecisely addressed.** s.2's
+   content was in neither the corpus nor the index — no query of any kind could return it.
+   s.8B's content is still found semantically, just not pinpointed by number.
+2. **The merge keeps related law together.** ss.8A–8F are all stamp-duty exemptions for
+   financial instruments, so a reader receiving 8A+8B gets adjacent law on one subject. The
+   SRA case served 2,855 characters about ports and shipyards under an injunction heading —
+   nothing signalled the mismatch.
+
+`single_endash` was rejected: it recovers the same s.2 but loses 23 sections including the
+entire ss.62–75 penalty run. ss.17, 33, 35, 48, 56 and 62–65 are byte-identical here.
+
+**To close properly** this needs the `8`-series suffix handling that `double_endash` breaks,
+not a different flag — the same bucket as `it_act_2000` and `legal_services_1987`.
+
 ## 1. IPC 354E — duplicate section number (two distinct provisions) · `PENDING_LEGAL_REVIEW`
 
 - **What:** the source carries **two different provisions numbered 354E** — "Sextortion" and
