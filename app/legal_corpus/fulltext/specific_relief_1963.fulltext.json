@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/1583/1/A1963-47.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1583",
         "sha256": "7b90aae6b01d7c9533f5b69a8ccbf00c16ba439e4624561204de236d5cb7f43d",
-        "fetched_on": "2026-07-29",
+        "fetched_on": "2026-07-31",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -293,6 +293,36 @@
           "text": "Injunction to perform negative agreement.—Notwithstanding anything contained in clause (e)\nof section 41, where a contract comprises an affirmative agreement to do a certain act, coupled with a\nnegative agreement, express or implied, not to do a certain act, the circumstance that the court is unable to\ncompel specific performance of the affirmative agreement shall not preclude it from granting an injunction\nto perform the negative agreement:\nProvided that the plaintiff has not failed to perform the contract so far as it is binding on him.\n2* * * * *\n(w.e.f. 20-12-1974).\n15\n1[THE SCHEDULE\n[See sections 20A and 41 (ha)]\nCategory of projects and Infrastructure Sub-Sectors\nSl. No. Category Infrastructure Sub-Sectors\n1 2 3",
           "page": 15,
           "title": "Injunction to perform negative agreement"
+        },
+        {
+          "num": "Sch.1.1",
+          "title": "Schedule 1 — Entry 1: Transport (a) Road and bridges (b) Ports (including Capital",
+          "text": "Transport (a) Road and bridges (b) Ports (including Capital Dredging) (c) Shipyards (including a floating or land-based facility with the essential features of waterfront, turning basin, berthing and docking facility, slipways or ship lifts, and which is self-sufficient for carrying on shipbuilding/repair/breaking activities) (d) Inland Waterways (e) Airports (f) Railway Track, tunnels, viaducts, bridges, terminal infrastructure including stations and adjoining commercial infrastructure (g) Urban Public Transport (except rolling stock in case of urban road transport)",
+          "page": 16
+        },
+        {
+          "num": "Sch.1.2",
+          "title": "Schedule 1 — Entry 2: Energy (a) Electricity Generation (b) Electricity Transmissi",
+          "text": "Energy (a) Electricity Generation (b) Electricity Transmission (c) Electricity Distribution (d) Oil pipelines (e) Oil/Gas/Liquefied Natural Gas (LNG) storage facility(including strategic storage of crude oil) (f) Gas pipelines (including city gas distribution network)",
+          "page": 16
+        },
+        {
+          "num": "Sch.1.3",
+          "title": "Schedule 1 — Entry 3: Water and (a) Solid Waste Management Sanitation (b) Water su",
+          "text": "Water and (a) Solid Waste Management Sanitation (b) Water supply pipelines (c) Water treatment plants (d) Sewage collection, treatment and disposal system (e) Irrigation (dams, channels, embankments, etc.) (f) Storm Water Drainage System (g) Slurry pipelines",
+          "page": 16
+        },
+        {
+          "num": "Sch.1.4",
+          "title": "Schedule 1 — Entry 4: Communication (a) Telecommunication (Fixed network including",
+          "text": "Communication (a) Telecommunication (Fixed network including optic fibre/wire/cable networks which provide broadband/internet) (b) Telecommunication towers (c) Telecommunications and Telecom Services 16 Sl. No. Category Infrastructure Sub-Sectors 1 2 3",
+          "page": 16
+        },
+        {
+          "num": "Sch.1.5",
+          "title": "Schedule 1 — Entry 5: Social and (a) Education Institutions (capital stock) Commer",
+          "text": "Social and (a) Education Institutions (capital stock) Commercial (b) Sports infrastructure (including provision of Sports Stadia and Infrastructure Infrastructure for Academies for Training/Research in Sports and Sports- relating activities) (c) Hospitals (capital stock including Medical Colleges, Para Medical Training Institutes and Diagnostic Centres) (d) Tourism infrastructure viz. (i) three-star or higher category classified hotels located outside cities with population of more than one million; (ii) ropeways and cable cars (e) Common infrastructure for industrial parks and other parks with industrial activity such as food parks, textile parks, Special Economic Zones, tourism facilities and agriculture markets (f) Post-harvest storage infrastructure for agriculture and horticulture produce including cold storage (g) Terminal markets (h) Soil-testing laboratories (i) Cold chain (including cold room facility for farm level pre-cooling, for preservation or storage of agriculture and allied produce, marine products and meat) (j) Affordable Housing (including a housing project using at least 50% of the Floor Area Ratio (FAR)/Floor Space Index (FSI) for dwelling units with carpet area of not more than 60 square meters Explanation.—For the purposes of this sub-clause, the term “carpet area” shall have the same meaning as assigned to it in clause (k) of section 2 of the Real Estate (Regulation and Development) Act, 2016 (16 of 2016).] 17",
+          "page": 17
         }
       ]
     }

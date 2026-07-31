@@ -366,6 +366,9 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # its own handling, which this flag does not provide. Recorded in
         # CORPUS_LIMITATIONS.md rather than glossed.
         "wrapped_headings": True,
+        # The 2018 infrastructure SCHEDULE defines "infrastructure project" for s.20A,
+        # which BARS injunctions against such projects. It was dropped; now Sch.1.1-1.5.
+        "schedules": True,
     },
     "partnership_1932": {
         "title": "Indian Partnership Act, 1932", "short": "Partnership Act", "year": 1932, "status": "in_force",
@@ -390,6 +393,9 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # GENUINE COST: Schedule I (maximum fees under s.71) is dropped. Fourth act owed
         # schedule-aware parsing - see CORPUS_LIMITATIONS.md.
         "wrapped_headings": True,
+        # SCHEDULE I (maximum fees under s.71) was dropped by the wrapped_headings fix.
+        # Now Sch.I.*.
+        "schedules": True,
     },
     "sale_of_goods_1930": {
         # s.21 had swallowed s.22 ("Specific goods in a deliverable state, when the seller
@@ -533,6 +539,9 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "year": 1985, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/18974/1/narcotic-drugs-and-psychotropic-substances-act-1985.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/1791",
+        # The psychotropic-substances SCHEDULE defines what is controlled at all. It was
+        # surfacing as bogus sections 110H/110K holding chemical names; now Sch.1.*.
+        "schedules": True,
     },
     "poca_1988": {
         "title": "Prevention of Corruption Act, 1988", "short": "PC Act", "year": 1988,
@@ -562,6 +571,14 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force", "article_schedule": "bare",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2156/1/a2016-04.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2156",
+        # NO `schedules` flag: `article_schedule: "bare"` above ALREADY parses this act's
+        # schedule, and better. The shipped corpus carries Sch.1 "Disclosure and discovery
+        # of documents", Sch.2 "Discovery by interrogatories", Sch.3 "Inspection" ... i.e.
+        # Order XV-A already split rule-by-rule. Adding the generic parser would emit
+        # Sch.1.1-Sch.1.11 over the same text under a second scheme.
+        #
+        # Corrects a standing claim in OWNER_QUEUE that "Order XV-A case-management content
+        # is missing from the Commercial Courts Schedule". It is not, and never was.
     },
     # ── Batch 4 (2026-07-16, roadmap P1 continuation): litigation + family/labour/property ──
     "scst_1989": {
@@ -1122,6 +1139,122 @@ def _seventh_list_name(line: str) -> tuple[str, str] | None:
     return None
 
 
+# Statutory schedule headings are printed in CAPS, optionally behind an India Code
+# amendment marker ("1[THE SCHEDULE"), and may carry a numeral before or after the word
+# ("FIRST SCHEDULE", "SCHEDULE I", "SCHEDULE II—[Enactments Repealed.]").
+#
+# Case-SENSITIVE on purpose: the Specific Relief Act says "the Schedule relating to any
+# Category of projects" mid-sentence in s.20A, and a case-insensitive match reads that prose
+# as a heading and swallows the rest of the act.
+_SCHEDULE_HEAD_RE = re.compile(
+    r"^\s*(?:\d{1,3}\s*\[)?\s*(?:THE\s+)?"
+    r"(?:(FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH|ELEVENTH|TWELFTH)\s+)?"
+    r"SCHEDULE\b\s*[-–—]?\s*([IVX]{1,4}|\d{1,2})?"
+)
+
+_SCHEDULE_ENTRY_RE = re.compile(r"^\s*(\d{1,3})\s*[.)]?\s+(\S.*)$")
+
+_SCHEDULE_ORDINALS = {
+    "FIRST": "I", "SECOND": "II", "THIRD": "III", "FOURTH": "IV", "FIFTH": "V",
+    "SIXTH": "VI", "SEVENTH": "VII", "EIGHTH": "VIII", "NINTH": "IX",
+    "TENTH": "X", "ELEVENTH": "XI", "TWELFTH": "XII",
+}
+
+# A heading in the front matter is a table-of-contents line, not a schedule. Real schedules
+# sit in the back of the act and carry substantive text; ToC entries are one line each.
+_SCHEDULE_MIN_PAGE_FRACTION = 0.25
+_SCHEDULE_MIN_CHARS = 300
+
+
+def _schedule_regions(pages: list[str]) -> list[tuple[str, int, int]]:
+    """(label, start_page, end_page_exclusive) for each real schedule in the act."""
+    heads: list[tuple[str, int]] = []
+    floor = int(len(pages) * _SCHEDULE_MIN_PAGE_FRACTION)
+    for pno in range(floor, len(pages)):
+        for line in pages[pno].splitlines()[:20]:
+            m = _SCHEDULE_HEAD_RE.match(line)
+            if m:
+                label = _SCHEDULE_ORDINALS.get((m.group(1) or "").upper(), "") or (m.group(2) or "")
+                heads.append((label.upper() or str(len(heads) + 1), pno))
+                break
+    out = []
+    for i, (label, start) in enumerate(heads):
+        end = heads[i + 1][1] if i + 1 < len(heads) else len(pages)
+        if sum(len(pages[p]) for p in range(start, end)) >= _SCHEDULE_MIN_CHARS:
+            out.append((label, start, end))
+    return out
+
+
+def _segment_schedules(pages: list[str]) -> list[dict]:
+    """Parse an act's SCHEDULES into their own ``Sch.<label>.<entry>`` namespace.
+
+    Schedules are legally live. The Specific Relief schedule defines "infrastructure
+    project" for s.20A (which bars injunctions), the NDPS schedule lists which substances
+    are controlled at all, and the Commercial Courts schedule carries Order XV-A. They were
+    previously dropped, or worse MISFILED: schedule entries renumber from 1, so without a
+    namespace they collide with real section numbers and overwrite them. That exact
+    collision cost ten sections of law across arbitration, CrPC and IBC, unnoticed since
+    before version control.
+
+    Ids follow the Constitution's existing ``Sch7.L1.*`` precedent so a schedule entry can
+    never occupy a section number. An unenumerated schedule (a fee table with dotted
+    leaders, say) is emitted WHOLE rather than chopped on whatever digits appear in it.
+    """
+    out: list[dict] = []
+    for label, start, end in _schedule_regions(pages):
+        body_lines: list[tuple[str, int]] = []
+        for pno in range(start, end):
+            for i, line in enumerate(pages[pno].splitlines()):
+                if pno == start and i == 0 and _SCHEDULE_HEAD_RE.match(line):
+                    continue                       # drop the heading line itself
+                if line.strip():
+                    body_lines.append((line, pno))
+        if not body_lines:
+            continue
+
+        # Editorial footnotes ("1. Ins. by Act 18 of 2018, s. 14 (w.e.f. 1-10-2018)") match
+        # the entry pattern but are not schedule entries. Same filter the body uses.
+        body_lines = _drop_footnotes(body_lines)
+
+        entries: list[dict] = []
+        cur: dict | None = None
+        last = 0
+        for line, pno in body_lines:
+            m = _SCHEDULE_ENTRY_RE.match(line)
+            # Schedule entries run 1, 2, 3 … A number that does NOT advance is nested
+            # numbering (an inserted Order restarts at 1) or a stray marker, never a new
+            # entry. Without this the Commercial Courts schedule emits three separate
+            # "Sch.1.1"s — and a duplicate id is what aborted the seed and silently dropped
+            # 12 acts on 2026-07-12; see the de-dup note in vector_store._seed_collection.
+            if m and len(m.group(2)) > 3 and int(m.group(1)) > last:
+                if cur:
+                    entries.append(cur)
+                last = int(m.group(1))
+                cur = {"num": m.group(1), "text": [m.group(2)], "page": pno + 1}
+            elif cur:
+                cur["text"].append(line.strip())
+        if cur:
+            entries.append(cur)
+
+        prefix = f"Sch{('.' + label) if label else ''}"
+        if len(entries) < 2:
+            # Not enumerated — keep it intact rather than inventing structure that is not
+            # in the print. "Statement under section 58 …" must not become an entry 58.
+            text = " ".join(ln.strip() for ln, _ in body_lines)
+            out.append({"num": prefix, "title": f"Schedule {label}".strip(),
+                        "text": text, "page": start + 1})
+            continue
+        for e in entries:
+            text = " ".join(e["text"])
+            out.append({
+                "num": f"{prefix}.{e['num']}",
+                "title": f"Schedule {label} — Entry {e['num']}: {text[:60]}".strip(),
+                "text": text,
+                "page": e["page"],
+            })
+    return out
+
+
 def _segment_seventh_schedule(pages: list[str]) -> list[dict]:
     """Parse the Constitution's SEVENTH SCHEDULE (Article 246) — the Union / State / Concurrent
     Lists that divide legislative power (among the most-litigated parts of the Constitution) —
@@ -1346,6 +1479,11 @@ def ingest(act_id: str) -> dict:
         sections = sections + _segment_seventh_schedule(pages)
     if meta.get("tenth_schedule"):
         sections = sections + _segment_tenth_schedule(pages)
+    # Generic SCHEDULES, in their own namespace so an entry can never occupy a section
+    # number. Appended AFTER the max_section cap for the same reason the Sch7/Sch10 slices
+    # are: the "Sch.*" ids must not be filtered by a numeric cap they cannot satisfy.
+    if meta.get("schedules"):
+        sections = sections + _segment_schedules(pages)
 
     FULLTEXT_DIR.mkdir(parents=True, exist_ok=True)
     out = {

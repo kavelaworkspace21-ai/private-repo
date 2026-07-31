@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/18974/1/narcotic-drugs-and-psychotropic-substances-act-1985.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1791",
         "sha256": "8cd8e71f5e1bd5a5d98a414d553c76838ae8bf9b493097981220305ef70deac2",
-        "fetched_on": "2026-07-29",
+        "fetched_on": "2026-07-31",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -791,6 +791,642 @@
           "text": "para- 1-(4—methoxyphenyl)-N-\nMethoxymethylamphet methylpropan-2-amine\namine,PMMA",
           "page": 52,
           "title": "para- 1-(4"
+        },
+        {
+          "num": "Sch.1.1",
+          "title": "Schedule 1 — Entry 1: DET N, N-Diethyltryptamine",
+          "text": "DET N, N-Diethyltryptamine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.2",
+          "title": "Schedule 1 — Entry 2: DMHP 3-(1,2-Dimethylheptyl)-1-hydroxy-7, 8, 9, 10-tetrahydro",
+          "text": "DMHP 3-(1,2-Dimethylheptyl)-1-hydroxy-7, 8, 9, 10-tetrahydro 6, 6, 9-trimethyl- 6H-dibenzo [b, d] pyran",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.3",
+          "title": "Schedule 1 — Entry 3: DMT N, N-Dimethyltryptamine",
+          "text": "DMT N, N-Dimethyltryptamine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.4",
+          "title": "Schedule 1 — Entry 4: (+)-LYSERGIDE LSD, LSD-25 (+)-N, N-Diethyllysergamide (d- ly",
+          "text": "(+)-LYSERGIDE LSD, LSD-25 (+)-N, N-Diethyllysergamide (d- lysergic acid diethylamide)",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.5",
+          "title": "Schedule 1 — Entry 5: mescaline 3, 4, 5-Trimethoxyphenethylamine",
+          "text": "mescaline 3, 4, 5-Trimethoxyphenethylamine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.6",
+          "title": "Schedule 1 — Entry 6: parahexyl 3-Hexyl-1-hydroxy-7, 8, 9, 10- tetrahydro-6, 6, 9-",
+          "text": "parahexyl 3-Hexyl-1-hydroxy-7, 8, 9, 10- tetrahydro-6, 6, 9-trimethyl-6H- dibenzo [b, d] pyran",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.7",
+          "title": "Schedule 1 — Entry 7: ETICYCLIDINE PCE N-Ethyl-1-phenylcyclohexylamine",
+          "text": "ETICYCLIDINE PCE N-Ethyl-1-phenylcyclohexylamine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.8",
+          "title": "Schedule 1 — Entry 8: ROLICYCLIDINE PHP, PCPY 1-(1-phenylcyclohexyl) pyrrolidine",
+          "text": "ROLICYCLIDINE PHP, PCPY 1-(1-phenylcyclohexyl) pyrrolidine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.9",
+          "title": "Schedule 1 — Entry 9: psilocine, psilotsin 3-(2-Dimethylaminoethyl)-4- hydroxyindo",
+          "text": "psilocine, psilotsin 3-(2-Dimethylaminoethyl)-4- hydroxyindole",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.10",
+          "title": "Schedule 1 — Entry 10: PSILOCYBINE 3-(2-Dimethylaminoethyl)-indol-4-yl dihydrogen p",
+          "text": "PSILOCYBINE 3-(2-Dimethylaminoethyl)-indol-4-yl dihydrogen phosphate",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.11",
+          "title": "Schedule 1 — Entry 11: STP, DOM 2-Amino-1-(2, 5-dimethoxy-methyl) phenylpropane",
+          "text": "STP, DOM 2-Amino-1-(2, 5-dimethoxy-methyl) phenylpropane",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.12",
+          "title": "Schedule 1 — Entry 12: TENOCYCLIDINE TCP 1-[1-(2-Thienyl) cydohexyl] piperidine",
+          "text": "TENOCYCLIDINE TCP 1-[1-(2-Thienyl) cydohexyl] piperidine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.13",
+          "title": "Schedule 1 — Entry 13: THC Tetrahydrocannabinols, the following isomers: Δ6a(10a),",
+          "text": "THC Tetrahydrocannabinols, the following isomers: Δ6a(10a), Δ6a(7), Δ7, Δ8, Δ9, Δ10, Δ9(11) and their stcreochemical variants",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.14",
+          "title": "Schedule 1 — Entry 14: DOB 2, 5-dimethoxyl-4-bromoamphetamine",
+          "text": "DOB 2, 5-dimethoxyl-4-bromoamphetamine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.15",
+          "title": "Schedule 1 — Entry 15: MDA 3, 4-methylenedioxyamphetamine",
+          "text": "MDA 3, 4-methylenedioxyamphetamine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.16",
+          "title": "Schedule 1 — Entry 16: AMPHETAMINE (±)-2-Amino-1-phenylpropane",
+          "text": "AMPHETAMINE (±)-2-Amino-1-phenylpropane",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.17",
+          "title": "Schedule 1 — Entry 17: DEXAMPHETAMINE (+)-2-Amino-1-phenylpropane",
+          "text": "DEXAMPHETAMINE (+)-2-Amino-1-phenylpropane",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.18",
+          "title": "Schedule 1 — Entry 18: MECLOQUALONE 3-(o-Chlorophenyl)-2-methyl-4(3H)- quinazolinon",
+          "text": "MECLOQUALONE 3-(o-Chlorophenyl)-2-methyl-4(3H)- quinazolinone",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.19",
+          "title": "Schedule 1 — Entry 19: METHAMPHETAMINE (+)-2-Methylamino-1-phenylpropane",
+          "text": "METHAMPHETAMINE (+)-2-Methylamino-1-phenylpropane",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.20",
+          "title": "Schedule 1 — Entry 20: METHAQUALONE 2-Methyl-3-0-tolyl-4-(3H)- quinazoinone",
+          "text": "METHAQUALONE 2-Methyl-3-0-tolyl-4-(3H)- quinazoinone",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.21",
+          "title": "Schedule 1 — Entry 21: METHYLPHENIDATE 2-Phenyl-2(2-piperidyl) acetic acid, methyl",
+          "text": "METHYLPHENIDATE 2-Phenyl-2(2-piperidyl) acetic acid, methyl ester",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.22",
+          "title": "Schedule 1 — Entry 22: PHENCYCLIDINE PCP 1-(1-Phenylcyclohexyl) piperidine",
+          "text": "PHENCYCLIDINE PCP 1-(1-Phenylcyclohexyl) piperidine",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.23",
+          "title": "Schedule 1 — Entry 23: PHENMETRAZINE 3-Methyl-2-phenylmorpholine 46 Sl. Internation",
+          "text": "PHENMETRAZINE 3-Methyl-2-phenylmorpholine 46 Sl. International non-proprietary Other nonproprietary Chemical name No. names names",
+          "page": 46
+        },
+        {
+          "num": "Sch.1.24",
+          "title": "Schedule 1 — Entry 24: AMOBARBITAL 5-Ethyl-5-(3-methylbutyl) barbituric acid",
+          "text": "AMOBARBITAL 5-Ethyl-5-(3-methylbutyl) barbituric acid",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.25",
+          "title": "Schedule 1 — Entry 25: CYCLOBARBITAL 5-(1-Cyclohexen-1-yl)-5-ethyl- barbituric acid",
+          "text": "CYCLOBARBITAL 5-(1-Cyclohexen-1-yl)-5-ethyl- barbituric acid",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.26",
+          "title": "Schedule 1 — Entry 26: GLUTETHIMIDE 2-Ethyl-2-phenylglutarimide",
+          "text": "GLUTETHIMIDE 2-Ethyl-2-phenylglutarimide",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.27",
+          "title": "Schedule 1 — Entry 27: PENTAZOCINE 1, 2, 3, 4, 5, 6-Hexahydro-6, 11- dimethyl-3-(3-",
+          "text": "PENTAZOCINE 1, 2, 3, 4, 5, 6-Hexahydro-6, 11- dimethyl-3-(3-methyl-2-butenyl)-2, 6- methano-3 benzazocin-8-ol",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.28",
+          "title": "Schedule 1 — Entry 28: PENTOBARBITAL 5-Ethyl-5-(1-methylbutyl) barbituric acid",
+          "text": "PENTOBARBITAL 5-Ethyl-5-(1-methylbutyl) barbituric acid",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.29",
+          "title": "Schedule 1 — Entry 29: SECOBARBITAL 5-Allyl-5-(1-methylbutyl) barbituric acid",
+          "text": "SECOBARBITAL 5-Allyl-5-(1-methylbutyl) barbituric acid",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.30",
+          "title": "Schedule 1 — Entry 30: ALPRAZOLAM 8-Chloro-1-methyl-6-phenyl-4H-s- triazolo [4, 3-a",
+          "text": "ALPRAZOLAM 8-Chloro-1-methyl-6-phenyl-4H-s- triazolo [4, 3-a] [1, 4] benzodiazepine",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.31",
+          "title": "Schedule 1 — Entry 31: AMFEPRAMONE 2-(Diethylamino) propiophenone",
+          "text": "AMFEPRAMONE 2-(Diethylamino) propiophenone",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.32",
+          "title": "Schedule 1 — Entry 32: BARBITAL 5, 5-Diethylbarbituric acid",
+          "text": "BARBITAL 5, 5-Diethylbarbituric acid",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.33",
+          "title": "Schedule 1 — Entry 33: BENZPHETAMINE N-Benzyl-N, α-dimethylphenethyl- amine",
+          "text": "BENZPHETAMINE N-Benzyl-N, α-dimethylphenethyl- amine",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.34",
+          "title": "Schedule 1 — Entry 34: BROMAZEPAM 7-Bromo-1, 3-dihydro-5-(2-pyridyl)- 2H-1, 4-benzo",
+          "text": "BROMAZEPAM 7-Bromo-1, 3-dihydro-5-(2-pyridyl)- 2H-1, 4-benzodiazepin-2-one.",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.35",
+          "title": "Schedule 1 — Entry 35: CAMAZEPAM 7-Chloro-1, 3-dihydro-3-hydroxy-1- methyl-5-phenyl",
+          "text": "CAMAZEPAM 7-Chloro-1, 3-dihydro-3-hydroxy-1- methyl-5-phenyl-2-H-1, 4 benezo- diazepin-2-one dimethylcarbamate (ester)",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.36",
+          "title": "Schedule 1 — Entry 36: CHLORDIAZEPOXIDE 7-Chloro-2-(methylamino)-5-phenyl- 3H-1, 4-",
+          "text": "CHLORDIAZEPOXIDE 7-Chloro-2-(methylamino)-5-phenyl- 3H-1, 4-benzodiazepine-4-oxide",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.37",
+          "title": "Schedule 1 — Entry 37: CLOBAZAM 7-Chloro-1-methyl-5-phenyl-1H-1, 5- benzodiazepine,",
+          "text": "CLOBAZAM 7-Chloro-1-methyl-5-phenyl-1H-1, 5- benzodiazepine, 2, 4 (3H, 5H)-dione",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.38",
+          "title": "Schedule 1 — Entry 38: CLONAZEPAM 5-(o-Chlorophenyl)-1, 3-dihydro-7- nitro-2H-1, 4-",
+          "text": "CLONAZEPAM 5-(o-Chlorophenyl)-1, 3-dihydro-7- nitro-2H-1, 4-benzodiazepin-2-one",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.39",
+          "title": "Schedule 1 — Entry 39: CLORAZEPATE 7-Chloro-2, 3-dihydro-2-oxo-5-phenyl- 1H, 4-benz",
+          "text": "CLORAZEPATE 7-Chloro-2, 3-dihydro-2-oxo-5-phenyl- 1H, 4-benzodiazepine-3-carboxylic acid",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.40",
+          "title": "Schedule 1 — Entry 40: CLOTIAZEPAM 5-(0-Chlorophenyl)-7-ethyl-1, 3- dihydro-1-methy",
+          "text": "CLOTIAZEPAM 5-(0-Chlorophenyl)-7-ethyl-1, 3- dihydro-1-methyl-2H-thieno [2, 3-e]-1, 4-diazepine-2-one",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.41",
+          "title": "Schedule 1 — Entry 41: CLOXAZOLAM 10-Chloro-11b-(o-chlorophenyl)-2, 3, 7, 11b-tetra",
+          "text": "CLOXAZOLAM 10-Chloro-11b-(o-chlorophenyl)-2, 3, 7, 11b-tetrahydro-oxazolo-[3, 2-d] [1, 4] benzodiazepine-6 (5H)-one",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.42",
+          "title": "Schedule 1 — Entry 42: DELORAZEPAM 7-Chloro-5-(o-chlorophenyl)-1, 3- dihydro-2H-1,",
+          "text": "DELORAZEPAM 7-Chloro-5-(o-chlorophenyl)-1, 3- dihydro-2H-1, 4-benzodiazepin-2-one 47 Sl. International non-proprietary Other nonproprietary Chemical name No. names names",
+          "page": 47
+        },
+        {
+          "num": "Sch.1.43",
+          "title": "Schedule 1 — Entry 43: DIAZEPAM 7-Chloro-1, 3-dihydro-1-methyl-5- phenyl-2H-1, 4-be",
+          "text": "DIAZEPAM 7-Chloro-1, 3-dihydro-1-methyl-5- phenyl-2H-1, 4-benzodiazepin-2-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.44",
+          "title": "Schedule 1 — Entry 44: ESTAZOLAM 8-Chloro-6-phenyl-4H-s-triazolo [4, 3-a], [1, 4] b",
+          "text": "ESTAZOLAM 8-Chloro-6-phenyl-4H-s-triazolo [4, 3-a], [1, 4] benzodiazepine",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.45",
+          "title": "Schedule 1 — Entry 45: ETHCHLORVYNOL Ethyl-2-chlorovinylethynylcarbinol",
+          "text": "ETHCHLORVYNOL Ethyl-2-chlorovinylethynylcarbinol",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.46",
+          "title": "Schedule 1 — Entry 46: ETHINAMATE 1-Ethylnylcyclohexanolcarbamate",
+          "text": "ETHINAMATE 1-Ethylnylcyclohexanolcarbamate",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.47",
+          "title": "Schedule 1 — Entry 47: ETHYLLOFLAZEPATE Ethyl 7-chloro-5-(o-fluorophenyl)-2, 3-dihy",
+          "text": "ETHYLLOFLAZEPATE Ethyl 7-chloro-5-(o-fluorophenyl)-2, 3-dihydro-2-oxo-1H-1, 4-benzo- diazepine-3-carboxylate",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.48",
+          "title": "Schedule 1 — Entry 48: FLUDIAZEPAM 7-Chloro-5-(o-fluorophenyl)-1, 3- dihydro-1-meth",
+          "text": "FLUDIAZEPAM 7-Chloro-5-(o-fluorophenyl)-1, 3- dihydro-1-methyl-2H-1, 4-benzo- diazepine-2-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.49",
+          "title": "Schedule 1 — Entry 49: FLUNITRAZEPAM 5-(o-Fluorophenyl)-1, 3-dihydro-1- methyl-7-ni",
+          "text": "FLUNITRAZEPAM 5-(o-Fluorophenyl)-1, 3-dihydro-1- methyl-7-nitro-2H-1, 4-benzo- diazepin-2-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.50",
+          "title": "Schedule 1 — Entry 50: FLURAZEPAM 7-Chloro-1-[2-(diethylamino) ethyl]- 5-(o-fluorop",
+          "text": "FLURAZEPAM 7-Chloro-1-[2-(diethylamino) ethyl]- 5-(o-fluorophenyl)-1, 3-dihydro-2H- 1, 4-benzo-diazepin-2-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.51",
+          "title": "Schedule 1 — Entry 51: HALAZEPAM 7-Chloro-1, 3-dihydro-5-phenyl-1-(2, 2, 2-trifluor",
+          "text": "HALAZEPAM 7-Chloro-1, 3-dihydro-5-phenyl-1-(2, 2, 2-trifluoroethyl)-2H-1, 4-benzo- diazepin-2-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.52",
+          "title": "Schedule 1 — Entry 52: HALOXAZOLAM 10-Bromo-11b-(o-fluorophenyl)-2, 3, 7, 11b-tetra",
+          "text": "HALOXAZOLAM 10-Bromo-11b-(o-fluorophenyl)-2, 3, 7, 11b-tetrahydrooxazolo [3, 2-d] [1, 4] benzodiazepine-6, (5H)-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.53",
+          "title": "Schedule 1 — Entry 53: KETAZOLAM 11-Chloro-8, 12b-dihydro-2, 8- dimethyl-12b-phenyl",
+          "text": "KETAZOLAM 11-Chloro-8, 12b-dihydro-2, 8- dimethyl-12b-phenyl-4H-[1, 3]- oxazino-[3, 2-d] [1, 4] benzodiazepine-4, 7(6H)-dione",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.54",
+          "title": "Schedule 1 — Entry 54: LEFETAMINE SPA (—)-1-dimethylamino-1, 2diphenyl- ethane",
+          "text": "LEFETAMINE SPA (—)-1-dimethylamino-1, 2diphenyl- ethane",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.55",
+          "title": "Schedule 1 — Entry 55: LOPRAZOLAM 6-(o-Chlorophenyl)-2, 4-dihydro-2- [(4 methyl-1-p",
+          "text": "LOPRAZOLAM 6-(o-Chlorophenyl)-2, 4-dihydro-2- [(4 methyl-1-piperazinyl) metnylene]- 8-nitro-1H-imidazo [1, 2-0] [1, 4] benzodiazepin-1-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.56",
+          "title": "Schedule 1 — Entry 56: LORAZEPAM 7-Chloro-5-(o-chlorophenyl)-1, 3- dihydro-3-hydrox",
+          "text": "LORAZEPAM 7-Chloro-5-(o-chlorophenyl)-1, 3- dihydro-3-hydroxy-2H-1, 4-benzo- diazepine-2-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.57",
+          "title": "Schedule 1 — Entry 57: LORMETAZEPAM 7-Chloro-5-(o-chlorophenyl)-1, 3- dihydro-3-hyd",
+          "text": "LORMETAZEPAM 7-Chloro-5-(o-chlorophenyl)-1, 3- dihydro-3-hydroxy-1-methyl-2H-1, 4- benzcxiiazepine-2-one",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.58",
+          "title": "Schedule 1 — Entry 58: MAZINDOL 5-(P-Chlorophenyl)-2, 5-dihydro-3- H-imidazo [2, 1-",
+          "text": "MAZINDOL 5-(P-Chlorophenyl)-2, 5-dihydro-3- H-imidazo [2, 1-x] isoindol-5-01 48 Sl. International non-proprietary Other nonproprietary Chemical name No. names names",
+          "page": 48
+        },
+        {
+          "num": "Sch.1.59",
+          "title": "Schedule 1 — Entry 59: MEDAZEPAM 7-Chloro-2, 3-dihydro-1-methyl-5- phenyl-1H-1, 4-b",
+          "text": "MEDAZEPAM 7-Chloro-2, 3-dihydro-1-methyl-5- phenyl-1H-1, 4-benzodiazepine",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.60",
+          "title": "Schedule 1 — Entry 60: MEPROBAMATE 2-Methyl-2-propyl-1, 3-propanediol dicarbamate",
+          "text": "MEPROBAMATE 2-Methyl-2-propyl-1, 3-propanediol dicarbamate",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.61",
+          "title": "Schedule 1 — Entry 61: METHYLPHENOBARBITA 5-Ethyl-1-methyl-5-phenylbarbituric L aci",
+          "text": "METHYLPHENOBARBITA 5-Ethyl-1-methyl-5-phenylbarbituric L acid",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.62",
+          "title": "Schedule 1 — Entry 62: METHYPRYLON 3, 3-Diethyl-5-methyl-2, 4 piperidine- dione",
+          "text": "METHYPRYLON 3, 3-Diethyl-5-methyl-2, 4 piperidine- dione",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.63",
+          "title": "Schedule 1 — Entry 63: NIMETAZEPAM 1, 3-Dihydro-1-methyl-7-nitro-5- phenyl- 2-H-1,",
+          "text": "NIMETAZEPAM 1, 3-Dihydro-1-methyl-7-nitro-5- phenyl- 2-H-1, 4-benzodiazepin-2- one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.64",
+          "title": "Schedule 1 — Entry 64: NITRAZEPAM 1, 3-Dihydro-7-nitro-5-phenyl-2H-1, 4-benzodiazep",
+          "text": "NITRAZEPAM 1, 3-Dihydro-7-nitro-5-phenyl-2H-1, 4-benzodiazepin-2-one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.65",
+          "title": "Schedule 1 — Entry 65: NORDAZEPAM 7-Chloro-1, 3-dihydro-5-phenyl-1 (2H)-1, 4-benzod",
+          "text": "NORDAZEPAM 7-Chloro-1, 3-dihydro-5-phenyl-1 (2H)-1, 4-benzodiazepin-2-one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.66",
+          "title": "Schedule 1 — Entry 66: OXAZEPAM 7-Chloro-1, 3-dihydro-3-hydroxy-5- phenyl -2H-1, 4-",
+          "text": "OXAZEPAM 7-Chloro-1, 3-dihydro-3-hydroxy-5- phenyl -2H-1, 4-benzodiazepin-2-one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.67",
+          "title": "Schedule 1 — Entry 67: OXAZOLAM 10-Chloro-2, 3, 7, 11b-tetrahydro-2- methyl-11b-phe",
+          "text": "OXAZOLAM 10-Chloro-2, 3, 7, 11b-tetrahydro-2- methyl-11b-phenyl-oxazolo [3, 2-d] [1, 4] benzodiazepin-6 (5H)-one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.68",
+          "title": "Schedule 1 — Entry 68: PHENDIMETRAZINE (+)-3, 4-Dimethyl-2-phenyl- morpholine",
+          "text": "PHENDIMETRAZINE (+)-3, 4-Dimethyl-2-phenyl- morpholine",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.69",
+          "title": "Schedule 1 — Entry 69: PHENOBARBITAL 5-Ethyl-5-phenylbarbituric acid",
+          "text": "PHENOBARBITAL 5-Ethyl-5-phenylbarbituric acid",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.70",
+          "title": "Schedule 1 — Entry 70: PHENTERMINE £, £-Dimethylphenethylamine",
+          "text": "PHENTERMINE £, £-Dimethylphenethylamine",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.71",
+          "title": "Schedule 1 — Entry 71: PINAZEPAM 7-Chloro-1, 3-dihydro-5-phenyl-1-(2- propynyl)-2H-",
+          "text": "PINAZEPAM 7-Chloro-1, 3-dihydro-5-phenyl-1-(2- propynyl)-2H-1, 4-benzodiazepin-2- one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.72",
+          "title": "Schedule 1 — Entry 72: PIPRADROL 1-1-Diphenyl-1-(2-piperidyl)- methanol",
+          "text": "PIPRADROL 1-1-Diphenyl-1-(2-piperidyl)- methanol",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.73",
+          "title": "Schedule 1 — Entry 73: PRAZEPAM 7-Chlorol-(cyclopropylmethyl)-1,-3- dihydro-5-pheny",
+          "text": "PRAZEPAM 7-Chlorol-(cyclopropylmethyl)-1,-3- dihydro-5-phenyl)-2H-1, 4-benzo- diazepin-2-one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.74",
+          "title": "Schedule 1 — Entry 74: TEMAZEPAM 7-Chloro-1, 3-dihydro-3-hydroxy-1- methyl-5-phenyl",
+          "text": "TEMAZEPAM 7-Chloro-1, 3-dihydro-3-hydroxy-1- methyl-5-phenyl -2H-1-4-benzo- diazepin-2-one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.75",
+          "title": "Schedule 1 — Entry 75: TETRAZEPAM 7-Chloro-5-(cycloexen-1-yl)-1, 3- dihydro-1-methy",
+          "text": "TETRAZEPAM 7-Chloro-5-(cycloexen-1-yl)-1, 3- dihydro-1-methyl-2H-1, 4-benzo- diazepin-2-one",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.76",
+          "title": "Schedule 1 — Entry 76: TRIAZOLAM 8-Chloro-6-(o-chlorophenyl)-1- methyl-4H-s-triazod",
+          "text": "TRIAZOLAM 8-Chloro-6-(o-chlorophenyl)-1- methyl-4H-s-triazodo[4,3-a] [1,4] benzodiazepine. 49 1[77. CATHIONE (--)-(S)-2-aminopropophenone",
+          "page": 49
+        },
+        {
+          "num": "Sch.1.78",
+          "title": "Schedule 1 — Entry 78: DMA (±)-2,5-dimethoxy-a- methlyphenethylamine",
+          "text": "DMA (±)-2,5-dimethoxy-a- methlyphenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.79",
+          "title": "Schedule 1 — Entry 79: DOET (±)-4 ethyl -2, 5-dimethoxy-a- phenethylamine",
+          "text": "DOET (±)-4 ethyl -2, 5-dimethoxy-a- phenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.80",
+          "title": "Schedule 1 — Entry 80: MDMA (±)-N, a-dimethyl-3. 4- (methylene- dioxy) phenethylami",
+          "text": "MDMA (±)-N, a-dimethyl-3. 4- (methylene- dioxy) phenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.81",
+          "title": "Schedule 1 — Entry 81: 4-methylaminorex (±)-cis-2-amino-4-methyl-5-phcnyl-2- oxazol",
+          "text": "4-methylaminorex (±)-cis-2-amino-4-methyl-5-phcnyl-2- oxazoline",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.82",
+          "title": "Schedule 1 — Entry 82: MMDA 2-methoxy-a-methyl-4-5, (methylene- dioxy) phenethylami",
+          "text": "MMDA 2-methoxy-a-methyl-4-5, (methylene- dioxy) phenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.83",
+          "title": "Schedule 1 — Entry 83: N-ethyl MDA (±) N-ethyl-u-methyl-4, 4 (methylene- dioxy) phe",
+          "text": "N-ethyl MDA (±) N-ethyl-u-methyl-4, 4 (methylene- dioxy) phenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.84",
+          "title": "Schedule 1 — Entry 84: N-hydroxy MDA (±) -N (u-methyl 3, 4- (methylenedioxy) phenet",
+          "text": "N-hydroxy MDA (±) -N (u-methyl 3, 4- (methylenedioxy) phenethy hydroxylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.85",
+          "title": "Schedule 1 — Entry 85: PMA p-methoxy-a-methylphenethyamine",
+          "text": "PMA p-methoxy-a-methylphenethyamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.86",
+          "title": "Schedule 1 — Entry 86: TMA (±) -3,4, 5-trimethoxy-a- methylphenethy-lamine",
+          "text": "TMA (±) -3,4, 5-trimethoxy-a- methylphenethy-lamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.87",
+          "title": "Schedule 1 — Entry 87: FENETYLINE 7-(2-(ø-methylphenethyl) amino) ethyl-) theophyli",
+          "text": "FENETYLINE 7-(2-(ø-methylphenethyl) amino) ethyl-) theophyline",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.88",
+          "title": "Schedule 1 — Entry 88: LEVAMFETAMINE levamphetamine (--)-(R)- ø- methylphenethylami",
+          "text": "LEVAMFETAMINE levamphetamine (--)-(R)- ø- methylphenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.89",
+          "title": "Schedule 1 — Entry 89: lovomethamphetamine (--)-N-[ ø- methylphenethylamine",
+          "text": "lovomethamphetamine (--)-N-[ ø- methylphenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.90",
+          "title": "Schedule 1 — Entry 90: METAMFETAMINE Methamphetamine (±)-N-ø- RACEMATE mecnate dime",
+          "text": "METAMFETAMINE Methamphetamine (±)-N-ø- RACEMATE mecnate dimethylphenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.91",
+          "title": "Schedule 1 — Entry 91: Delta-9-***tetrahy- (6a-R, 10aR)-6a, 7, 8, 10a- drocannabino",
+          "text": "Delta-9-***tetrahy- (6a-R, 10aR)-6a, 7, 8, 10a- drocannabinol and tctrahydro-6, 6, 9-trimethyl-3-penty stereochemical variants 611-dibenzo [b-d] pyran-OI",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.92",
+          "title": "Schedule 1 — Entry 92: BUPRENORPHINE 21, cyclopropyl-7-cc-[(S)-I-hydroxy- 1-2,2-tri",
+          "text": "BUPRENORPHINE 21, cyclopropyl-7-cc-[(S)-I-hydroxy- 1-2,2-trimethyl-propyl] 6/14-endo- ethano-6-7,8,14-tetra-hydrooripavine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.93",
+          "title": "Schedule 1 — Entry 93: BUTALBITAL 5-allyl-5-isobutylbarbituric acid",
+          "text": "BUTALBITAL 5-allyl-5-isobutylbarbituric acid",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.94",
+          "title": "Schedule 1 — Entry 94: CATHINE (+)-norpseudo- (+)-(R)-ø-[(R)-I-aminoethyl] ephedrin",
+          "text": "CATHINE (+)-norpseudo- (+)-(R)-ø-[(R)-I-aminoethyl] ephedrine Benzyl alcohol",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.95",
+          "title": "Schedule 1 — Entry 95: ALLOBARBITAL MEFENOREX 5,5-diallybarbituric acid",
+          "text": "ALLOBARBITAL MEFENOREX 5,5-diallybarbituric acid",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.96",
+          "title": "Schedule 1 — Entry 96: ETILAMFETAMINE N-ethylamphetamine N-ethyl-ø- methylphenethyl",
+          "text": "ETILAMFETAMINE N-ethylamphetamine N-ethyl-ø- methylphenethylamine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.97",
+          "title": "Schedule 1 — Entry 97: FENCAMEFAMIN N-ethyl-3-phenly-2-norbornanmine",
+          "text": "FENCAMEFAMIN N-ethyl-3-phenly-2-norbornanmine",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.98",
+          "title": "Schedule 1 — Entry 98: FENPROPOREX (±) -3-[(??-methyphenethy) amino] propioxitrile",
+          "text": "FENPROPOREX (±) -3-[(??-methyphenethy) amino] propioxitrile 50 N(3 chloropropyl)-a-methylphenethy- lamine 99. MEFENOREX 8-chloro-6-a-(o-fluorophenyl)-1- methyl-4H-imidazol (1, 5-a] [1, 4]",
+          "page": 50
+        },
+        {
+          "num": "Sch.1.100",
+          "title": "Schedule 1 — Entry 100: MIDAZOLAM benzodiazepine",
+          "text": "MIDAZOLAM benzodiazepine",
+          "page": 51
+        },
+        {
+          "num": "Sch.1.101",
+          "title": "Schedule 1 — Entry 101: PEMOLINE 2-amino-5-phenyl-2-oxazolin-4-one(- 2-imino-5-pheny",
+          "text": "PEMOLINE 2-amino-5-phenyl-2-oxazolin-4-one(- 2-imino-5-phenyl-4-oxazolidinone)",
+          "page": 51
+        },
+        {
+          "num": "Sch.1.102",
+          "title": "Schedule 1 — Entry 102: PYROVAERONE 4-methyl-2-(1-pyrrolidinyl) valerophenone",
+          "text": "PYROVAERONE 4-methyl-2-(1-pyrrolidinyl) valerophenone",
+          "page": 51
+        },
+        {
+          "num": "Sch.1.103",
+          "title": "Schedule 1 — Entry 103: SECBUTABARB1TAL 5-sec-butyl-5-ethylbarbituric acid",
+          "text": "SECBUTABARB1TAL 5-sec-butyl-5-ethylbarbituric acid",
+          "page": 51
+        },
+        {
+          "num": "Sch.1.104",
+          "title": "Schedule 1 — Entry 104: VINYLBITAL 5-(1- methylbutyl)-5vinylbarbituric acid",
+          "text": "VINYLBITAL 5-(1- methylbutyl)-5vinylbarbituric acid",
+          "page": 51
+        },
+        {
+          "num": "Sch.1.105",
+          "title": "Schedule 1 — Entry 105: rutobarbital 5-butyl-5-ethylbarbituric acid] 1[105A ETRYPTAM",
+          "text": "rutobarbital 5-butyl-5-ethylbarbituric acid] 1[105A ETRYPTAMINE (3-(2-aminobutyl) indole) . 105B. METHCATHINONE (2-(methylamino)-1 phenylpropan-1- one) 105C. ZIPEPROL (ø-(ø-methoxybenzyl)-4 (methoxyphenethyl)-1- (piperazineetha-nol) 105D. AMINOREX (2-amino-5-phenyl-2-oxazoline) 105E. BROTIZOLAM (2-bromo-4-) 0-chlorophenyl)-9- methyl-6H-thieno (3,2-f)-s-triazolo [4,3,-a) (1,4} diazepine) 105F. MESOCARB (3-(ø-methylphenethyl-N- (phenylerbamoyl) Sydnone imine]. 2[106. 2C.-B(4-bromo-2, 5dimethoxyphenethylamine)",
+          "page": 51
+        },
+        {
+          "num": "Sch.1.107",
+          "title": "Schedule 1 — Entry 107: 4-MTA (ø* Methyl-4- Mthylthiophenethylamine)",
+          "text": "4-MTA (ø* Methyl-4- Mthylthiophenethylamine)",
+          "page": 51
+        },
+        {
+          "num": "Sch.1.108",
+          "title": "Schedule 1 — Entry 108: GHB (r-Hydroxybutyric Acid)",
+          "text": "GHB (r-Hydroxybutyric Acid)",
+          "page": 51
+        },
+        {
+          "num": "Sch.1.109",
+          "title": "Schedule 1 — Entry 109: Zolpidem (INN)] 3[110. Salts and preparations of above.] 4[1",
+          "text": "Zolpidem (INN)] 3[110. Salts and preparations of above.] 4[110A. Ketamine 2-(2-cholorphenyl)-2-(methylamino) cyclohexanone] 5[110B. MEPHEDRONE 4-methylmethcathinone (RS)-2-methylamino-1-(4- (4-MMC) methylphenyl) propan-1-one. 4-methylephedrone 6[110C. 25B-NBOMe 2C-B-NBOMe 2-(4-brome-2,5-dimethoxyphenyl)-N- 3. Entry 77 re-numbered as Entry 106 by S.O. 785(E), dated 26th October, 1992. 51 (2-methoxybenzyl) ethanamine 110D. 25C-NBOMe 2C-C-NBOMe 2-(4-chloro-2,5- dimethoxyphenyl)- N-(2-methoxybenzyl) ethanamine 110E. 25I-NBOMe 2C-I-NBOMe 2-(4-iodo-2,5-dimethoxyphenyl)-N- (2-methoxybenzyl) ethanamine 110F. N-BENZYLPIPERAZINE Benzylpiperazine, BZP 1-benzylpiperazine 110G. JWH-018 AM-678 Naphthalene-1-yl(1-pentyl-1H-indol- 3-yl) methanone 110H. AM-2201 JWH-2201 [1-(5-Fluoropentyl)-1H-indol-3-yl] (naphthalen-1-yl) methanone 3,4- (R/S)-1—(Benzo[d][1,3] dioxol-5- 110I. Methylenedioxypyroval yl)-2-(pyrrolidine-1-yl) MDPV erone Pentan-1-one 110J. METHYLONE Beta-keto-MDMA (RS)-2-methylamino-1-(3,4- methylenedioxyphenyl) propan-1- one] 1[110K. para- 1-(4—methoxyphenyl)-N- Methoxymethylamphet methylpropan-2-amine amine,PMMA 110L. a- 1-phenyl-2-(pyrrolidine-1-yl) pentan- Pyrrolidinovaleropheno 1-one ne, a-PVP 110M. para-Methyl-4- 4-methyl-5-(4-methylphenyl)-4,5- ethylaminorex, 4,4’- dihydro-1,3-oxazol-2-amine DMAR 110N. Methoxetamine,MXE 2-(ethylamino)-2-(3-methoxyphenyl) cyclohexanone 110O. Phenazepam 7-bromo-5-(2- chlorophenyl)-1,3- dihydro-2H-1,4-benzodiazepin-2- one.] 2[110P 4-Methylethcathinone 4-MEC 110Q Ethylone 110R Pentedrone 110S Ethylphenidate 110T Methiopropamine MPA 110U MDMB-CHMICA 110V 5F-APINACA 5F-AKB-48 110W XLR-11 110X Catha Edulis (Dry Chatt or Mira Leaves Dry Chat Edulish)] 3[110Y Tramadol ] 4[110Z AB-CHMINACA N-[(2S)-1-Amino-3-methyl-1- oxobutan-2-yl]-1-(cyclohexylmethyl)- 1H-indazole-3-carboxamide 52 110ZA 5F-ADB(5F-MDMB- Methyl(2S)-2-{1-5-fluorophentyl)- PINACA) 1H-indazole-3-carbonylamino}-3,3- dimethylbutanoate 110ZB AB-PINACA N-[(2S)-1-Amino-3-methyl- 1oxobutan-2yl]-1-penty1H-indazole 3-carboxamide 110ZC UR-144 (1-Penty-1 H-indol-3-yl) (2,2,3,3- tetramrthylcyclopropyl) methanone 110ZD 5F-PB-22 Quinolin-8-yl 1-(5-fluropenthl)-1h- inodole-3-carboxylate 110ZE 4-Fluoroamphetamine 4-FA 1-(4-Fluorophenyl) propan-2-amine.] N-[(2S)-1-amino-3-methyl-1- 1[110ZF. oxobutan-2-yl]-1-[4-fluorophenyl) AB-FUBINACA methyl] indazole-3-carboxamide 110ZG 5F-AMB-PINACA (5F- Methyl 2-({[1-5-fluoropenty)-1H- AMB,5F-MMB- indazol3yl] carbonyl} amino)-3- PINACA) methylbutanoate 110ZH 5F-MDMB-PICA (5F- Methyl(S)-2-(1-5-fluoropentyl)-1H- MDMB-2201) indole-3- carboxamido)-3,3- dimethylbutanoate 110ZI 4F-MDMB-BINACA Methyl(S)-2-(1-(4-fluorobutyl)-1H- indazole-3-carboxamido)-3,3- dimethylbutanoate 110ZJ 4-CMC (4- clephedrone 1-(4-chlorophenyl)-2-(methylamino)- chloromethcathinone) 1-propanone 110ZK N-ethylhexedrone 2-(Ethylamino)-1-phenyl-1-hexanone 110ZL Alpha-PHP (RS)-1-Phenyl-2-(pyrrolidine-1- yl)hexan-1-one 110ZM flualprazolam 8-Chloro-6-(2-fluoro-phenyl)-1- methyl-4hbenzo[f][1,2,4]triazolo[4,3- a][1,4]diazepime 110ZN Etizolam 4-(2-Chlorophenyl)-2-ethyl-9-methyl- 6H-thieno[3,2- f][1,2,4]triazolo[4,3a][1,4]diazepine 110ZO DOC 4-Chloro-2,5- dimethoxyamfetamine 110ZP ADB-FUBINACA N-[(2S)-1-amino-3,3-dimethyl-1- oxobutan-2-yl]-1-[4- fluorophenyl)methyl]-1Hindazole-3- carboxamide 110ZQ FUB- Methyl(2S)-2-({1-[4- AMB,MMBFUBINAC fluorophenyl]methyl-1Hindazole-3- A,AMBFUBINACA carbonyl} amino)-3-methylbutanoate 110ZR CUMYL-4CNBINACA 1-(4-cyanobutyl)-N-(2-phenylpropan- 2-yl)-1Hindazole-3-carboxamide 110ZS ADB- N-[(2S)-1-amino-3,3-dimethyl-1- 53 CHMINACA,MAB- oxobutan-2-yl]-1-(cyclohexylmethyl)- CHMINACA 1H-indazole-3-carboxamide 110ZT N-ethylnorpentylone 1-(2H-1,3-benzodioxol-5-yl)-2- (ethylamino)pentan-1-one”.] 54",
+          "page": 51
         }
       ]
     }
