@@ -114,11 +114,18 @@ def test_a_token_with_no_iat_is_refused_after_a_revocation():
 
     from app.auth.dependencies import token_revoked
 
+    # NAIVE datetimes are deliberate here, not an oversight. The app stores timestamps in
+    # naive-UTC columns (see the design note in app/util/time.py), and token_revoked()
+    # compares `datetime.fromtimestamp(iat, tz=utc).replace(tzinfo=None)` against the stored
+    # epoch. Making these aware would raise "can't compare offset-naive and offset-aware
+    # datetimes" — the very error that module exists to avoid. The DTZ gate is right to ask;
+    # this is the answer.
     class _U:
-        tokens_valid_from = datetime(2026, 1, 1)
+        tokens_valid_from = datetime(2026, 1, 1)  # noqa: DTZ001 — naive-UTC storage contract
 
     assert token_revoked(_U(), {"sub": "1"}) is True
-    assert token_revoked(_U(), {"sub": "1", "iat": int(datetime(2025, 1, 1).timestamp())}) is True
+    _iat = int(datetime(2025, 1, 1).timestamp())  # noqa: DTZ001 — naive-UTC storage contract
+    assert token_revoked(_U(), {"sub": "1", "iat": _iat}) is True
 
 
 def test_untouched_accounts_are_unaffected():
