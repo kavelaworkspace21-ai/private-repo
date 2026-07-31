@@ -198,12 +198,43 @@ def upgrade() -> None:
         batch_op.create_index(batch_op.f('ix_document_versions_id'), ['id'], unique=False)
         batch_op.create_index(batch_op.f('ix_document_versions_tenant_id'), ['tenant_id'], unique=False)
 
+    # `cases` and `clients` ALREADY EXIST and, anywhere but a fresh install, already hold
+    # rows. Adding a NOT NULL column with no default to a populated table fails outright on
+    # PostgreSQL — `column "tenant_id" of relation "cases" contains null values`.
+    #
+    # This was originally written as a single nullable=False add. It passed CI and every
+    # local run for one reason only: both start from an EMPTY database, where the add
+    # always succeeds. The check could not fail on the case that breaks a populated Aurora.
+    # Found 2026-07-30 by compiling the migrations to Postgres DDL offline.
+    #
+    # Add nullable, backfill, then enforce. Written in portable SQLAlchemy Core rather than
+    # the PRAGMA-based helper in app/db/migrate_tenancy.py, which is both SQLite-only and
+    # never called from anywhere.
+    for _table, _idx in (("cases", []), ("clients", ["email"])):
+        with op.batch_alter_table(_table, schema=None) as batch_op:
+            batch_op.add_column(sa.Column("tenant_id", sa.Integer(), nullable=True))
+
+    # Pure SQL via op.execute(), deliberately: it needs no result set, so it works in
+    # OFFLINE mode (`alembic upgrade --sql`) as well as online. Fetching the tenant id with
+    # op.get_bind().execute(...).scalar() reads better but returns None offline — get_bind()
+    # has no connection to give — which breaks the very DDL-compile check that found this
+    # bug. Both statements are portable to SQLite and PostgreSQL as written.
+    op.execute(
+        "INSERT INTO tenants (name) "
+        "SELECT 'Default Firm' WHERE NOT EXISTS (SELECT 1 FROM tenants)"
+    )
+    for _table in ("cases", "clients"):
+        op.execute(
+            f"UPDATE {_table} SET tenant_id = (SELECT MIN(id) FROM tenants) "  # noqa: S608
+            f"WHERE tenant_id IS NULL"
+        )
+
     with op.batch_alter_table('cases', schema=None) as batch_op:
-        batch_op.add_column(sa.Column('tenant_id', sa.Integer(), nullable=False))
+        batch_op.alter_column("tenant_id", existing_type=sa.Integer(), nullable=False)
         batch_op.create_index(batch_op.f('ix_cases_tenant_id'), ['tenant_id'], unique=False)
 
     with op.batch_alter_table('clients', schema=None) as batch_op:
-        batch_op.add_column(sa.Column('tenant_id', sa.Integer(), nullable=False))
+        batch_op.alter_column("tenant_id", existing_type=sa.Integer(), nullable=False)
         batch_op.create_index(batch_op.f('ix_clients_email'), ['email'], unique=False)
         batch_op.create_index(batch_op.f('ix_clients_tenant_id'), ['tenant_id'], unique=False)
 

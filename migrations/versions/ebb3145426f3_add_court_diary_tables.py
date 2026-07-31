@@ -106,4 +106,13 @@ def downgrade() -> None:
         batch_op.drop_index(batch_op.f('ix_diary_entries_id'))
 
     op.drop_table('diary_entries')
+
+    # PostgreSQL enum types are schema objects that OUTLIVE their tables, and CREATE TYPE is
+    # not idempotent. Without these drops, downgrade succeeds and the very next upgrade
+    # fails with 'type "hearingstage" already exists' — a rolled-back deploy on Aurora could not
+    # move forward again without manual intervention. Invisible on SQLite, which has no enum
+    # types at all (the enum is just a VARCHAR), so this is guarded and a no-op there.
+    if op.get_bind().dialect.name == "postgresql":
+        op.execute("DROP TYPE IF EXISTS hearingstage")
+        op.execute("DROP TYPE IF EXISTS hearingoutcome")
     # ### end Alembic commands ###
