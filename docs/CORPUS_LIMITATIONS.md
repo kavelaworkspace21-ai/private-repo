@@ -355,11 +355,25 @@ heading of an injunction provision. Misattributed text is worse than missing tex
 nothing signals to the reader that it is wrong; s.42 is now its correct ~727 ch. But the
 Schedule is legally live — it defines "infrastructure project" for s.20A, which bars
 injunctions against such projects. s.20A itself survives intact (1,648 ch); only its Schedule
-is gone. Like the NDPS psychotropic schedule, it needs dedicated schedule handling.
+was gone.
 
-`OWNER_QUEUE`: schedule-aware parsing is now required by FOUR acts (NDPS psychotropic
-substances, SRA infrastructure, Commercial Courts Order XV-A, Partnership Schedule I fees).
-The same cost has now been accepted four separate times. It should be built once.
+**✅ RESOLVED 2026-07-30 — schedule-aware parsing built.** `_segment_schedules()` recovers the
+SRA infrastructure categories (`Sch.1.1`–`Sch.1.5`), the NDPS psychotropic list (106 entries)
+and Partnership Schedule I (9 fee entries): 120 entries, every body section byte-identical,
+no id repeated. Entries are namespaced on the Constitution's `Sch7.L1.*` precedent so a
+schedule entry can never occupy a section number.
+
+**Commercial Courts was listed here as a fourth act needing this, and that was wrong.**
+`article_schedule: "bare"` already parses it, and better — the shipped corpus carries `Sch.1`
+"Disclosure and discovery of documents", `Sch.2` "Discovery by interrogatories", `Sch.3`
+"Inspection", i.e. Order XV-A split rule by rule. The claim was inherited and repeated
+without anyone opening the file, and surfaced only because a body-integrity check failed and
+the failure was diagnosed instead of blamed on the new code.
+
+That cuts both ways and is worth stating once: this project has now been wrong about corpus
+content in **both** directions — text believed present that was amending legislation
+(arbitration s.16, CrPC s.44, IBC s.6), and text believed missing that was there all along
+(Order XV-A). A claim about what the corpus contains is a claim to verify, not inherit.
 
 ### A named trap: character-count deltas cannot tell law from table-of-contents
 

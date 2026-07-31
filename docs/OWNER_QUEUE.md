@@ -8,15 +8,27 @@ what the build work has actually surfaced and hands off. Newest sprint on top.
 
 ## From the corpus flag sweep (2026-07-29)
 
-- **Schedule-aware parsing is owed by FOUR acts and should be built once.** NDPS
-  (psychotropic substances), Specific Relief (2018 infrastructure schedule), Commercial
-  Courts (Order XV-A), Partnership (Schedule I maximum fees). Each recovery so far has
-  accepted the loss of a schedule as the price of recovering operative sections, and each
-  time that was the right local call — but four times is a pattern, not a coincidence, and
-  a fifth acceptance would be a decision to keep losing schedules rather than fix them.
-  Schedules are legally live: the SRA one defines "infrastructure project" for s.20A, which
-  bars injunctions. **Agent-completable — needs a decision to prioritise it, not owner
-  credentials.**
+- **RESOLVED 2026-07-30 — schedule-aware parsing built.** NDPS (+106 psychotropic
+  substances), Specific Relief (+5 infrastructure categories), Partnership (+9 Schedule I
+  fee entries) — 120 entries that were previously dropped. Every body section is
+  byte-identical and no id repeats, both checked against the shipped corpus. Ids use the
+  Constitution's `Sch7.L1.*` precedent so a schedule entry can never occupy a section
+  number, which is the collision that cost ten sections of law in arbitration, CrPC and IBC.
+
+  **This entry previously listed Commercial Courts (Order XV-A) as a fourth act, and that
+  was WRONG.** `article_schedule: "bare"` has always parsed that act, and better than the
+  generic parser would: the shipped corpus carries `Sch.1` "Disclosure and discovery of
+  documents", `Sch.2` "Discovery by interrogatories", `Sch.3` "Inspection" — Order XV-A
+  split rule by rule. The claim that its case-management content was missing was inherited
+  and repeated for months without anyone opening the file. It surfaced only because a
+  body-integrity check failed and the failure was diagnosed rather than assumed to be the
+  new code's fault.
+
+  Worth keeping as a caution: a queue item asserting something is MISSING is a claim about
+  the corpus, and this project has now been wrong about that in both directions — content
+  believed present that was amendment text (arbitration s.16, CrPC s.44, IBC s.6), and
+  content believed missing that was there all along (Order XV-A). Verify before acting on
+  either.
 
 - **RESOLVED 2026-07-29 — reseed had no crash safety.** It deleted the live collection
   first and embedded for minutes, so any interruption left a truncated index that still
