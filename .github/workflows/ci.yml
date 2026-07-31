@@ -100,12 +100,24 @@ jobs:
       - name: Alembic upgrade head (real Postgres — surfaces SQLite-only DDL)
         run: alembic upgrade head
 
-      # ADVISORY (for now): the conftest harness runs the full suite against real Postgres
-      # (not SQLite-in-disguise). Kept non-blocking until a first green run confirms no
-      # further SQLite-only test assumptions remain — then promote to blocking (drop
-      # continue-on-error). See docs/OWNER_QUEUE.md / STATUS.md.
-      - name: Full test suite (Postgres) — advisory until first green
-        continue-on-error: true
+      # BLOCKING (promoted 2026-07-30). The conftest harness runs the full suite against
+      # real Postgres, not SQLite-in-disguise.
+      #
+      # This was previously `continue-on-error: true`, "advisory until a first green run
+      # confirms no further SQLite-only test assumptions remain". That condition could never
+      # be met: the lane has never executed once — there is no git remote — so it was
+      # waiting for evidence it was configured never to produce. An advisory gate reports
+      # nothing; a red run that fails nothing is indistinguishable from a green one.
+      #
+      # The two obvious SQLite-only assumptions were checked before promoting:
+      #   * backups already branch on the driver and the tests already assert
+      #     status == "aurora_managed" on Postgres (tests/test_backups.py IS_SQLITE)
+      #   * no LIKE/ilike usage anywhere in app/ or tests/, so the case-sensitivity
+      #     difference does not arise
+      #
+      # If the first real run is red, that is the point: it surfaces the remaining
+      # assumptions instead of hiding them. Read the failures, do not re-disable this.
+      - name: Full test suite (Postgres)
         run: pytest tests/ -q
 
   # ── Dependency audit: BLOCKING, with documented waivers ────────────────────────

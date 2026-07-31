@@ -92,11 +92,31 @@ This audit is static. It proves the migrations **compile** for Postgres; it cann
 they **run**, and it says nothing about the ~766 tests, which have only ever executed
 against SQLite. Specifically untested:
 
-* runtime query behaviour (Postgres `LIKE` is case-sensitive, SQLite's is not for ASCII)
+* runtime query behaviour — though a grep found **no** `LIKE`/`ilike` usage in `app/` or
+  `tests/`, so the classic SQLite-vs-Postgres case-sensitivity trap does not apply here
 * transaction and isolation semantics under the scheduler's `UNIQUE(job_id, slot_key)` claim
-* `app/services/backup.py`, which imports `sqlite3` directly and runs
-  `PRAGMA integrity_check` — **backups are SQLite-only and will not work on Aurora**
 
 Running the suite against a real Postgres remains the only way to close these. It needs
 either a local Postgres/Docker (neither is installed on this machine) or the CI lane
 actually running.
+
+### Correction — backups are NOT a Postgres gap
+
+An earlier version of this document stated that `app/services/backup.py` is SQLite-only and
+"will not work on Aurora". **That is wrong**, and it was inferred from `import sqlite3` and
+`PRAGMA integrity_check` at the top of the file without reading the dispatch twenty lines
+below. `run_backup()` branches on the driver:
+
+```python
+elif driver == "postgresql":
+    run.status = "aurora_managed"
+    run.location = "Amazon RDS automated backups (PITR + daily snapshots)"
+```
+
+On Aurora, backups are deliberately delegated to RDS — point-in-time recovery plus daily
+snapshots — and the app records that fact instead of attempting its own. The tests already
+know this: `tests/test_backups.py` computes `IS_SQLITE` from the engine URL, skips the
+file-retention tests on other backends, and asserts `status == "aurora_managed"` on
+Postgres.
+
+Which also means the suite is more Postgres-ready than this audit first assumed.
