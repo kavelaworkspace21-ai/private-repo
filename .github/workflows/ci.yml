@@ -28,10 +28,15 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install runtime dependencies
+      # Install from the LOCK, not requirements.txt. requirements.txt is the intent file
+      # and is 23/24 unpinned (`>=` ranges), so installing from it makes every CI run
+      # resolve whatever was newest that day — a different environment from the one that
+      # was certified locally, and a different one on each run. That is how a suite passes
+      # on a developer machine and fails in CI for reasons nobody can reproduce.
+      - name: Install runtime dependencies (locked)
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.lock
 
       - name: Generate SBOM (CycloneDX, from the installed runtime environment)
         run: |
@@ -90,10 +95,15 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install runtime dependencies
+      # Install from the LOCK, not requirements.txt. requirements.txt is the intent file
+      # and is 23/24 unpinned (`>=` ranges), so installing from it makes every CI run
+      # resolve whatever was newest that day — a different environment from the one that
+      # was certified locally, and a different one on each run. That is how a suite passes
+      # on a developer machine and fails in CI for reasons nobody can reproduce.
+      - name: Install runtime dependencies (locked)
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.lock
 
       # BLOCKING: applying every migration on real Postgres is the core Aurora rehearsal —
       # it catches DDL that works on SQLite but not Postgres, the classic deploy-day failure.
@@ -132,10 +142,10 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: pip-audit (fails on any unwaived known CVE in requirements.txt)
+      - name: pip-audit (fails on any unwaived known CVE in the LOCKED dependency set)
         run: |
           pip install pip-audit==2.10.1
           # Waivers are documented, justified vuln ids in security/pip-audit-waivers.txt.
           IGNORES=$(grep -vE '^\s*#|^\s*$' security/pip-audit-waivers.txt | awk '{print "--ignore-vuln " $1}' | tr '\n' ' ')
           echo "Applying waivers: $IGNORES"
-          pip-audit -r requirements.txt $IGNORES
+          pip-audit -r requirements.lock $IGNORES
