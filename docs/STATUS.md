@@ -5,6 +5,147 @@
 > `docs/governance/` AIRA/Firoz-Brain/soul constitution + LSAI-SKILL package was RETIRED and
 > DELETED by the owner on 2026-07-21 and is no longer authority.)
 
+## CORPUS INTEGRITY + RESEED DURABILITY + POSTGRES READINESS (2026-07-29 → 07-30)
+
+**Certified: 782 passed / 0 failed · fingerprint `a1fecc33d3e0` · index 8,914 chunks ·
+preflight OK · HEAD `ee09872`, release pinned to `f29eda0`.**
+
+The session began as a parser flag sweep and turned into something else. The sweep's
+findings were real, but the two most serious problems were found beside it, by asking a
+question this project had never asked: not *is the section present?* but **is this text
+law?**
+
+### 1. Ten sections held AMENDING legislation instead of law — nine wrong since before version control
+
+India Code prints the amending Act in the same PDF as the principal Act. Its clauses
+renumber from 1 (`16. In section 31 of the principal Act,—`), so with no boundary they parse
+as sections and **collide with the principal Act's numbering**. The genuine provision loses.
+
+The failure shape is the dangerous one: the section exists, has a plausible length, and
+retrieves normally. It simply is not the law.
+
+| Act | Sections | Was holding |
+|---|---|---|
+| `arbitration_1996` | 6, 16, 18 | amendment clauses — s.16 replaced **competence-competence** |
+| `crpc_1973` | 16, 38, 44 | s.16 Metropolitan Magistrates, s.44 **Arrest by Magistrate** |
+| `ibc_2016` | 6, 19, 26, 36 | s.6 **who may initiate a CIRP**, s.36 Liquidation estate |
+
+Two boundary rules were needed: `drop_extracts_appendix` (appended amendment Acts) and
+`body_before_schedule` (schedules that amend OTHER enactments — IBC's Eleventh Schedule
+rewrites the Companies Act). All ten now hold real law.
+`tests/test_corpus_contamination.py` scans the **shipped corpus**, expected count zero.
+
+Found by accident while diagnosing a regression in the tenth. Nine predate `1b7e99b`.
+
+### 2. The flag sweep — 15 applied, 4 rejected, all on measured evidence
+
+Applied: IPC, NDPS, SARFAESI, RERA, Transfer of Property, Specific Relief, Partnership,
+Mediation, POCSO, Sale of Goods, BSA, Hindu Succession, Motor Vehicles, Stamp Act,
+Constitution.
+
+Rejected: `it_act_2000` (destroyed 8,399 ch of Definitions), `legal_services_1987` (cut
+s.2(j), (k) and s.2(2)), `arbitration_1996` (both flags — one replaced competence-competence
+with an amendment stub), `ipc_1860 +wrapped_headings` (22 repeal markers for zero gain).
+
+Whole regimes that were **absent** are now present: IBC ss.54B/54E/54F (2021 pre-packaged
+insolvency), IBC s.9 (operational-creditor CIRP), Stamp Act s.2 Definitions (11,191 ch),
+Motor Vehicles s.2 + 33 more, Constitution Arts. 124C/131A/242/272/306, Hindu Succession
+s.14, Transfer of Property s.58 and s.43.
+
+Governed costs, recorded not buried: Stamp ss.8B/8E/8F/23A lose addressability (text merges
+into 8A/8D/23); mediation ss.49/55 stay absent. Both in `CORPUS_LIMITATIONS.md`.
+
+### 3. Schedule-aware parsing — 120 entries recovered
+
+`_segment_schedules()` + the `schedules` flag: NDPS +106 psychotropic substances, Specific
+Relief +5 infrastructure categories (which define "infrastructure project" for s.20A, the
+provision that BARS injunctions), Partnership +9 Schedule I fees. Every body section
+byte-identical, no id repeated. Ids follow the Constitution's `Sch7.L1.*` precedent so a
+schedule entry can never occupy a section number — the collision above, made structurally
+impossible.
+
+**A standing claim was struck.** `OWNER_QUEUE` said Commercial Courts Order XV-A was missing
+from its schedule. It never was: `article_schedule: "bare"` already parses that act, and
+better (`Sch.1` Disclosure and discovery, `Sch.2` Discovery by interrogatories, `Sch.3`
+Inspection — Order XV-A rule by rule). The claim was inherited and repeated for months
+without anyone opening the file.
+
+### 4. `reseed()` — six durability guards, five written against failures that actually happened
+
+It used to delete the live collection FIRST and embed for minutes; any interruption left a
+truncated index that still answered queries with most of the law missing (2026-07-20
+disk-full, -25 concurrent, -29 killed process leaving 1,200 of 8,704 chunks).
+
+Now: builds into a temp collection and swaps by **rename**; a lock refuses concurrent
+reseeds, with a **heartbeat** so a killed holder goes stale in 5 min not an hour; a shrink
+check refuses a build under 90% of live; orphan adoption completes a swap interrupted
+between delete and rename; the disk floor **scales with store size** (build-then-swap holds
+two copies — 642 MB measured at peak, against a flat 500 MB floor); and the build reads a
+**frozen corpus snapshot**, so a concurrent `ingest()` cannot blend two corpus versions into
+one index. That last one was hit for real, by me, two turns after describing the hazard.
+
+### 5. Library search now resolves the words advocates use
+
+`test_search_finds_sections` was **passing because the corpus was corrupt**: it searched
+"anticipatory bail", a phrase that existed nowhere except inside CrPC s.38's contaminated
+amendment text. Repairing the corpus removed it and exposed a real, old gap — the statutes
+never say "anticipatory bail" (CrPC s.438 / BNSS s.482 are "Direction for grant of bail to
+person apprehending arrest") and never say "FIR". Colloquial terms now expand to statutory
+wording, resolving in both the old Code and its 2023 successor.
+
+### 6. Postgres / Aurora — audit, two deploy hazards fixed, lane made blocking
+
+`docs/POSTGRES_MIGRATION_AUDIT.md`. All 16 migrations compile cleanly to Postgres DDL both
+directions (verified with Alembic **offline mode**, which exercises the dialect compiler
+without a server — no local Postgres or Docker here, and Aurora is off-limits).
+
+* **The tenancy migration could not be applied to a database with data.** `530d6dd3a280`
+  added `tenant_id` NOT NULL with no default or backfill to the pre-existing `cases` and
+  `clients`. **CI could not catch this by construction** — it starts from an empty container,
+  where adding a NOT NULL column always succeeds. The lane went green on precisely the
+  migration that breaks a populated Aurora. Now: add nullable → backfill → SET NOT NULL,
+  proven on SQLite with rows present.
+* **A rolled-back deploy could not be re-applied.** Seven enum types created going up, none
+  dropped coming down; `CREATE TYPE` is not idempotent, so the next upgrade died on
+  "type casestatus already exists". Fixed, dialect-guarded.
+* **The CI suite step is now BLOCKING.** It was `continue-on-error: true` "until a first
+  green run" — a condition that could never be met, because **the lane has never executed
+  once** (no git remote). An advisory gate reports nothing.
+
+### The through-line
+
+Nearly every problem this session was a **check that reported nothing**: a content probe that
+raised instead of asserting; a suite whose exit code was swallowed by `tail`, letting a
+freeze commit on a red run; a status check matching a sentinel the chain had merely echoed;
+a CI gate configured so it could not fail; and a test green because the corpus was wrong.
+The corpus damage was real, but it survived because the things watching it were not looking.
+
+Every measurement shortcut produced at least one confident wrong answer — head-sampling
+missed 8,399 destroyed chars; section counts called Partnership's best change its worst; a
+presence check would have cleared `legal_services_1987`; and a harness that did not
+replicate the real pipeline invented a cost for Motor Vehicles, concealed real damage in
+arbitration, and manufactured two false objections to the Constitution. What worked, every
+time: **run the real pipeline and diff against what actually shipped.**
+
+### Corrections made to my own claims this session
+
+* "s.29A recovered for arbitration" — it was the *amendment's* text; s.29A is correctly absent
+* "Motor Vehicles loses ss.140–144 no-fault liability" — those are omission markers, and they
+  were already absent from the shipped corpus, so there was no cost at all
+* "arbitration's oversized s.18/s.86 absorb the Schedules" — s.18 was amendment text
+* "backups are SQLite-only and will not work on Aurora" — wrong, and it reached a committed
+  document: `run_backup()` dispatches on driver and delegates to RDS PITR + daily snapshots
+
+### Still open
+
+* **The Postgres lane has never run** — needs a git remote, not more code. 782 tests remain
+  SQLite-only; Aurora is materially less risky but **not rehearsed**.
+* `it_act_2000` and `legal_services_1987` need footnote-aware continuation, not a flag
+* Stamp ss.8B/8E/8F/23A unaddressable pending 8-series suffix handling
+* Human gates G1/G6/G7/G8 + hallucination sign-off remain owner-only
+* **Owner action outstanding: rotate `INDIAN_KANOON_API_KEY`** (live, per-call billed; never
+  committed but displayed in plaintext in a working session transcript)
+
 ## VISION-ALIGNMENT PROGRAM — Phase 2: the citation gate now WITHHOLDS (2026-07-24)
 
 Closes the CONTRADICTED claim from this morning's re-adjudication: the "citation hard-gate"
