@@ -13,7 +13,7 @@ jobs:
   # ── Test suite on SQLite (the default dev/CI database) ─────────────────────────
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     env:
       # Deterministic, offline test config (no live AI / no rate limiting).
       RATELIMIT_ENABLED: "0"
@@ -37,6 +37,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.lock
+
+      # The Chroma vector index is DERIVED from app/legal_corpus/fulltext and is gitignored,
+      # so a fresh runner has none. Any test that touches get_collection() then seeds ~8,900
+      # chunks inline — 15-25 minutes of CPU embedding, inside a 25-minute job. That is why
+      # the suite failed here while passing locally, and it went unnoticed because this lane
+      # had never actually run.
+      #
+      # Key on the corpus contents: a corpus change must rebuild, anything else restores in
+      # seconds. The first run on a new corpus still pays the build cost, hence the raised
+      # timeout below.
+      - name: Cache the vector index (keyed on the corpus)
+        uses: actions/cache@v4
+        with:
+          path: chroma_db
+          key: chroma-${{ hashFiles('app/legal_corpus/fulltext/*.json', 'app/legal_corpus/*.json') }}
+          restore-keys: chroma-
 
       - name: Generate SBOM (CycloneDX, from the installed runtime environment)
         run: |
@@ -65,7 +81,7 @@ jobs:
   # ── Postgres parity: the Aurora rehearsal (S0.4) ───────────────────────────────
   test-postgres:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     services:
       postgres:
         image: postgres:16
@@ -104,6 +120,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.lock
+
+      # The Chroma vector index is DERIVED from app/legal_corpus/fulltext and is gitignored,
+      # so a fresh runner has none. Any test that touches get_collection() then seeds ~8,900
+      # chunks inline — 15-25 minutes of CPU embedding, inside a 25-minute job. That is why
+      # the suite failed here while passing locally, and it went unnoticed because this lane
+      # had never actually run.
+      #
+      # Key on the corpus contents: a corpus change must rebuild, anything else restores in
+      # seconds. The first run on a new corpus still pays the build cost, hence the raised
+      # timeout below.
+      - name: Cache the vector index (keyed on the corpus)
+        uses: actions/cache@v4
+        with:
+          path: chroma_db
+          key: chroma-${{ hashFiles('app/legal_corpus/fulltext/*.json', 'app/legal_corpus/*.json') }}
+          restore-keys: chroma-
 
       # BLOCKING: applying every migration on real Postgres is the core Aurora rehearsal —
       # it catches DDL that works on SQLite but not Postgres, the classic deploy-day failure.
