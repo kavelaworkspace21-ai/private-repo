@@ -53,6 +53,10 @@ jobs:
           path: chroma_db
           key: chroma-${{ hashFiles('app/legal_corpus/fulltext/*.json', 'app/legal_corpus/*.json') }}
           restore-keys: chroma-
+          # Without this the cache only saves on a SUCCESSFUL post-step, so a job that
+          # keeps timing out can never populate it — the cache would stay empty forever
+          # precisely in the case it exists to fix.
+          save-always: true
 
       - name: Generate SBOM (CycloneDX, from the installed runtime environment)
         run: |
@@ -81,7 +85,12 @@ jobs:
   # ── Postgres parity: the Aurora rehearsal (S0.4) ───────────────────────────────
   test-postgres:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 782 tests at Postgres latency — every query is a socket round-trip to the
+    # service container, several times slower than SQLite in-process. Run #4 was
+    # CANCELLED at 45m having not finished. 90m is a real budget, not a guess at
+    # one: the SQLite suite takes ~8m locally and Postgres is plausibly 3-5x that,
+    # plus a cold vector-index seed on the first run.
+    timeout-minutes: 90
     services:
       postgres:
         image: postgres:16
@@ -136,6 +145,10 @@ jobs:
           path: chroma_db
           key: chroma-${{ hashFiles('app/legal_corpus/fulltext/*.json', 'app/legal_corpus/*.json') }}
           restore-keys: chroma-
+          # Without this the cache only saves on a SUCCESSFUL post-step, so a job that
+          # keeps timing out can never populate it — the cache would stay empty forever
+          # precisely in the case it exists to fix.
+          save-always: true
 
       # BLOCKING: applying every migration on real Postgres is the core Aurora rehearsal —
       # it catches DDL that works on SQLite but not Postgres, the classic deploy-day failure.
