@@ -49,13 +49,35 @@ def _pg_schema():
     The original comment called it "slower but this is a rehearsal, not the hot path",
     which was a fair guess that had never been measured, because the lane had never run.
     """
+    from sqlalchemy import event, text
+
     from app.db.config import engine as configured_engine
+
+    # FAIL FAST INSTEAD OF HANGING. drop_all, create_all and TRUNCATE all need an ACCESS
+    # EXCLUSIVE lock. If any pooled connection is idle-in-transaction holding those tables,
+    # Postgres waits FOREVER — there is no default lock timeout. SQLite has no such concept,
+    # which is precisely why this is invisible locally.
+    #
+    # That is what the CI lane has been doing: runs #4, #5, #7 and #9 were cancelled at 45m,
+    # 90m, 90m and 90m having emitted ~14 lines of pytest output. Near-silence under `-q` is
+    # a block, not slowness. A 10s lock_timeout converts an unbounded hang into an
+    # immediate, named error naming the statement that could not get its lock.
+    @event.listens_for(configured_engine, "connect")
+    def _set_timeouts(dbapi_conn, _rec):            # pragma: no cover - PG lane only
+        with dbapi_conn.cursor() as cur:
+            cur.execute("SET lock_timeout = '10s'")
+            cur.execute("SET idle_in_transaction_session_timeout = '30s'")
+
+    # Drop any pooled connection before schema DDL: a connection this pool is holding is
+    # exactly the one that would block the lock we are about to take.
+    configured_engine.dispose()
 
     Base.metadata.drop_all(configured_engine)     # clear anything a prior run left behind
     Base.metadata.create_all(configured_engine)
     try:
         yield configured_engine
     finally:
+        configured_engine.dispose()
         Base.metadata.drop_all(configured_engine)
 
 
@@ -79,6 +101,12 @@ def client(request):
         # drop_all was doing implicitly.
         tables = ", ".join(f'"{t}"' for t in Base.metadata.tables)
         if tables:
+            # Return every pooled connection first. A connection left idle-in-transaction by
+            # the previous test holds row locks on these tables, and TRUNCATE needs ACCESS
+            # EXCLUSIVE — without this it waits on the pool's own leftovers. The lock_timeout
+            # set in _pg_schema turns any remaining contention into a fast, named error
+            # rather than a silent 90-minute stall.
+            configured_engine.dispose()
             with configured_engine.begin() as conn:
                 conn.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))
 
