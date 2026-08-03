@@ -21,7 +21,15 @@ jobs:
       JWT_SECRET: "ci-test-secret-not-for-prod"
       ENVIRONMENT: test   # security_gate: CI uses throwaway secrets and must declare it
     steps:
+      # FULL history, not the default shallow fetch-depth: 1.
+      # test_release_ops.py::test_release_json_pins_a_real_commit_in_this_history runs
+      # `git merge-base --is-ancestor <pinned commit> HEAD`. In a shallow clone the pinned
+      # commit object does not exist, git errors, and the test fails — not because the pin
+      # is stale but because CI cannot see the history to judge it. That was the SQLite
+      # suite failure across runs #1-#5. The repo is 7.8 MB; full history costs nothing.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -113,7 +121,15 @@ jobs:
       # The app + Alembic read DATABASE_URL; psycopg v3 driver.
       DATABASE_URL: "postgresql+psycopg://juriscite:juriscite@localhost:5432/juriscite_ci"
     steps:
+      # FULL history, not the default shallow fetch-depth: 1.
+      # test_release_ops.py::test_release_json_pins_a_real_commit_in_this_history runs
+      # `git merge-base --is-ancestor <pinned commit> HEAD`. In a shallow clone the pinned
+      # commit object does not exist, git errors, and the test fails — not because the pin
+      # is stale but because CI cannot see the history to judge it. That was the SQLite
+      # suite failure across runs #1-#5. The repo is 7.8 MB; full history costs nothing.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -180,7 +196,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      # FULL history, not the default shallow fetch-depth: 1.
+      # test_release_ops.py::test_release_json_pins_a_real_commit_in_this_history runs
+      # `git merge-base --is-ancestor <pinned commit> HEAD`. In a shallow clone the pinned
+      # commit object does not exist, git errors, and the test fails — not because the pin
+      # is stale but because CI cannot see the history to judge it. That was the SQLite
+      # suite failure across runs #1-#5. The repo is 7.8 MB; full history costs nothing.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
