@@ -188,8 +188,22 @@ jobs:
       #
       # If the first real run is red, that is the point: it surfaces the remaining
       # assumptions instead of hiding them. Read the failures, do not re-disable this.
+      # -v, not -q, and ONE LINE PER TEST on purpose.
+      #
+      # Runs #4, #5 and #7 were all cancelled at the timeout (45m, 90m, 90m) having emitted
+      # roughly FOURTEEN lines of pytest output in an hour and a half. `-q` prints progress
+      # dots as tests complete, so near-zero output means this lane HANGS rather than runs
+      # slowly — and a hang is invisible in the log because the test that never finishes is
+      # the one that never prints.
+      #
+      # With -v pytest writes each test's name BEFORE running it, so the last line in a
+      # cancelled log names the culprit exactly. --durations then ranks the slow ones if it
+      # turns out to be many small stalls rather than one block.
+      #
+      # This is diagnosis, not a fix. It does not weaken the gate: the step still fails on
+      # any test failure, and the lane stays blocking.
       - name: Full test suite (Postgres)
-        run: pytest tests/ -q
+        run: pytest tests/ -v --durations=25
 
   # ── Dependency audit: BLOCKING, with documented waivers ────────────────────────
   audit:
