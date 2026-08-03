@@ -34,21 +34,54 @@ from app.db.session import get_db
 from app.main import app
 
 
+@pytest.fixture(scope="session")
+def _pg_schema():
+    """Build the Postgres schema ONCE for the whole session.
+
+    It used to be built per test — `drop_all` + `create_all` + `drop_all` again, for every
+    one of ~780 tests. On SQLite that is nearly free. On Postgres each one is catalog DDL
+    against a real server: ~40 tables, their indexes and 7 enum types, three times over,
+    per test.
+
+    Measured, not guessed: the CI Postgres job was CANCELLED at 45 minutes, then again at
+    90, having still not finished — while the identical suite takes ~8 minutes on SQLite.
+    No timeout would ever have been enough, because the cost scales with the test count.
+    The original comment called it "slower but this is a rehearsal, not the hot path",
+    which was a fair guess that had never been measured, because the lane had never run.
+    """
+    from app.db.config import engine as configured_engine
+
+    Base.metadata.drop_all(configured_engine)     # clear anything a prior run left behind
+    Base.metadata.create_all(configured_engine)
+    try:
+        yield configured_engine
+    finally:
+        Base.metadata.drop_all(configured_engine)
+
+
 @pytest.fixture()
-def client():
+def client(request):
     # Postgres/Aurora parity lane (S0.4): when DATABASE_URL points at a non-SQLite backend
     # (the CI test-postgres job), run the very same tests against the REAL configured engine
     # instead of a throwaway SQLite file — that is what makes the lane an Aurora rehearsal
-    # rather than SQLite-in-disguise. Per-test isolation is a clean drop_all/create_all on the
-    # shared DB (the PG lane runs serially, so this is safe; it is slower but this is a
-    # rehearsal, not the hot path). The SQLite branch below is UNCHANGED — the default local
-    # and CI runs behave exactly as before.
+    # rather than SQLite-in-disguise. The SQLite branch below is UNCHANGED — the default
+    # local and CI runs behave exactly as before.
     db_url = os.getenv("DATABASE_URL", "")
     if db_url and not db_url.startswith("sqlite"):
-        from app.db.config import engine as configured_engine
+        from sqlalchemy import text
 
-        Base.metadata.drop_all(configured_engine)     # clear anything a prior test left behind
-        Base.metadata.create_all(configured_engine)
+        configured_engine = request.getfixturevalue("_pg_schema")
+
+        # Per-test isolation by TRUNCATE rather than DDL. Emptying ~40 small tables is
+        # milliseconds; dropping and recreating them is seconds. RESTART IDENTITY keeps the
+        # behaviour tests were written against — a fresh schema restarts every sequence, so
+        # the first user is still id 1. CASCADE handles the foreign-key ordering that
+        # drop_all was doing implicitly.
+        tables = ", ".join(f'"{t}"' for t in Base.metadata.tables)
+        if tables:
+            with configured_engine.begin() as conn:
+                conn.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))
+
         TestSession = sessionmaker(autocommit=False, autoflush=False, bind=configured_engine)
 
         def _override_get_db():
@@ -64,7 +97,10 @@ def client():
                 yield c
         finally:
             app.dependency_overrides.clear()
-            Base.metadata.drop_all(configured_engine)
+            # No drop_all here: the schema belongs to the session fixture, which tears it
+            # down once at the end. Dropping it per test is what made this lane unable to
+            # finish, and it would also destroy the schema the next test expects to find.
+            # Isolation is the TRUNCATE at setup above.
         return
 
     # ── default: fresh SQLite temp DB per test (local + CI `test` job) ──
