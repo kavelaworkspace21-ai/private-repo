@@ -35,7 +35,12 @@ chroma_db/
 # Official source PDFs (~153 MB). Re-downloadable; their SHA-256 + URL are recorded
 # in the versioned fulltext provenance, so integrity stays verifiable without the blobs.
 data/source_pdfs/
-artifacts/
+artifacts/*
+# ...EXCEPT the S0 baseline. These are small machine-readable check outputs (JUnit XML,
+# ruff JSON, pip-audit JSON, environment manifest) that every later sprint compares against.
+# A baseline nobody can diff against is not a baseline, so unlike the heavy derived artifacts
+# above these are versioned deliberately.
+!artifacts/baseline/
 demo_shots/
 backups/
 *.bak

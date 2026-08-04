@@ -1,0 +1,82 @@
+{
+  "captured_at": "2026-08-04",
+  "purpose": "S0 baseline \u2014 the reference every later sprint diffs against.",
+  "git": {
+    "head": "caba687b128624e6f810fed766e51319976d817f",
+    "branch": "main",
+    "commit_count": "97",
+    "working_tree_clean": false,
+    "dirty_paths": [
+      "gitignore",
+      "artifacts/"
+    ],
+    "dirty_paths_note": "The tree was dirty at capture time ONLY with this baseline's own outputs \u2014 the artifacts/baseline/ files being written, the .gitignore exception that lets them be versioned, and the S0 docs. Committed together as the baseline commit; nothing else was outstanding."
+  },
+  "runtime": {
+    "python_local": "3.14.6",
+    "python_ci": "3.12",
+    "platform": "Windows-11-10.0.28020-SP0"
+  },
+  "dependencies": {
+    "lock_file": "requirements.lock",
+    "lock_sha256": "cf364f5b4a1b489c94c8625f34f7c86bd9f00c5d4bce8191c2c94c18e1a719c0",
+    "locked_packages": 154,
+    "installed_packages": 154
+  },
+  "release_identity": {
+    "app_version": "0.2.0",
+    "corpus_fingerprint": "a1fecc33d3e0",
+    "migration_head": "e2b7c9d40a15",
+    "chroma_collection": "indian_law_sections",
+    "embedding_model": "onnx-default-minilm",
+    "expected_chunk_count": 8914,
+    "verified_acts": 50,
+    "generated_at": "2026-07-31",
+    "note": "Pinned identity of the verified release. The Chroma index is DERIVED from the versioned app/legal_corpus/fulltext/*.json; a clean build regenerates it via reseed() and MUST match corpus_fingerprint. Preflight fails closed on any mismatch. Regenerate this file with: python -m app.ops.release freeze",
+    "commit": "6929ccf"
+  },
+  "checks": {
+    "ruff": {
+      "command": "ruff check .",
+      "rulesets": [
+        "DTZ",
+        "F"
+      ],
+      "findings": 0
+    },
+    "pip_audit": {
+      "command": "pip-audit -r requirements.lock (+ documented waivers)",
+      "result": "clean",
+      "waivers": [
+        "ecdsa",
+        "chromadb"
+      ]
+    },
+    "pytest_sqlite": {
+      "command": "pytest tests/ -q",
+      "results": "artifacts/baseline/junit-sqlite.xml",
+      "summary": {
+        "tests": 785,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "seconds": 531.4
+      }
+    },
+    "pytest_postgres": {
+      "command": "pytest tests/ -v (CI only)",
+      "note": "cannot run locally \u2014 no Docker, no Postgres server on the dev box"
+    }
+  },
+  "ci": {
+    "workflow": ".github/workflows/ci.yml",
+    "jobs": [
+      "test",
+      "test-postgres",
+      "audit"
+    ],
+    "green_baseline_run": 15,
+    "green_baseline_url": "https://github.com/kavelaworkspace21-ai/private-repo/actions/runs/30885314546",
+    "evidence": "docs/CI_RELEASE_EVIDENCE.md"
+  }
+}
