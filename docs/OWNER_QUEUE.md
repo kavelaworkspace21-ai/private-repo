@@ -186,6 +186,20 @@ agent level; **AWS-side revocation is owner-only and still open.**
   CI and to deploy the current corpus. AWS billing is owner-only.
 - **OWNER-12 — Error-tracker + alert channel choice** (GlitchTip/Sentry, email/Slack webhook) —
   feeds Sprint 5 observability.
+- **OWNER-14 — Uploaded client files have NO backup at all.** Found in S4, 2026-08-04. This is
+  distinct from (and more severe than) B3 "restore-test the RDS backup path": B3 is an
+  untested backup, this is the **absence** of one. Document *rows* live in PostgreSQL and are
+  covered by Aurora PITR. Document *bytes* live on local disk under
+  `data/uploads/<tenant_id>/` — `app/services/storage.py` is filesystem-only, there is no
+  `boto3` and no bucket anywhere in `app/`, and its docstring names S3 as a future swap that
+  has not happened. Restore the database alone and every document row points at a file that is
+  not there; the UI still lists the document and the bytes are gone. **Nothing in the database
+  is wrong, so no database-level check can see it** — `scripts/verify_restore.py` walks the
+  filesystem for exactly this reason. Losing `chroma_db/` is an outage (derived, rebuildable);
+  losing `data/uploads/` is data loss. **Action (owner, before any real client data):** put
+  `data/uploads/` on durable storage (EFS with backup, or complete the S3 swap the code was
+  designed for), or back it up on the database's schedule and retention. See
+  `docs/BACKUP_AND_DR.md` §1.
 - **OWNER-13 — The GitHub repo is still PUBLIC.** Verified against the API on 2026-08-04:
   `visibility: public`, `private: false`. It was set public deliberately so CI logs could be
   read without auth, and the intent afterwards was to set it back — that has not taken effect.

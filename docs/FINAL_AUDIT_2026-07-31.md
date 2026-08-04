@@ -13,7 +13,12 @@
 >   (`visibility: public`). Tracked as OWNER-13 in [`OWNER_QUEUE.md`](OWNER_QUEUE.md).
 >
 > Everything else — the corpus findings in §2, the risk register in §5, and blocking items
-> B2–B7 — stands as written.
+> B2–B7 — stands as written, **except that §5's "Backup unrestorable — Unknown / Severe" row
+> is now worse than Unknown.** S4 (2026-08-04) established that uploaded client files have no
+> backup at all: document rows are in PostgreSQL and covered by Aurora PITR, but the bytes are
+> on local disk under `data/uploads/`, and `app/services/storage.py` is filesystem-only. This
+> is not an untested backup, it is the absence of one. Tracked as OWNER-14; see
+> [`BACKUP_AND_DR.md`](BACKUP_AND_DR.md) §1.
 
 **Date:** 2026-07-31 · **HEAD:** `0c1aca3` · **App version:** 0.2.0
 **Corpus fingerprint:** `a1fecc33d3e0` · **Index:** 8,914 chunks · **Commits:** 88
