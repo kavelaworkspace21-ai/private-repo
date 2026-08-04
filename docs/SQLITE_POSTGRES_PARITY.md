@@ -106,6 +106,7 @@ next person re-deriving it.
 | Result ordering without `ORDER BY` | 32 list queries in routers; 21 have `order_by`. All 11 without it were inspected individually: 9 are erasure/collection paths that iterate to delete, 1 builds a **set** for idempotency dedup (`ecourts.py`), and 1 is an inner sub-query whose outer query *does* order and limit (`workbench.py`). **No user-facing list depends on implicit order.** |
 | Backups | `run_backup()` already dispatches on the driver and returns `status="aurora_managed"` on PostgreSQL; the tests assert per-backend behaviour. Not a divergence — but see the caveat below. |
 | String concat / integer division | No `\|\|` concatenation or integer-division-dependent arithmetic in app code. |
+| Corpus reseed / build / swap under a PostgreSQL-backed app | **Structurally cannot diverge.** `reseed()` in `app/ai/vector_store.py` touches ChromaDB and the filesystem only — it imports no `Session` and no `get_db`, so there is no SQL involved to behave differently. The SQL-backed state *around* it (`backup_runs`, `scheduled_job_runs`, written by `app/services/backup.py` and `app/services/scheduler.py`) is ordinary ORM work already exercised on the Postgres lane, since the whole suite runs there. No separate test written: one would assert that code with no database access is unaffected by the database. |
 
 ---
 
