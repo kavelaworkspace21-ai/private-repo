@@ -107,6 +107,30 @@ def client(request):
             # set in _pg_schema turns any remaining contention into a fast, named error
             # rather than a silent 90-minute stall.
             configured_engine.dispose()
+
+            # dispose() is NOT sufficient on its own: it closes connections the pool still
+            # holds, and does nothing about one that was CHECKED OUT and never returned.
+            # Sixteen call sites across ten test files do
+            #     db = next(app.dependency_overrides[get_db]())
+            # which runs the generator as far as its `yield` and abandons it there. The
+            # `finally: db.close()` in get_db never executes — it would only run when the
+            # generator is closed or garbage-collected, which is not something to schedule a
+            # test suite around. Each of those leaves a backend sitting `idle in transaction`
+            # holding AccessShareLock on whatever it read, and TRUNCATE wants ACCESS
+            # EXCLUSIVE on all 33 tables. SQLite has no such thing, so it is invisible there.
+            #
+            # So end them explicitly. The filter is deliberately narrow: `idle in
+            # transaction` only — a backend doing real work is never touched, so this cannot
+            # mask a genuine concurrency failure. It is also scoped to current_database(),
+            # and DATABASE_URL here is the dedicated CI service container.
+            with configured_engine.begin() as conn:
+                conn.execute(text("""
+                    SELECT pg_terminate_backend(pid)
+                      FROM pg_stat_activity
+                     WHERE datname = current_database()
+                       AND pid <> pg_backend_pid()
+                       AND state = 'idle in transaction'
+                """))
             with configured_engine.begin() as conn:
                 conn.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))
 

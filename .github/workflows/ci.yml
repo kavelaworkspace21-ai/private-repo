@@ -61,10 +61,11 @@ jobs:
           path: chroma_db
           key: chroma-${{ hashFiles('app/legal_corpus/fulltext/*.json', 'app/legal_corpus/*.json') }}
           restore-keys: chroma-
-          # Without this the cache only saves on a SUCCESSFUL post-step, so a job that
-          # keeps timing out can never populate it — the cache would stay empty forever
-          # precisely in the case it exists to fix.
-          save-always: true
+          # NOTE: `save-always: true` was used here and GitHub now warns it "does not work
+          # as intended and will be removed". The documented replacement is a separate
+          # actions/cache/restore + actions/cache/save pair. Removed rather than left in
+          # place: an input that does not do what its name says is worse than no input,
+          # because it reads as a solved problem. Tracked in OWNER_QUEUE.
 
       - name: Generate SBOM (CycloneDX, from the installed runtime environment)
         run: |
@@ -161,10 +162,11 @@ jobs:
           path: chroma_db
           key: chroma-${{ hashFiles('app/legal_corpus/fulltext/*.json', 'app/legal_corpus/*.json') }}
           restore-keys: chroma-
-          # Without this the cache only saves on a SUCCESSFUL post-step, so a job that
-          # keeps timing out can never populate it — the cache would stay empty forever
-          # precisely in the case it exists to fix.
-          save-always: true
+          # NOTE: `save-always: true` was used here and GitHub now warns it "does not work
+          # as intended and will be removed". The documented replacement is a separate
+          # actions/cache/restore + actions/cache/save pair. Removed rather than left in
+          # place: an input that does not do what its name says is worse than no input,
+          # because it reads as a solved problem. Tracked in OWNER_QUEUE.
 
       # BLOCKING: applying every migration on real Postgres is the core Aurora rehearsal —
       # it catches DDL that works on SQLite but not Postgres, the classic deploy-day failure.

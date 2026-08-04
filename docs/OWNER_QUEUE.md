@@ -150,13 +150,19 @@ agent level; **AWS-side revocation is owner-only and still open.**
 ## From Sprint 0 — Baseline Hygiene (2026-07-21)
 
 ### Decisions / follow-ups the agent intentionally did NOT auto-apply
-- **Promote the Postgres CI suite to blocking.** The new `test-postgres` job runs the full
-  suite against a real `postgres:16` (via a DB-configurable test harness), but its suite step
-  is `continue-on-error: true` because it could not be verified locally (no Docker/Postgres on
-  the dev box). `alembic upgrade head` on Postgres IS blocking. **Action:** after the first CI
-  run on a push, confirm the Postgres suite is green, then delete the `continue-on-error: true`
-  line in `.github/workflows/ci.yml` to make it blocking. If it's red, the failures are real
-  SQLite-only assumptions to fix.
+- ~~**Promote the Postgres CI suite to blocking.**~~ **DONE 2026-07-30.** `continue-on-error`
+  removed; both `alembic upgrade head` and the full suite are blocking on real `postgres:16`.
+  The first genuine run (#10) returned **764 passed, 1 skipped, 17 errors** — and every error
+  was in fixture setup, not test logic. There were no SQLite-only test assumptions to fix; the
+  harness itself was the problem (abandoned scheduler jobs + leaked sessions deadlocking
+  against `TRUNCATE`). Fixed 2026-08-04; see `docs/POSTGRES_MIGRATION_AUDIT.md`.
+- **`actions/cache` no longer saves on a failed job.** `save-always: true` was removed from
+  both cache steps in `.github/workflows/ci.yml` — GitHub deprecated it ("does not work as
+  intended and will be removed"), so it was doing nothing while reading as solved. The
+  consequence is real: a job that fails before the post-step never populates the vector-index
+  cache, so a persistently-failing lane keeps paying the full ~15-25 min cold embedding build.
+  **Action (agent, low priority):** replace with a separate `actions/cache/restore` at the top
+  and `actions/cache/save` with `if: always()` at the end.
 - **One-time repo-wide `ruff format`.** 154 files would be reformatted. Deferred so it doesn't
   bury the Sprint-0 diff (and there is no git here to isolate it into its own commit). The
   pre-commit `ruff-format` hook already formats files as they're touched. **Action (optional):**
@@ -174,6 +180,13 @@ agent level; **AWS-side revocation is owner-only and still open.**
   CI and to deploy the current corpus. AWS billing is owner-only.
 - **OWNER-12 — Error-tracker + alert channel choice** (GlitchTip/Sentry, email/Slack webhook) —
   feeds Sprint 5 observability.
+- **OWNER-13 — The GitHub repo is still PUBLIC.** Verified against the API on 2026-08-04:
+  `visibility: public`, `private: false`. It was set public deliberately so CI logs could be
+  read without auth, and the intent afterwards was to set it back — that has not taken effect.
+  While public it exposes `THREAT_MODEL.md`, `docs/POSTGRES_MIGRATION_AUDIT.md` and the
+  known-defect list in `docs/FINAL_AUDIT_2026-07-31.md`. **Action:** Settings → General →
+  Danger Zone → Change visibility → Private. Note this makes Actions logs unreadable without
+  `gh auth login`, so do it after the current CI work settles.
 
 ### Security note (informational — handled in-code, no action required)
 - pip-audit is now a **blocking** CI gate. Two vulnerabilities with no upstream fix are waived

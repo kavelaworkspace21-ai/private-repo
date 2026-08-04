@@ -26,10 +26,22 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         # Clean shutdown so the scheduler thread doesn't outlive the app (esp. under reload).
+        #
+        # wait=True, not wait=False. `wait=False` returns immediately and leaves a running
+        # job executing in a daemon thread AFTER the app it belongs to has gone. Every job
+        # here holds a database session (`next(get_db())`) and writes: run_tracked_job
+        # INSERTs a scheduled_job_runs row, the reminders body DELETEs from notifications
+        # and workbench_uploads, the backup body writes a backup. Abandoning one mid-write
+        # is precisely the case where "idempotent per slot" does not save you — the slot is
+        # already claimed, so the retry is skipped and the half-done work stands.
+        #
+        # This is also what broke the Postgres CI lane: an abandoned job kept its locks into
+        # the next test's fixture, deadlocking against TRUNCATE. See the test-lane note in
+        # _start_reminder_scheduler below.
         sched = getattr(app.state, "scheduler", None)
         if sched is not None:
             try:
-                sched.shutdown(wait=False)
+                sched.shutdown(wait=True)
             except Exception:
                 pass
 
@@ -203,6 +215,28 @@ def _disk_preflight():
 # ── Reminder scheduler (Phase A1) — fires due hearing/deadline reminders daily ──
 # (invoked from the lifespan handler above)
 def _start_reminder_scheduler():
+    # NOT under test, unless a test explicitly asks for it.
+    #
+    # The scheduler is started by the lifespan handler, so it started once per
+    # `with TestClient(app)` — roughly 780 times per suite run. Each boot fires
+    # `_startup_reminders_job` immediately, and that job is real work against the REAL
+    # configured database (it calls `next(get_db())`, not the test's dependency override):
+    # it INSERTs a scheduled_job_runs row, purges read notifications, and deletes expired
+    # workbench uploads. Locally, where DATABASE_URL is unset, that database is the
+    # developer's own legal_server.db.
+    #
+    # It also raced the test that came after it. On Postgres the abandoned job held its
+    # locks while the next test's fixture ran TRUNCATE (ACCESS EXCLUSIVE on 33 tables),
+    # which deadlocked — 17 errors in CI run #10, every one in fixture setup, no test
+    # logic at fault. On SQLite the same race is invisible because each test gets a fresh
+    # temp database file and the orphaned job writes to the previous, already-deleted one.
+    #
+    # Nothing tests this thread: tests/test_scheduled_jobs.py and tests/test_reminders.py
+    # both call app.services.scheduler / notifications directly, which is the better way
+    # to test a job anyway. SCHEDULER_ENABLED=1 forces it on if that ever changes.
+    if os.getenv("ENVIRONMENT") == "test" and os.getenv("SCHEDULER_ENABLED") != "1":
+        return
+
     try:
         from apscheduler.schedulers.background import BackgroundScheduler
         from app.db.session import get_db
