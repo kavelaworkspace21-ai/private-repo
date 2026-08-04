@@ -18,12 +18,17 @@
 
 **A database backup does not back up the documents.**
 
+> **PARTIALLY ADDRESSED 2026-08-04.** `run_backup()` now archives `data/uploads/` on **both**
+> engines, and production **refuses to boot** until the operator declares where files are
+> protected. The table below is updated; §1a records exactly what that does and does not buy,
+> because the archive alone is not durability.
+
 | Data | Lives in | Covered by an RDS backup? | Recoverable without it? |
 |---|---|---|---|
 | Matters, clients, users, diary, fees, billing, audit | PostgreSQL | **YES** | no |
 | Document **metadata** (filename, `file_path`, case link) | PostgreSQL | **YES** | no |
-| Document **bytes** — the actual client files | local disk `data/uploads/<tenant_id>/` | **NO** | **NO — gone forever** |
-| Workbench upload bytes + `.pages.json` sidecars | local disk `data/uploads/` | **NO** | **NO — gone forever** |
+| Document **bytes** — the actual client files | local disk `data/uploads/<tenant_id>/` | **NO** | **only from the uploads archive** — see §1a |
+| Workbench upload bytes + `.pages.json` sidecars | local disk `data/uploads/` | **NO** | **only from the uploads archive** — see §1a |
 | Vector index | local disk `chroma_db/` | **NO** | **yes** — derived; rebuild with `reseed()` |
 | Legal corpus fulltext | git (`app/legal_corpus/fulltext/`) | n/a | yes — versioned |
 | `RELEASE.json`, migrations, source | git | n/a | yes — versioned |
@@ -43,18 +48,54 @@ so no database-level check can see it.
 * **Aurora PITR is not a disaster-recovery plan for this application.** It covers the
   relational half. The half a client would sue over is on an instance disk.
 * **If the EC2 instance or container is replaced, uploaded files are gone** unless something
-  else is backing up `data/uploads/`. Nothing currently is.
+  else is backing up `data/uploads/`. Since 2026-08-04 `run_backup()` archives them (§1a) —
+  but to `BACKUP_DIR`, which defaults to the same disk. Durable only once
+  `UPLOADS_BACKUP_DIR` points somewhere that survives the instance.
 * The asymmetry to keep straight: losing `chroma_db/` is an **outage** (rebuildable from the
   versioned corpus, 15–25 min). Losing `data/uploads/` is **data loss**.
 
-**Owner decision required.** Either:
-1. put `data/uploads/` on durable storage (EFS with backup, or complete the S3 swap the code
-   was designed for), **or**
-2. add a file-level backup of `data/uploads/` to the same schedule and retention as the
-   database, **or**
-3. accept and *document in-product* that uploaded files are not disaster-recoverable.
+---
 
-Option 3 is not really available before G6/G7 with real client data.
+## 1a. What was done about it, and what is still yours
+
+**Implemented 2026-08-04** (`app/services/backup.py`, `app/security_gate.py`):
+
+* **`run_backup()` archives the uploads tree on every run, on BOTH engines.** Previously the
+  PostgreSQL branch recorded `aurora_managed` and returned, doing nothing — RDS owned the
+  relational half and nothing owned the files. The archive is written temp-then-renamed so a
+  crash cannot leave a truncated file that looks complete, skips symlinks so it cannot be
+  walked out of the tree, preserves the per-tenant directory structure, and shares the
+  database backups' rolling retention (`BACKUP_KEEP`, default 7).
+* **`verify_uploads_backup()`** reopens an archive and confirms it is readable — the same
+  argument as `verify_backup()` for the database. An archive nobody has opened is not known to
+  be an archive.
+* **The production boot gate now refuses to start** until the operator declares where uploaded
+  files are protected, via either `UPLOADS_BACKUP_DIR` (a durable location for the archive) or
+  `UPLOADS_DURABLE_STORAGE=1` (an assertion that `data/uploads` is already on backed-up
+  storage). Setting `BACKUP_DIR` alone deliberately does **not** satisfy it: it defaults to
+  `./backups`, the same disk as the files it would protect, and a default is not a decision.
+
+### What this buys, stated precisely
+
+It converts a **silent** gap into a **loud** one, and makes the files a single artifact to
+ship off-box. The app's backup record no longer implies coverage it does not have.
+
+**It is not, by itself, durability.** An archive written to `./backups` sits on the same disk
+as the uploads it protects; if the instance dies they die together. The gate is what forces
+that to be confronted, but the operator still has to point `UPLOADS_BACKUP_DIR` at storage
+that survives the instance.
+
+### Still owner work
+
+1. **Point `UPLOADS_BACKUP_DIR` at durable storage** — a mounted EFS/backup volume, not
+   instance disk — **or** set `UPLOADS_DURABLE_STORAGE=1` if `data/uploads` is already on a
+   backed-up network mount.
+2. **Or complete the S3 swap** `storage.py` was designed for ("behind a small interface so
+   Phase B can swap in S3 without touching callers"). That is the architecturally right answer
+   and remains undone: it needs a bucket, credentials, and a `boto3` dependency. Not attempted
+   here rather than shipped untested — code that handles client files should not be written
+   blind against an API it cannot be run against.
+3. **Ship the archive off-box**, or the retention is seven copies of the same risk.
 
 ---
 
@@ -64,7 +105,8 @@ Option 3 is not really available before G6/G7 with real client data.
 
 ### PostgreSQL / Aurora — `status = "aurora_managed"`
 
-The application performs **no backup of its own**. It records a `BackupRun` row saying so:
+For the DATABASE the application performs **no backup of its own** — RDS owns it. It records a
+`BackupRun` row saying so:
 location *"Amazon RDS automated backups (PITR + daily snapshots)"*. Durability is entirely
 RDS's.
 
@@ -72,15 +114,22 @@ That is a defensible design — RDS does this better than an app can — but it 
 backup only exists if you configured it in AWS.** The app cannot tell whether you did. A green
 `aurora_managed` row is a statement of intent, not evidence a backup exists.
 
+**For the FILES this branch now DOES back up** — see §1a. `status` stays `aurora_managed`,
+which is correct for the database half, and the uploads archive is recorded in the same row's
+`detail` and `size_bytes`. A failure archiving the files fails the whole run: a backup that
+silently omits the client's documents is exactly the sort of green result this project keeps
+finding and regretting.
+
 ### SQLite (dev only) — the app does back up
 
 Online `sqlite3` backup copy into `BACKUP_DIR`, rolling retention of the most recent
 `BACKUP_KEEP` files (default **7**). `verify_backup()` reopens a backup file and runs
 `PRAGMA integrity_check` plus a core-schema check, so a silently corrupt backup is detectable.
 
-> Note the asymmetry: the **dev** path has a verification function, and the **production**
-> path has none, because RDS owns it. That is the gap S4 exists to close, and it can only be
-> closed by performing a restore.
+
+> Note the asymmetry that remains: the **database** half on production is verified by nobody
+> but RDS. That is the gap S4 exists to close, and it can only be closed by performing a
+> restore.
 
 ---
 

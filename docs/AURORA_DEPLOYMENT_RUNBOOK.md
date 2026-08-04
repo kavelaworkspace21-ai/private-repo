@@ -64,8 +64,16 @@ production, so forgetting it fails closed rather than open.
 | `DATABASE_URL` | `postgresql+psycopg://USER:PASS@host:5432/db?sslmode=require` | `database_problems()` |
 | `JWT_SECRET` | ≥ 32 chars, not `change-me-in-production` | `secret_problems()` |
 | `FIELD_ENCRYPTION_KEY` | a Fernet key | `secret_problems()` |
+| `UPLOADS_BACKUP_DIR` | a **durable** path for the uploads archive — or `UPLOADS_DURABLE_STORAGE=1` | `storage_problems()` |
 | `BILLING_MODE` | stays `test` until G6/G7 | `assert_billing_mode_allowed` |
 | `KANOON_ENABLED` | `false` | governance |
+
+> **Uploaded files are not in the database.** Document rows are covered by Aurora's backups;
+> the bytes are on local disk under `data/uploads/`. `run_backup()` archives them, but by
+> default into `BACKUP_DIR` — the same disk as the files it protects. The boot gate refuses to
+> start until you name a durable location or assert that `data/uploads` already is one.
+> `BACKUP_DIR` alone does **not** satisfy it: a default is not a decision. See
+> [`BACKUP_AND_DR.md`](BACKUP_AND_DR.md) §1a.
 
 > **`sslmode` is not optional and not a style preference.** libpq defaults to
 > `sslmode=prefer`, which **silently falls back to an unencrypted connection** if the server

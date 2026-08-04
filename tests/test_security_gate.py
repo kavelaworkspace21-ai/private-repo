@@ -84,6 +84,10 @@ def test_strong_secrets_pass_in_production(monkeypatch):
     # developer's ambient DATABASE_URL points at SQLite.
     monkeypatch.setenv("DATABASE_URL",
                        "postgresql+psycopg://u:p@host:5432/db?sslmode=require")
+    # ...and, since 2026-08-04, where uploaded FILES are protected. Document rows are covered
+    # by the database's backups; the bytes on disk were covered by nothing. See
+    # storage_problems() and tests/test_uploads_durability.py.
+    monkeypatch.setenv("UPLOADS_BACKUP_DIR", "/mnt/durable/backups")
     assert_secrets_sane()
 
 
@@ -122,4 +126,27 @@ def test_gate_passes_with_strong_secrets_and_a_tls_database(monkeypatch):
     _env(monkeypatch, environment="production")
     monkeypatch.setenv("DATABASE_URL",
                        "postgresql+psycopg://u:p@host:5432/db?sslmode=require")
+    monkeypatch.setenv("UPLOADS_BACKUP_DIR", "/mnt/durable/backups")
     assert_secrets_sane()
+
+
+def test_gate_refuses_production_when_uploaded_files_have_no_declared_durability(monkeypatch):
+    """Strong secrets and a TLS database are not enough on their own.
+
+    Document ROWS are in the database and covered by its backups. Document BYTES are on local
+    disk under data/uploads/ and were covered by nothing — and because nothing in the database
+    is wrong when they vanish, no database-level check can see it. A managed database makes
+    this worse, not better: the operator reasonably concludes backups are handled.
+
+    So the operator must say, once, where files are protected. This is the assertion that the
+    gate actually refuses; without it, the two tests above would pass just as happily if
+    storage_problems() always returned an empty list.
+    """
+    _env(monkeypatch, environment="production")
+    monkeypatch.setenv("DATABASE_URL",
+                       "postgresql+psycopg://u:p@host:5432/db?sslmode=require")
+    monkeypatch.delenv("UPLOADS_BACKUP_DIR", raising=False)
+    monkeypatch.delenv("UPLOADS_DURABLE_STORAGE", raising=False)
+
+    with pytest.raises(RuntimeError, match="uploaded client files"):
+        assert_secrets_sane()

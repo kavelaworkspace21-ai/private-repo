@@ -198,14 +198,27 @@ as `tests/test_scheduled_jobs.py` and `tests/test_reminders.py` do.
 
 ## 7. Backups
 
-`run_backup()` **dispatches on the driver**:
+`run_backup()` **dispatches on the driver** for the DATABASE:
 
 * **SQLite** — the app takes the backup itself.
 * **PostgreSQL / Aurora** — returns `status="aurora_managed"`. The app performs no backup of
   its own; durability is RDS point-in-time recovery plus daily snapshots.
 
-> That second path has **never been configured or restore-tested**. A backup nobody has
-> restored is a hope, not a backup. Tracked as B3 in `docs/FINAL_AUDIT_2026-07-31.md`.
+**Uploaded files are archived on BOTH engines**, because neither of the above covers them.
+Document rows are in the database; document bytes are on local disk under `data/uploads/`.
+The PostgreSQL branch used to do nothing at all, so the files were covered by nothing. The
+archive is temp-then-renamed (no truncated file that looks complete), skips symlinks, keeps
+the per-tenant directory layout, and shares `BACKUP_KEEP` retention.
+`verify_uploads_backup()` reopens an archive to confirm it is readable.
+
+Production **refuses to boot** until `UPLOADS_BACKUP_DIR` names a durable location, or
+`UPLOADS_DURABLE_STORAGE=1` asserts `data/uploads` already is one. `BACKUP_DIR` alone does not
+satisfy it — it defaults to `./backups`, the same disk as the files it protects.
+
+> Two things remain unproven. The RDS path has **never been configured or restore-tested** — a
+> backup nobody has restored is a hope, not a backup (B3). And the uploads archive is only
+> durable once it is written somewhere that survives the instance (OWNER-14). See
+> `docs/BACKUP_AND_DR.md`.
 
 ---
 

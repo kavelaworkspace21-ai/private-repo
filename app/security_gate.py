@@ -112,6 +112,44 @@ def database_problems() -> list[str]:
     return problems
 
 
+def storage_problems() -> list[str]:
+    """Production file-durability problems. Uploaded client files are not in the database.
+
+    Document ROWS live in PostgreSQL and are covered by Aurora's automated backups. Document
+    BYTES live on local disk under data/uploads/ — app/services/storage.py is filesystem-only,
+    with no object storage anywhere in the app. So on a managed database the operator naturally
+    concludes backups are handled, and the half a client would sue over is sitting on an
+    instance disk that disappears when the container is replaced.
+
+    Nothing in the database is wrong when that happens, so no database-level check can see it.
+    That is exactly why this belongs in the boot gate rather than in a monitoring dashboard:
+    the operator has to say, once, where uploaded files are protected.
+
+    Satisfied by EITHER:
+      * UPLOADS_BACKUP_DIR — where run_backup() writes the uploads archive. Point it at a
+        mounted durable volume (EFS, an attached backup volume), not the instance's own disk.
+      * UPLOADS_DURABLE_STORAGE=1 — an explicit assertion that data/uploads is ALREADY on
+        durable, backed-up storage (a network mount), so the archive is not the mechanism.
+
+    Deliberately not satisfied by merely setting BACKUP_DIR: that defaults to ./backups, the
+    same disk as the uploads it would protect, and a default is not a decision.
+    """
+    problems: list[str] = []
+    if os.getenv("UPLOADS_DURABLE_STORAGE", "").strip().lower() in ("1", "true", "yes"):
+        return problems
+    if os.getenv("UPLOADS_BACKUP_DIR", "").strip():
+        return problems
+
+    problems.append(
+        "uploaded client files have no declared durability. Document rows are in the database "
+        "and covered by its backups; the FILE BYTES are on local disk (data/uploads/) and are "
+        "not. If this instance is replaced, they are gone, and the database will still list "
+        "every one of them. Set UPLOADS_BACKUP_DIR to a durable location for the uploads "
+        "archive, or UPLOADS_DURABLE_STORAGE=1 if data/uploads is already on backed-up "
+        "storage")
+    return problems
+
+
 def assert_secrets_sane() -> None:
     """Refuse to boot in production with unsafe secrets. Warn loudly elsewhere.
 
@@ -120,7 +158,7 @@ def assert_secrets_sane() -> None:
     """
     # Composed here rather than folded into secret_problems(), so each function reports
     # exactly what its name says. The boot gate is what cares about both.
-    problems = secret_problems() + database_problems()
+    problems = secret_problems() + database_problems() + storage_problems()
     if not problems:
         return
 
@@ -134,6 +172,8 @@ def assert_secrets_sane() -> None:
             "  FIELD_ENCRYPTION_KEY: python -c \"from cryptography.fernet import Fernet; "
             "print(Fernet.generate_key().decode())\"\n"
             "  DATABASE_URL:         postgresql+psycopg://USER:PASS@host:5432/db?sslmode=require\n"
+            "  UPLOADS_BACKUP_DIR:   /mnt/durable/juriscite-backups   (or "
+            "UPLOADS_DURABLE_STORAGE=1 if data/uploads is already on backed-up storage)\n"
             "For local development set ENVIRONMENT=development to downgrade this to a warning."
         )
 

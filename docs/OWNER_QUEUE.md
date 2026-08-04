@@ -186,7 +186,18 @@ agent level; **AWS-side revocation is owner-only and still open.**
   CI and to deploy the current corpus. AWS billing is owner-only.
 - **OWNER-12 — Error-tracker + alert channel choice** (GlitchTip/Sentry, email/Slack webhook) —
   feeds Sprint 5 observability.
-- **OWNER-14 — Uploaded client files have NO backup at all.** Found in S4, 2026-08-04. This is
+- **OWNER-14 — Uploaded client files: backup added, DURABILITY still yours.** Found in S4 and
+  partially fixed the same day (2026-08-04). `run_backup()` now archives `data/uploads/` on
+  both engines — the PostgreSQL branch previously did nothing at all — and **production now
+  refuses to boot** until you declare where files are protected. **Your action:** set
+  `UPLOADS_BACKUP_DIR` to a durable location (mounted EFS/backup volume, NOT instance disk),
+  or `UPLOADS_DURABLE_STORAGE=1` if `data/uploads` is already on backed-up storage. Setting
+  `BACKUP_DIR` alone will not satisfy the gate: it defaults to `./backups`, the same disk as
+  the files it would protect. The archive is *not by itself* durability — it makes the files
+  one artifact to ship off-box. The architecturally right fix (the S3 swap `storage.py` was
+  designed for) is still open and needs a bucket, credentials and `boto3`. Original finding
+  below; see `docs/BACKUP_AND_DR.md` §1a.
+- **OWNER-14 (original finding) — Uploaded client files had NO backup at all.** This is
   distinct from (and more severe than) B3 "restore-test the RDS backup path": B3 is an
   untested backup, this is the **absence** of one. Document *rows* live in PostgreSQL and are
   covered by Aurora PITR. Document *bytes* live on local disk under
