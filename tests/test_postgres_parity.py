@@ -24,16 +24,6 @@ pg_only = pytest.mark.skipif(
 )
 
 
-def _engine():
-    """The configured engine.
-
-    On the Postgres lane this IS the database under test. On SQLite it is NOT — see the
-    `db_engine` fixture below. Only the @pg_only tests may use this.
-    """
-    from app.db.config import engine
-    return engine
-
-
 @pytest.fixture()
 def db_engine(client):
     """The engine the tests are actually running against.
@@ -63,7 +53,7 @@ def db_engine(client):
 # ── Foreign keys ───────────────────────────────────────────────────────────────
 
 @pg_only
-def test_foreign_keys_are_enforced_on_postgres():
+def test_foreign_keys_are_enforced_on_postgres(db_engine):
     """PostgreSQL rejects an orphan FK. SQLite, as configured here, does not.
 
     SQLite defaults to `PRAGMA foreign_keys=0` and nothing in app/db/config.py turns it on,
@@ -75,19 +65,26 @@ def test_foreign_keys_are_enforced_on_postgres():
     """
     from sqlalchemy.exc import IntegrityError
 
-    eng = _engine()
+    # Built from Base.metadata rather than hand-written SQL. The first version of this test
+    # spelled the column `filepath`; it is `file_path`, and the resulting UndefinedColumn
+    # error looked like a schema problem rather than a typo in the test. Core inserts also
+    # apply Python-side column defaults, which raw SQL silently does not.
+    documents = Base.metadata.tables["documents"]
+    eng = db_engine
     with pytest.raises(IntegrityError):
         with eng.begin() as conn:
-            conn.execute(text(
-                "INSERT INTO documents (tenant_id, case_id, filename, filepath, uploaded_at) "
-                "VALUES (1, 999999, 'orphan.pdf', '/tmp/orphan.pdf', CURRENT_TIMESTAMP)"
-            ))
+            conn.execute(documents.insert(), {
+                "tenant_id": 1,
+                "case_id": 999_999,          # no such case — this is the violation
+                "filename": "orphan.pdf",
+                "file_path": "/tmp/orphan.pdf",
+            })
 
 
 # ── Transaction abort semantics ────────────────────────────────────────────────
 
 @pg_only
-def test_a_failed_statement_does_not_poison_the_rest_of_the_transaction():
+def test_a_failed_statement_does_not_poison_the_rest_of_the_transaction(db_engine):
     """The divergence most likely to bite an endpoint.
 
     On PostgreSQL, ANY error inside a transaction aborts it — every later statement fails with
@@ -98,16 +95,21 @@ def test_a_failed_statement_does_not_poison_the_rest_of_the_transaction():
     then writes an audit row on the same session works in dev and fails in production. This
     asserts the recovery contract: after a rollback the session is usable again.
     """
-    from sqlalchemy.exc import IntegrityError, InternalError, ProgrammingError
+    # DBAPIError, the common parent, rather than a guess at which subclass psycopg maps
+    # SQLSTATE 25P02 (in_failed_sql_transaction) to. The property under test is that the
+    # transaction is poisoned and that a rollback clears it — not the exception's class name,
+    # and a wrong guess there would fail the build for a reason that is not the subject.
+    from sqlalchemy.exc import DBAPIError
 
-    eng = _engine()
+    eng = db_engine
     with eng.connect() as conn:
         trans = conn.begin()
-        with pytest.raises((IntegrityError, ProgrammingError)):
+        with pytest.raises(DBAPIError):
             conn.execute(text("INSERT INTO cases (id) VALUES (1)"))   # missing NOT NULL cols
 
         # The transaction is now aborted: further work must fail until it is rolled back.
-        with pytest.raises((InternalError, ProgrammingError, IntegrityError)):
+        # This SELECT is valid SQL against an existing table and would succeed on SQLite.
+        with pytest.raises(DBAPIError):
             conn.execute(text("SELECT COUNT(*) FROM cases"))
 
         trans.rollback()
@@ -174,7 +176,7 @@ def test_every_tenant_scoped_hot_table_has_a_tenant_id_index(db_engine):
 
 
 @pg_only
-def test_tenant_scoped_query_uses_the_index_at_scale():
+def test_tenant_scoped_query_uses_the_index_at_scale(db_engine):
     """EXPLAIN on data large enough for the planner to have a real choice.
 
     Asserting a plan shape against an empty table proves nothing — PostgreSQL correctly
@@ -183,19 +185,27 @@ def test_tenant_scoped_query_uses_the_index_at_scale():
     real check: with 5,000 rows split across two tenants, a tenant-scoped lookup that still
     sequential-scans means the index is missing or unusable.
     """
-    eng = _engine()
+    # Core inserts, not raw SQL, for the rows whose columns carry Python-side defaults.
+    # `tenants.verification_status` is NOT NULL with `default='pending'` declared on the
+    # MODEL — SQLAlchemy applies that on an ORM/Core insert and never on hand-written SQL,
+    # so `INSERT INTO tenants (name) ...` fails on PostgreSQL with a NotNullViolation. That
+    # is what broke this test and the concurrency test in run #18.
+    tenants = Base.metadata.tables["tenants"]
+    eng = db_engine
     with eng.begin() as conn:
-        conn.execute(text(
-            "INSERT INTO tenants (name) SELECT 'Plan Test' "
-            "WHERE NOT EXISTS (SELECT 1 FROM tenants)"
-        ))
-        tid = conn.execute(text("SELECT MIN(id) FROM tenants")).scalar()
+        tid = conn.execute(
+            tenants.insert().returning(tenants.c.id), {"name": "Plan Test A"}).scalar()
+        other = conn.execute(
+            tenants.insert().returning(tenants.c.id), {"name": "Plan Test B"}).scalar()
+
+        # The bulk rows stay as raw SQL: generate_series is the point, and clients has no
+        # Python-side defaults among its required columns (tenant_id, full_name, email).
         conn.execute(text("""
             INSERT INTO clients (tenant_id, full_name, email, created_at)
-            SELECT CASE WHEN g % 2 = 0 THEN :tid ELSE :tid + 1 END,
+            SELECT CASE WHEN g % 2 = 0 THEN :tid ELSE :other END,
                    'Client ' || g, 'c' || g || '@plan.example', CURRENT_TIMESTAMP
               FROM generate_series(1, 5000) AS g
-        """), {"tid": tid})
+        """), {"tid": tid, "other": other})
         conn.execute(text("ANALYZE clients"))
 
     with eng.connect() as conn:
@@ -211,7 +221,7 @@ def test_tenant_scoped_query_uses_the_index_at_scale():
 # ── Concurrency ────────────────────────────────────────────────────────────────
 
 @pg_only
-def test_concurrent_inserts_do_not_deadlock():
+def test_concurrent_inserts_do_not_deadlock(db_engine):
     """Real connections, real locks — the thing SQLite cannot model.
 
     SQLite serialises writers with a file lock, so concurrent-write bugs are invisible there.
@@ -219,19 +229,18 @@ def test_concurrent_inserts_do_not_deadlock():
     connections all land and none deadlocks. That is the property the app relies on, and it is
     the shape of failure that took the CI lane down for four runs.
     """
-    eng = _engine()
+    tenants = Base.metadata.tables["tenants"]
+    eng = db_engine
     errors: list[Exception] = []
-    landed = threading.Semaphore(0)
 
     def _insert(n: int):
         try:
+            # Core insert so `verification_status`'s model-level default is applied; raw SQL
+            # would hit NOT NULL and report a concurrency failure that was never one.
             with eng.begin() as conn:
-                conn.execute(text(
-                    "INSERT INTO tenants (name) VALUES (:n)"), {"n": f"concurrent-{n}"})
-            landed.release()
+                conn.execute(tenants.insert(), {"name": f"concurrent-{n}"})
         except Exception as exc:                      # pragma: no cover - failure path
             errors.append(exc)
-            landed.release()
 
     threads = [threading.Thread(target=_insert, args=(i,)) for i in range(8)]
     for t in threads:

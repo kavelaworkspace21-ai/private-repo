@@ -78,7 +78,14 @@ def isolated_db_url(tmp_path):
     try:
         with admin.connect() as conn:
             conn.execute(text(f'CREATE DATABASE "{name}"'))
-        yield str(url.set(database=name))
+        # render_as_string(hide_password=False), NOT str(url).
+        #
+        # SQLAlchemy's URL.__str__ REDACTS the password as literal '***'. Handing that to the
+        # alembic subprocess produces `password authentication failed for user "juriscite"` —
+        # which reads like a CI credentials problem and is really a string-formatting one.
+        # It cost four red tests in run #18, and it cannot reproduce on the SQLite lane
+        # because a SQLite URL has no password to redact.
+        yield url.set(database=name).render_as_string(hide_password=False)
     finally:
         with admin.connect() as conn:
             # Terminate stragglers first — DROP DATABASE fails while anything is connected.
@@ -138,18 +145,11 @@ def test_full_chain_applies_to_a_populated_database(isolated_db_url):
                 "WHERE NOT EXISTS (SELECT 1 FROM tenants t WHERE t.id = c.tenant_id)"
             )).scalar()
             assert orphans == 0, "cases.tenant_id references a tenant row that does not exist"
-    finally:
-        engine.dispose()
 
-
-def test_tenant_id_is_actually_enforced_after_migrating(isolated_db_url):
-    """Backfilling must not have been achieved by quietly leaving the column nullable."""
-    _assert_ok(_alembic(isolated_db_url, "upgrade", "head"), "upgrade head")
-
-    engine = create_engine(isolated_db_url)
-    try:
+        # ...and the backfill was not achieved by quietly leaving the column nullable.
+        # Asserted here, on the database this test already migrated, rather than in a test
+        # of its own that would pay for another full chain run in a fresh subprocess.
         cols = {c["name"]: c for c in inspect(engine).get_columns("cases")}
-        assert "tenant_id" in cols, "cases.tenant_id is missing after upgrade head"
         assert cols["tenant_id"]["nullable"] is False, (
             "cases.tenant_id is nullable — the constraint the migration exists to add was not "
             "applied, so tenant isolation is not enforced at the database level"
@@ -158,15 +158,22 @@ def test_tenant_id_is_actually_enforced_after_migrating(isolated_db_url):
         engine.dispose()
 
 
-def test_rollback_then_reapply(isolated_db_url):
-    """A rolled-back deploy must be re-appliable.
+def test_rollback_reapply_and_full_downgrade(isolated_db_url):
+    """Rollback, re-apply, and the whole chain in both directions — in one database.
 
-    This is the enum-idempotency case. Seven PostgreSQL enum types were created by upgrades
-    and dropped by none, and `CREATE TYPE` is not idempotent — so re-running an upgrade after
-    a downgrade failed with "type already exists". The affected downgrades now
-    `DROP TYPE IF EXISTS`, guarded on the postgresql dialect.
+    Deliberately one test rather than three. Every `alembic` call is a subprocess that
+    re-imports the application, and on Windows that dominates: split across separate tests
+    this file added ~13 minutes to a local suite run while costing about one minute on the
+    Linux CI runner. Sharing a single database across the sequence cuts the process count
+    roughly in half without weakening anything — `_assert_ok` names the exact step that
+    failed, so a failure here is no harder to read than a failure in three separate tests.
 
-    On SQLite this still proves the chain's downgrade path is coherent end to end.
+    The re-apply step is the enum-idempotency case: seven PostgreSQL enum types were created
+    by upgrades and dropped by no downgrade, and `CREATE TYPE` is not idempotent, so a
+    rolled-back deploy could not be re-applied — the second upgrade failed with "type already
+    exists". The affected downgrades now `DROP TYPE IF EXISTS`, guarded on the dialect.
+    SQLite has no native enum type, so none of that is visible on the other lane; there this
+    still proves the downgrade path is coherent end to end.
     """
     _assert_ok(_alembic(isolated_db_url, "upgrade", "head"), "first upgrade head")
     _assert_ok(_alembic(isolated_db_url, "downgrade", PRE_TENANCY_REV),
@@ -174,18 +181,7 @@ def test_rollback_then_reapply(isolated_db_url):
     _assert_ok(_alembic(isolated_db_url, "upgrade", "head"),
                "re-apply upgrade head after a rollback")
 
-    engine = create_engine(isolated_db_url)
-    try:
-        assert "cases" in inspect(engine).get_table_names()
-    finally:
-        engine.dispose()
-
-
-def test_downgrade_to_base_and_back(isolated_db_url):
-    """The whole chain, both directions. Catches a downgrade that silently does nothing."""
-    _assert_ok(_alembic(isolated_db_url, "upgrade", "head"), "upgrade head")
-    _assert_ok(_alembic(isolated_db_url, "downgrade", "base"), "downgrade base")
-
+    _assert_ok(_alembic(isolated_db_url, "downgrade", "base"), "downgrade to base")
     engine = create_engine(isolated_db_url)
     try:
         remaining = set(inspect(engine).get_table_names()) - {"alembic_version"}
