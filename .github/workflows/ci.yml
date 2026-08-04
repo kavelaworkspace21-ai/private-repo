@@ -103,6 +103,14 @@ jobs:
           name: junit-sqlite
           path: junit-sqlite.xml
 
+      # Emit one ANNOTATION per failing test. Logs and artifact downloads both require an
+      # authenticated token; annotations do not, so this is the only route by which a red run
+      # is diagnosable from the API alone. Never changes the result — the suite step's own
+      # exit code already failed the job.
+      - name: Annotate failing tests (SQLite)
+        if: failure()
+        run: python .github/scripts/annotate_junit.py junit-sqlite.xml "SQLite"
+
   # ── Postgres parity: the Aurora rehearsal (S0.4) ───────────────────────────────
   test-postgres:
     runs-on: ubuntu-latest
@@ -228,6 +236,14 @@ jobs:
         with:
           name: junit-postgres
           path: junit-postgres.xml
+
+      # Emit one ANNOTATION per failing test. Logs and artifact downloads both require an
+      # authenticated token; annotations do not, so this is the only route by which a red run
+      # is diagnosable from the API alone. Never changes the result — the suite step's own
+      # exit code already failed the job.
+      - name: Annotate failing tests (Postgres)
+        if: failure()
+        run: python .github/scripts/annotate_junit.py junit-postgres.xml "Postgres"
 
   # ── Dependency audit: BLOCKING, with documented waivers ────────────────────────
   audit:
