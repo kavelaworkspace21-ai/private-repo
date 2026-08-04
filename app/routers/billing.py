@@ -12,15 +12,15 @@ Doctrine:
     period end, auto-renew is disclosed at checkout, no card is required for a trial.
   • BILLING_MODE=test until G6/G7 human review passes.
 """
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.user import User, UserRole
 from app.models.billing import (
-    Invoice, Subscription, STATUS_CANCELED, STATUS_EXPIRED, CYCLE_ANNUAL,
+    Invoice, Subscription,
 )
-from app.auth.dependencies import get_current_user, require_role
+from app.auth.dependencies import require_role
 from app.services import billing as bl
 from app.services.tenancy import current_tenant_id, write_audit
 from app.schemas.billing import (

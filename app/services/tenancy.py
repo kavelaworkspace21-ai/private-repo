@@ -8,7 +8,6 @@ reached only via a tenant-scoped Case, which enforces isolation transitively.
 from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 
-from app.db.session import get_db
 from app.auth.dependencies import get_current_user
 from app.models.user import User
 from app.models.case import Case

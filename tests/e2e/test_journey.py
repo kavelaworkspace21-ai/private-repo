@@ -126,8 +126,8 @@ def test_workbench_journey_and_isolation(client, monkeypatch):
     assert a1["review_status"] == "DRAFT_FOR_ADVOCATE_REVIEW"
 
     # 3. analysis → matter document + diary tasks
-    doc = client.post(f"/api/workbench/artifacts/{a1['id']}/save-to-matter", headers=auth(adv),
-                      json={"case_id": case_id}).json()
+    client.post(f"/api/workbench/artifacts/{a1['id']}/save-to-matter", headers=auth(adv),
+                json={"case_id": case_id})
     tasks = client.post(f"/api/workbench/artifacts/{a1['id']}/create-tasks", headers=auth(adv),
                         json={"case_id": case_id}).json()
     assert tasks["created"] >= 2

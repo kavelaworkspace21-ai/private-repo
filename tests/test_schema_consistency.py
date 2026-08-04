@@ -16,7 +16,6 @@ import pytest
 from alembic.autogenerate import compare_metadata
 from alembic.config import Config
 from alembic.migration import MigrationContext
-from alembic.script import ScriptDirectory
 from sqlalchemy import create_engine, inspect
 
 import app.models  # noqa: F401 — registers every model on Base.metadata

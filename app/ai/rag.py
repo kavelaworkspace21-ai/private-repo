@@ -267,7 +267,7 @@ def retrieve_by_section(query: str) -> str:
             repeal = ""
             if meta.get("act_status") == "repealed":
                 note = meta.get("note", "") or (
-                    f"This Act stands repealed" +
+                    "This Act stands repealed" +
                     (f" — now see {meta.get('repealed_by')}" if meta.get("repealed_by") else "") + ".")
                 repeal = (f"\n  ⚠ REPEALED STATUTE: {note} State this to the user and, where a "
                           f"successor provision exists, point them to it.")

@@ -6,7 +6,6 @@ Everything here runs in Razorpay TEST mode. No live keys, no real payments, no P
 import hashlib
 import hmac
 import json
-import os
 
 import pytest
 
@@ -80,7 +79,6 @@ def test_subscription_is_tenant_isolated(client, db_session_factory=None):
     t1 = register_and_login(client, "iso1@firm.com")
     t2 = register_and_login(client, "iso2@firm.com")
     # t1 downgrades itself to free; t2 must be unaffected
-    from app.db.session import get_db
     s1 = client.get("/api/billing/subscription", headers=auth(t1)).json()
     s2 = client.get("/api/billing/subscription", headers=auth(t2)).json()
     assert s1["plan_code"] == s2["plan_code"] == "solo_advocate"

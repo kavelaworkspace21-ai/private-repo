@@ -1,11 +1,17 @@
 # Juriscite pre-commit hooks (S0.5).
-# Install once:  pre-commit install
+# Install once:  pre-commit install     (wires BOTH pre-commit and pre-push, see below)
 # Run on demand: pre-commit run --all-files
 #
 # Hooks run on STAGED files, so they normalize the codebase gradually as files are touched —
 # no big-bang reformat. A one-time full `ruff format` (154 files as of 2026-07-21) is
 # deliberately DEFERRED to its own formatting-only change so it doesn't bury real diffs
 # (see docs/OWNER_QUEUE.md).
+#
+# S1: staged-file scope is exactly how the CI lint gate got surprised. The DTZ violations that
+# failed CI run #1 were in files nobody had staged, so every local check was green while the
+# repo was not. `ruff check .` at PUSH time closes that gap — the same command CI runs, over
+# the same tree, before the push rather than after.
+default_install_hook_types: [pre-commit, pre-push]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -26,6 +32,21 @@ repos:
       - id: ruff
         args: ["--fix"]
       - id: ruff-format
+
+  # Repo-wide lint at PUSH time — the same `ruff check .` the CI gate runs, over the whole
+  # tree rather than the staged subset. pass_filenames: false is the point: pre-commit would
+  # otherwise hand it only the changed files, which is the behaviour this hook exists to fix.
+  # Version pinned to match .github/workflows/ci.yml, so local and CI cannot disagree.
+  - repo: local
+    hooks:
+      - id: ruff-repo-wide
+        name: ruff check . (whole repository, pre-push)
+        entry: ruff check .
+        language: python
+        additional_dependencies: ["ruff==0.15.22"]
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
 
   # Secret scanning — the baseline (.secrets.baseline) records the audited clean state;
   # the hook fails the commit if a NEW secret appears.

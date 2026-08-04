@@ -16,7 +16,6 @@ USAGE:
 import re
 import sys
 import logging
-from pathlib import Path
 
 import requests
 

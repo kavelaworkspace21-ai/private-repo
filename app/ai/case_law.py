@@ -15,7 +15,6 @@ API docs: https://api.indiankanoon.org/  (POST, header: "Authorization: Token <k
 """
 import os
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 

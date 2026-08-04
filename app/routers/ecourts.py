@@ -6,7 +6,7 @@ eCourts + calendar integration (read-only eCourts, per CLAUDE.md authorized 2026
 - GET  /api/ecourts/case/{cnr}     → preview hearings for a CNR (read-only, no DB write)
 - POST /api/ecourts/sync           → mirror eCourts hearings into the Court Diary (write)
 """
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import Response
 from pydantic import BaseModel
 from sqlalchemy.orm import Session

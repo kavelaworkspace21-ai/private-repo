@@ -7,7 +7,7 @@ import os
 import re
 import json
 import logging
-from typing import Optional, AsyncGenerator
+from typing import AsyncGenerator
 
 logger = logging.getLogger(__name__)
 

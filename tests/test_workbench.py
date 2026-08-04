@@ -5,7 +5,6 @@ The hidden _gate_probe_* workflows generate deterministically (no LLM, no networ
 so every gate is provable in CI: question-first, assumptions, citation hard-gate,
 refusal, versioning, entitlements, tenant isolation, audit.
 """
-import pytest
 
 from tests.conftest import register_and_login, auth
 from app.models.billing import KIND_RESEARCH

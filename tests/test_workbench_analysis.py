@@ -54,7 +54,7 @@ def _stub(mode="good"):
             elif name == "Facts Summary" and mode == "no_page_refs":
                 body = "The complainant supplied cement and the cheque bounced."
             elif name in wf.get("file_sections", []):
-                body = f"Anchored in the record [p.1]: material drawn from the file."
+                body = "Anchored in the record [p.1]: material drawn from the file."
             elif name == "Limitation Issues" and mode == "uncited_limitation":
                 body = "The complaint appears within time under the applicable provision."
             elif name in wf["law_sections"]:

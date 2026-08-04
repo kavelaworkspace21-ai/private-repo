@@ -10,8 +10,12 @@ import logging
 import os
 import uuid
 from contextvars import ContextVar
+from typing import TYPE_CHECKING
 
 from starlette.middleware.base import BaseHTTPMiddleware
+
+if TYPE_CHECKING:                       # import only for the annotation below; fastapi is
+    from fastapi import HTTPException   # imported lazily inside internal_error() at runtime
 
 _request_id: ContextVar[str] = ContextVar("request_id", default="-")
 

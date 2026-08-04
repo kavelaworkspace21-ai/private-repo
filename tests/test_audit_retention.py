@@ -42,7 +42,7 @@ def test_audit_is_tenant_scoped(client):
 def test_purge_removes_old_read_notifications_only():
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
-    import app.models
+    import app.models  # noqa: F401  registers every model on Base.metadata before create_all
     from app.db.base import Base
     from app.models.notification import Notification
     from app.services.privacy import purge_old_read_notifications

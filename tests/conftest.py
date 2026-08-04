@@ -49,7 +49,7 @@ def _pg_schema():
     The original comment called it "slower but this is a rehearsal, not the hot path",
     which was a fair guess that had never been measured, because the lane had never run.
     """
-    from sqlalchemy import event, text
+    from sqlalchemy import event
 
     from app.db.config import engine as configured_engine
 

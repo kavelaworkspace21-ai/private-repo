@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.services.tenancy import write_audit
-from app.models.user import User, UserRole
+from app.models.user import User
 from app.models.tenant import Tenant
 from app.models.consent import ConsentRecord
 from app.services.privacy import record_consents

@@ -12,7 +12,6 @@ that still matters: **no real money moves without a human turning it on.** See
 """
 import pytest
 
-from app.main import app
 from app.services import billing as bl
 
 

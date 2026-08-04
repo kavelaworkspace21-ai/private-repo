@@ -10,7 +10,6 @@ Two leaks this pins:
     cached the whole object while reading only three fields. Anything in localStorage is
     readable by any script on the page.
 """
-import json
 import pathlib
 
 from app.observability import _SCRUBBED, _scrub, _scrub_event

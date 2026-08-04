@@ -5,7 +5,6 @@ Browsing returns verbatim section text + a verifiable source link. Summaries are
 grounded ONLY in that section's text (no outside knowledge), so they cannot introduce
 facts not in the statute. Falls back to an extractive excerpt without an OpenAI key.
 """
-import os
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 

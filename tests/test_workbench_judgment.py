@@ -7,7 +7,6 @@ LLM + Kanoon are stubbed; the gates are what's under test.
 """
 import io
 
-import pytest
 
 from tests.conftest import register_and_login, auth
 from app.services.workbench import engine

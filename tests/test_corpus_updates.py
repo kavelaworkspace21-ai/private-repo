@@ -6,7 +6,7 @@ All offline: the network fetcher is injected."""
 import json
 
 from app.ai.corpus_updates import (
-    corpus_manifest, corpus_version, check_upstream, last_upstream_check,
+    corpus_manifest, corpus_version, check_upstream,
 )
 
 

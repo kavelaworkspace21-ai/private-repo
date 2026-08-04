@@ -7,7 +7,6 @@ an open G6 gap; these tests close it and keep it closed.
 The case that motivated it: a firm-INVITED member (created by an admin, never asked to
 accept anything) could use every AI feature without having granted consent.
 """
-from app.auth.dependencies import require_ai_user
 from app.db.session import get_db
 from app.main import app
 from app.models.consent import ConsentRecord

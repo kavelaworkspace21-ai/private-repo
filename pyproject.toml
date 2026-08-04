@@ -13,7 +13,14 @@ extend-exclude = ["venv", "alembic/versions", "migrations", "app/static/*.min.js
 # and other tz-naive datetime *instant* constructors a lint error, so the utcnow() sweep
 # can't silently regress. Scoped to DTZ (not the full default set) so this gate stays about
 # datetime correctness and doesn't fail on unrelated pre-existing style debt.
-select = ["DTZ"]
+#
+# S1 adds F (pyflakes) on top. F is the real-bug half of the default set — undefined names,
+# unused imports, unused locals, f-strings with no placeholders — and it is cheap: 59
+# violations repo-wide, 39 of them auto-fixable. The noisy rulesets stay OUT deliberately,
+# because a gate that fires 1,418 times on day one is a gate people learn to ignore:
+#     E (pycodestyle) 446 · B (bugbear) 299 · S (bandit) 1,418
+# Those are a separate, deliberate decision, not something to smuggle in behind a CI fix.
+select = ["DTZ", "F"]
 
 # DTZ011/DTZ012 (date.today / date.fromtimestamp) are about CALENDAR dates, not instants.
 # The diary, reminders, court cause-lists and notifications intentionally use the local
@@ -26,3 +33,14 @@ ignore = ["DTZ011", "DTZ012"]
 [tool.ruff.lint.per-file-ignores]
 # The helper is the ONE sanctioned place that constructs a UTC value from scratch.
 "app/util/time.py" = ["DTZ"]
+
+# SQLAlchemy declarative relationships are declared as STRING forward references —
+# `Mapped["Case"]`, `relationship("Client")` — and are resolved from the mapper registry at
+# configuration time, not from module scope. Importing the target class for real would create
+# an import cycle in every direction (Case <-> Client <-> Document <-> ...), which is the
+# whole reason the string form exists. Ruff cannot see the registry, so it reports all 18 as
+# F821 undefined-name. They are not undefined; they are late-bound.
+#
+# Scoped to this directory and this ONE rule, so a genuinely undefined name anywhere else —
+# including elsewhere in these same files — still fails the gate.
+"app/models/*.py" = ["F821"]

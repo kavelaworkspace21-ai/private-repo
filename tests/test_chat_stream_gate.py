@@ -9,7 +9,6 @@ the client receives and what gets persisted.
 """
 import json
 
-import pytest
 
 from app.ai import agent as agent_mod
 from tests.conftest import auth, register_and_login

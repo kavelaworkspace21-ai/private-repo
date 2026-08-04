@@ -266,7 +266,6 @@ def artifact_to_matter(artifact_id: int, body: ArtifactToMatter, db: Session = D
     from app.services import storage
     from app.models.document import Document
     from app.models.document_version import DocumentVersion
-    import hashlib
     wf = get_workflow(a.artifact_type) or {}
     text = _artifact_export_text(db, a)
     fname = f"{wf.get('label', a.artifact_type).replace(' ', '_')}_v{a.version}.txt"

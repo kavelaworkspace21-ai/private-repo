@@ -8,9 +8,8 @@ Doctrine carried in the schema itself:
   • uploads carry their retention policy so the 7-day scratch auto-delete is a
     property of the row, not a convention someone has to remember.
 """
-from datetime import datetime
 
-from sqlalchemy import String, Text, Integer, Boolean, DateTime, JSON, func
+from sqlalchemy import String, Integer, DateTime, JSON, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base

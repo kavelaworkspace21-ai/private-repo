@@ -12,7 +12,6 @@ G8 (senior-advocate sign-off) — tracked in manifest.json.
 """
 import functools
 import json
-import re
 from pathlib import Path
 
 TEMPLATES_DIR = Path(__file__).parent.parent.parent / "templates" / "drafts"

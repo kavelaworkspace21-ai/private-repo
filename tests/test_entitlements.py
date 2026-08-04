@@ -5,7 +5,6 @@ and tenant-scoped metering.
 These tests never reach the language model: an over-quota request is refused before any
 model work, and the under-quota assertions are made against the service layer.
 """
-import pytest
 
 from tests.conftest import register_and_login, auth
 from app.main import app
