@@ -6,8 +6,6 @@ from typing import Optional
 
 from app.db.session import get_db
 from app.models.diary_entry import DiaryEntry
-from app.models.diary_task import DiaryTask
-from app.models.filing_deadline import FilingDeadline
 from app.models.case import Case
 from app.services.tenancy import current_tenant_id
 
@@ -23,28 +21,6 @@ class HearingSummary(BaseModel):
     stage: str
     outcome: str
     hearing_date: date
-
-    model_config = {"from_attributes": True}
-
-
-class TaskSummary(BaseModel):
-    id: int
-    case_id: int
-    case_title: str
-    title: str
-    due_date: Optional[date]
-    is_overdue: bool
-
-    model_config = {"from_attributes": True}
-
-
-class DeadlineSummary(BaseModel):
-    id: int
-    case_id: int
-    case_title: str
-    title: str
-    deadline_date: date
-    is_overdue: bool
 
     model_config = {"from_attributes": True}
 
@@ -94,29 +70,20 @@ def diary_today(db: Session = Depends(get_db), tenant_id: int = Depends(current_
     )
 
 
-@router.get("/tasks", response_model=list[TaskSummary])
-def diary_tasks(db: Session = Depends(get_db), tenant_id: int = Depends(current_tenant_id)):
-    today = date.today()
-    rows = (
-        db.query(DiaryTask, Case.title)
-        .join(Case, DiaryTask.case_id == Case.id)
-        .filter(Case.tenant_id == tenant_id, DiaryTask.is_completed == False)
-        .order_by(DiaryTask.due_date)
-        .all()
-    )
-    result = []
-    for task, case_title in rows:
-        # compute overdue live so it stays fresh without a background job
-        overdue = bool(task.due_date and task.due_date < today)
-        result.append(TaskSummary(
-            id=task.id,
-            case_id=task.case_id,
-            case_title=case_title,
-            title=task.title,
-            due_date=task.due_date,
-            is_overdue=overdue,
-        ))
-    return result
+# REMOVED 2026-08-04 (S5 security review): `GET /tasks`, handler `diary_tasks`.
+#
+# The second of two shadowed duplicates in this file, found by
+# tests/test_endpoint_authorization.py::test_no_duplicate_path_and_method_registrations.
+# `diary.router` is included first and registers the same GET /api/diary/tasks, so this
+# handler never ran.
+#
+# Unlike the /deadlines duplicate it was NOT a security hole — it took current_tenant_id and
+# filtered Case.tenant_id correctly. It is removed anyway, because a shadowed handler is dead
+# code that goes live the moment route ordering shifts, and reviewing it teaches you nothing
+# about what the app actually serves. Behaviour is unchanged: the frontend calls
+# /api/diary/tasks with `pending_only=` and `case_id=`, parameters only diary.list_tasks
+# accepts, so it has always been talking to that handler. TaskSummary existed solely for this
+# response and went with it.
 
 
 class MonthlyHearings(BaseModel):
@@ -165,26 +132,25 @@ def monthly_hearings(months: int = 6, db: Session = Depends(get_db),
     )
 
 
-@router.get("/deadlines", response_model=list[DeadlineSummary])
-def diary_deadlines(db: Session = Depends(get_db)):
-    today = date.today()
-    week_end = today + timedelta(days=7)
-    rows = (
-        db.query(FilingDeadline, Case.title)
-        .join(Case, FilingDeadline.case_id == Case.id)
-        .filter(FilingDeadline.is_filed == False, FilingDeadline.deadline_date <= week_end)
-        .order_by(FilingDeadline.deadline_date)
-        .all()
-    )
-    result = []
-    for dl, case_title in rows:
-        overdue = dl.deadline_date < today
-        result.append(DeadlineSummary(
-            id=dl.id,
-            case_id=dl.case_id,
-            case_title=case_title,
-            title=dl.title,
-            deadline_date=dl.deadline_date,
-            is_overdue=overdue,
-        ))
-    return result
+# REMOVED 2026-08-04 (S5 security review): `GET /deadlines`, handler `diary_deadlines`.
+#
+# It took NO authentication dependency and applied NO tenant filter. Its whole dependency tree
+# was `get_db`. It queried FilingDeadline joined to Case across the entire table and returned
+# every firm's filing deadlines together with their case titles, to anyone who asked.
+#
+# It was never reachable: `diary.router` is included before `diary_summary.router` in main.py
+# and registers the same `GET /api/diary/deadlines`, so FastAPI matched the protected handler
+# first — an unauthenticated request returned 401, verified. But the only thing standing
+# between every tenant's matter data and the public internet was the ORDER OF TWO LINES in
+# main.py. Moving an include, or deleting the route that shadowed it, would have published it
+# silently, and no test would have failed.
+#
+# Deleted rather than secured: nothing consumed it. The frontend calls /api/diary/deadlines
+# with `unfiled_only=` and `case_id=`, parameters only diary.list_deadlines accepts, so it has
+# always been talking to the protected handler. DeadlineSummary existed solely for this
+# response and went with it. Every other endpoint in this file takes
+# `tenant_id: int = Depends(current_tenant_id)` and filters `Case.tenant_id == tenant_id`;
+# this one was an outlier, not a design decision.
+#
+# tests/test_endpoint_authorization.py now enumerates every route and fails on any that is
+# neither protected nor explicitly listed as public, so a shadowed handler cannot hide again.

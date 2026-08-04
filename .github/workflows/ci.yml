@@ -265,6 +265,29 @@ jobs:
           python-version: "3.12"
           cache: pip
 
+      # BLOCKING secret scan, repo-wide.
+      #
+      # detect-secrets was already configured in .pre-commit-config.yaml — and had never run.
+      # Verified 2026-08-04: .git/hooks/ contained only .sample files, so no pre-commit hook
+      # was installed in this clone and none of those protections (detect-secrets,
+      # detect-private-key, check-added-large-files, ruff) had executed on a single one of the
+      # 107 commits. Local hooks are advisory by construction anyway: they are skippable with
+      # --no-verify, absent in a fresh clone, and bypassed entirely by a push from the web UI.
+      #
+      # A gate that only exists where it can be skipped is not a gate. This one runs where it
+      # cannot be.
+      #
+      # The baseline records the audited-clean state; the scan fails on anything NEW. Every one
+      # of its 77 entries was inspected individually on 2026-08-04 and is a false positive:
+      # test fixture passwords, corpus SHA-256 provenance hashes, a migration revision id,
+      # documentation URLs of the form postgresql://USER:PASS@host, an alg=none JWT used to
+      # test that unsigned tokens are REFUSED, and the ephemeral Postgres service-container
+      # credentials in this file.
+      - name: Secret scan (BLOCKING — detect-secrets against the audited baseline)
+        run: |
+          pip install detect-secrets==1.5.0
+          detect-secrets-hook --baseline .secrets.baseline $(git ls-files)
+
       - name: pip-audit (fails on any unwaived known CVE in the LOCKED dependency set)
         run: |
           pip install pip-audit==2.10.1

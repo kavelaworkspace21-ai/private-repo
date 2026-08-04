@@ -1,0 +1,239 @@
+# Security & Privacy Review Package
+
+**Sprint:** S5 — Security & Privacy Release Hardening · **Date:** 2026-08-04
+**Commit:** see `RELEASE.json` · **Prepared for:** human gates **G6** (security) and **G7** (privacy)
+
+> **This package cannot self-certify.** G6 and G7 are human gates by governance and must never
+> be signed off by the agent that prepared the evidence. What follows is the evidence, the
+> findings, and an explicit statement of what was *not* examined.
+
+---
+
+## 1. Findings
+
+### 1.1 An unauthenticated endpoint exposing every firm's matter data — **FIXED**
+
+**Severity: high (latent).** `GET /api/diary/deadlines`, handler `diary_summary.diary_deadlines`.
+
+* No authentication dependency. Its entire dependency tree was `get_db`.
+* No tenant filter. It queried `FilingDeadline` joined to `Case` across the whole table and
+  returned **every firm's filing deadlines together with their case titles**.
+
+**It was not reachable.** `diary.router` is included before `diary_summary.router` in
+`main.py` and registers the same path, so FastAPI matched the protected handler first; an
+unauthenticated request returned 401, verified empirically. The only thing standing between
+every tenant's matter data and the public internet was **the order of two lines in main.py**,
+and no test would have failed if that order changed.
+
+Removed rather than secured: nothing consumed it. The frontend calls `/api/diary/deadlines`
+with `unfiled_only=` and `case_id=`, parameters only the protected handler accepts.
+
+### 1.2 A second shadowed duplicate — **FIXED**
+
+`GET /api/diary/tasks` was registered by both `diary.list_tasks` and
+`diary_summary.diary_tasks`. Not a security hole — the shadowed copy was correctly
+tenant-scoped — but removed for the same reason: a shadowed handler is dead code that goes
+live the moment route ordering shifts.
+
+### 1.3 Secret scanning existed only where it could be skipped — **FIXED**
+
+`detect-secrets` was configured in `.pre-commit-config.yaml` and **had never run**. Verified:
+`.git/hooks/` contained only `.sample` files, so no hook was installed in this clone and none
+of those protections — detect-secrets, `detect-private-key`, `check-added-large-files`, ruff —
+had executed on any of the 107 commits.
+
+Local hooks are advisory by construction anyway: skippable with `--no-verify`, absent in a
+fresh clone, bypassed entirely by a push from the web UI. Secret scanning is now a **blocking
+CI step**, where it cannot be skipped.
+
+> **Owner action:** run `pre-commit install` locally so the hooks also fire before commits.
+> CI is the gate; the hooks are the fast feedback.
+
+---
+
+## 2. Secrets
+
+| Check | Result |
+|---|---|
+| High-signature patterns (AWS keys, private keys, `sk-`, `ghp_`, Slack tokens) across **all 107 commits** | **none found** |
+| Secret-bearing files ever added in any commit (`.env`, `*.pem`, `*.key`, token files) | **none** — only `.env.example` |
+| `.env.example` contents | placeholders and empty values only; `JWT_SECRET=change-me` |
+| `INDIAN_KANOON_API_KEY` literal in history | **never** — every match is documentation naming the variable |
+| Repo-wide `detect-secrets` against the baseline | clean (see below) |
+| Secret scanning in CI | **added, blocking** (§1.3) |
+
+**Baseline refreshed.** `.secrets.baseline` was generated 2026-07-27 and had gone stale.
+Regenerated: **77 entries across 54 files, every one inspected individually** and confirmed a
+false positive — test fixture passwords (`Sup3rSecret!`, `hunter2`), corpus SHA-256 provenance
+hashes, a migration revision id, documentation URLs of the form `postgresql://USER:PASS@host`,
+the ephemeral Postgres service-container credentials in `ci.yml`, a synthetic Fernet constant
+in `test_security_gate.py` (sitting beside `STRONG_JWT = "a" * 64`), and an `alg=none` JWT used
+to test that unsigned tokens are **refused**.
+
+**Secrets are never logged.** `secret_problems()` reports the *name* of a misconfigured secret
+and never its value — pinned by `test_problem_messages_never_contain_the_secret_value`.
+`live_status()` and `/api/admin/status` return **presence booleans only**.
+
+### Still outstanding — owner
+
+* **Rotate `INDIAN_KANOON_API_KEY` (B4).** Never committed, verified across all 107 commits,
+  but it was displayed in plaintext in a working session transcript on 2026-07-24. It is a
+  live, per-call **billed** key. S5 asks to "confirm rotation is complete" — **it is not
+  confirmed**, and cannot be from inside the repository.
+* **Set the repository private (B8).** Verified still `visibility: public` on 2026-08-04.
+
+---
+
+## 3. Authentication and authorization
+
+**189 API routes**: 151 authenticated, 38 public by design, 0 unclassified.
+
+Two mechanisms: `get_current_user` (JWT bearer) covers most routes directly or through
+`current_tenant_id` / `require_role` / `require_ai_consent`; `require_founder` guards
+cross-tenant admin actions with an `X-Admin-Token` header and **fails closed** when
+`ADMIN_TOKEN` is unset.
+
+`tests/test_endpoint_authorization.py` enumerates the live route table and fails on any route
+that is neither authenticated nor explicitly listed as public. It also fails on any
+**duplicate path+method registration** — which is what surfaced §1.1 and §1.2.
+
+> **A subtlety worth the reviewer's attention.** Sub-router routes are **not** in `app.routes`:
+> recent FastAPI keeps an `_IncludedRouter` referencing the original router instead of copying
+> routes up, so a naive scan sees **36 of 189**. Any prior audit that used a flat scan examined
+> under a fifth of the surface. That is how §1.1 survived.
+
+Tenant scoping runs through one chokepoint, `app/services/tenancy.py`
+(`current_tenant_id`, `get_owned_case`, `get_owned_client`, `scoped_children`,
+`get_owned_child`, `write_audit`). Existing coverage: `test_idor_sweep.py`,
+`test_tenant_rbac_deep.py`, `test_attack_surface.py`, plus a Postgres-lane isolation assertion.
+
+Session and token handling: tokens carry `iat`; a password reset or `logout-all` advances a
+per-user revocation epoch that invalidates every earlier token; reset tokens are single-use and
+expire in ≤15 minutes; a token with no `iat` is refused **fail-closed**. Covered by
+`test_token_revocation.py`.
+
+---
+
+## 4. LLM safety
+
+**9 egress points**, each reached only through one of **13 consent-gated routes**:
+
+| Egress | Reached via |
+|---|---|
+| `ai/agent.py::stream_agent_response` | `POST /api/ai/chat` |
+| `ai/case_law.py::summarize_case` | `GET /api/research/cases/{tid}/summary` |
+| `routers/ai_chat.py::transcribe_audio` | `POST /api/ai/transcribe` |
+| `routers/ai_drafting.py::edit_selection` | `POST /api/drafting/edit` |
+| `routers/ai_drafting.py::review_own_draft` | `POST /api/drafting/review-draft` |
+| `routers/ai_drafting.py::stream` | `POST /api/drafting/generate` |
+| `routers/library.py::summarize_section` | `GET /api/library/acts/{act_id}/sections/{num}/summary` |
+| `services/workbench/engine.py::_llm_generate` | `POST /api/workbench/sessions/{session_id}/generate` |
+| `services/workbench/uploads.py::answer_from_file` | `POST /api/workbench/uploads/{upload_id}/chat` |
+
+`tests/test_llm_egress_inventory.py` discovers egress by parsing the source, so a **new** model
+call anywhere under `app/` fails the suite until it is inventoried and its gating route named —
+and it re-resolves every named route against the live app, so a row claiming a gate that no
+longer exists also fails. This closes a real gap: the pre-existing consent test asserted
+`expected - gated`, which verifies known handlers and is silent about new ones.
+
+Consent behaviour (existing coverage, `test_ai_consent_boundary.py`): refusal without consent;
+consent at a superseded policy version does not count; **withdrawal blocks the next request
+immediately**; the outbound payload is not even constructed without consent; consent actions
+are audited; there is deliberately **no environment flag to disable the gate**.
+
+**Citation withholding.** `validate_answer()` removes sentences carrying unverifiable citations
+and withholds the answer entirely if too little survives — it withholds rather than warns.
+Adversarial-output coverage lives in `test_citation_guard.py`.
+
+---
+
+## 5. Privacy
+
+### What is collected and where it lives
+
+| Data | Store | Encrypted at rest by the app? |
+|---|---|---|
+| Advocate identity (name, email, hash) | `users` | no |
+| Client identity (name, email, phone, address) | `clients` | **no** |
+| Matter data (titles, notes, hearings, fees, diary) | various | **no** |
+| Uploaded documents | **local disk** `data/uploads/<tenant_id>/` | no |
+| TOTP 2FA secret | `users.totp_secret` | **yes** — Fernet |
+| Chat history, AI messages, activity previews | `conversations`, `ai_messages`, `user_activities` | no |
+| Consent records | `consent_records` | no |
+
+**Only `totp_secret` is encrypted at application level.** Client names, emails, matter titles
+and uploaded documents are not — a database dump or a disk image exposes them in the clear.
+
+That may be an acceptable decision (Aurora provides storage-level encryption, and
+application-level encryption of searchable columns breaks search), but it **is a decision, and
+it has not been made explicitly**. G7 should record it either way.
+
+### Retention and deletion
+
+* `DELETE /api/account` erases across the schema. `test_erasure_completeness.py` enumerates
+  every tenant- or user-scoped table and fails if any is non-empty afterwards unless
+  explicitly justified — **a new table therefore fails that test until someone decides how
+  erasure treats it**.
+* Cascades are performed by **explicit deletes**, not `ondelete="CASCADE"`, because SQLite runs
+  with `foreign_keys=0` and the cascade is a no-op there while firing on PostgreSQL. Dev and
+  production silently disagreed before this was fixed.
+* Read notifications are purged conservatively; Workbench scratch uploads auto-delete after
+  **7 days** (WB-02).
+
+> **Unresolved, and it is a G7 question.** Restoring a database snapshot that predates an
+> erasure **brings the erased data back**. There is no re-erasure step in the restore
+> procedure. See `BACKUP_AND_DR.md` §6. This needs a decision before real client data exists —
+> most likely: log erasures durably outside the database and replay them after any restore.
+
+### Data flows crossing a trust boundary
+
+1. **Advocate → app → model provider.** Only through the 9 egress points in §4, each behind
+   consent. This is the only flow that sends client content off-premises.
+2. **App → Indian Kanoon.** Links only, never model grounding; `KANOON_ENABLED=false` by
+   default and gated on an explicit flag *plus* a key.
+3. **App → database.** `sslmode` is mandatory in production — libpq defaults to `prefer`, which
+   silently falls back to plaintext, so the boot gate rejects a URL without it.
+4. **App → email.** Reset links and reminders.
+5. **App → local disk.** Uploaded files, per-tenant directories.
+
+**Not built, by governance:** prediction, person-scoring, judge-profiling, eCourts scraping,
+judgment corpus. Enforced at boot by `assert_prohibited_disabled()`.
+
+---
+
+## 6. What this package does NOT cover
+
+Stated so the reviewer knows the edges:
+
+* **No penetration test.** No live attacker simulation, no fuzzing, no dependency-confusion or
+  supply-chain analysis beyond `pip-audit` against the lockfile.
+* **No cryptographic review** of the JWT or Fernet usage beyond configuration checks.
+* **No review of the frontend** (`app/static/*.js`) for XSS, DOM injection or token handling.
+  The API surface was audited; the browser code was not.
+* **No infrastructure review.** No cluster exists. Network policy, security groups, WAF, TLS
+  termination and secret injection mechanism are all unexamined — S5 asks to "verify production
+  secrets are injected through approved mechanisms" and **there is no production to verify**.
+* **No load or DoS testing.** Rate limiting is **per-process**; horizontal scaling multiplies
+  every limit by the instance count.
+* **No legal-accuracy review.** That is G1, separate.
+
+---
+
+## 7. Sign-off checklist for the human gates
+
+| # | Item | Ready? |
+|---|---|---|
+| 1 | No known critical secret exposure | **Yes** — §2, subject to #2 below |
+| 2 | `INDIAN_KANOON_API_KEY` rotated | **NO — owner action outstanding (B4)** |
+| 3 | Repository private | **NO — still public (B8)** |
+| 4 | Every endpoint authenticated or classified public | **Yes** — §3, enforced by test |
+| 5 | Consent enforced at every LLM egress | **Yes** — §4, enforced by test |
+| 6 | Tenant isolation adversarially tested | **Yes** — incl. on PostgreSQL |
+| 7 | Erasure completeness enforced | **Yes** — schema-enumerating test |
+| 8 | Client PII encryption-at-rest decision recorded | **NO — decision required (§5)** |
+| 9 | Erasure-vs-restore policy decided | **NO — decision required (§5)** |
+| 10 | Frontend security review | **NOT DONE — out of scope (§6)** |
+| 11 | Infrastructure/network review | **NOT POSSIBLE — nothing deployed (§6)** |
+
+Items 2, 3, 8 and 9 are owner decisions or owner actions. Items 10 and 11 are scope gaps, not
+passes. **G6/G7 should not be signed until 2, 3, 8 and 9 are closed.**
