@@ -1,5 +1,20 @@
 # Juriscite — Final Audit & Path to Release
 
+> **SUPERSEDED IN PART — 2026-08-04.** This is a dated snapshot and is left as written rather
+> than edited, so the record of what was known on 2026-07-31 stays intact. Two things below
+> have since changed:
+>
+> * **§1 "CI — not yet green" and §4 B1 "Get CI green" are DONE.** All three jobs pass on
+>   `main`; the Postgres suite runs against a real `postgres:16` and is blocking. Run IDs,
+>   commit SHAs and the deliberately-broken-test negative control are recorded in
+>   [`CI_RELEASE_EVIDENCE.md`](CI_RELEASE_EVIDENCE.md). §3's table of seven runs is superseded
+>   by the fuller table there.
+> * **§4 B8 "Set the repo private" is still OPEN**, and was verified still open on 2026-08-04
+>   (`visibility: public`). Tracked as OWNER-13 in [`OWNER_QUEUE.md`](OWNER_QUEUE.md).
+>
+> Everything else — the corpus findings in §2, the risk register in §5, and blocking items
+> B2–B7 — stands as written.
+
 **Date:** 2026-07-31 · **HEAD:** `0c1aca3` · **App version:** 0.2.0
 **Corpus fingerprint:** `a1fecc33d3e0` · **Index:** 8,914 chunks · **Commits:** 88
 
