@@ -177,13 +177,23 @@ def test_every_tenant_scoped_hot_table_has_a_tenant_id_index(db_engine):
 
 @pg_only
 def test_tenant_scoped_query_uses_the_index_at_scale(db_engine):
-    """EXPLAIN on data large enough for the planner to have a real choice.
+    """EXPLAIN on data whose SHAPE makes the index the right choice.
 
-    Asserting a plan shape against an empty table proves nothing — PostgreSQL correctly
-    sequential-scans a table of five rows, so the assertion would either fail or have to be
-    written so loosely it could never fail. Seeding enough rows first is what makes this a
-    real check: with 5,000 rows split across two tenants, a tenant-scoped lookup that still
-    sequential-scans means the index is missing or unusable.
+    Asserting a plan against an empty table proves nothing — PostgreSQL correctly
+    sequential-scans five rows — so this seeds real volume first. But volume alone is not
+    enough, and the first version of this test got that wrong: it split 5,000 rows evenly
+    across two tenants and then asserted an index scan. PostgreSQL returned
+
+        Seq Scan on clients (cost=0.00..109.50 rows=2500) Filter: (tenant_id = '1')
+
+    which is the CORRECT plan. A query matching half the table is faster sequentially; no
+    planner should use an index for it. The test was asserting something false.
+
+    Selectivity is the thing under test, not row count. The shape that matters for tenant
+    isolation is many firms each holding a small slice, so that is what is built here: one
+    target tenant with 25 clients beside a noise tenant with 5,000. At ~0.5% selectivity an
+    index scan is unambiguously right, and a sequential scan means the index is missing or
+    unusable — which is the failure this test exists to catch.
     """
     # Core inserts, not raw SQL, for the rows whose columns carry Python-side defaults.
     # `tenants.verification_status` is NOT NULL with `default='pending'` declared on the
@@ -193,20 +203,28 @@ def test_tenant_scoped_query_uses_the_index_at_scale(db_engine):
     tenants = Base.metadata.tables["tenants"]
     eng = db_engine
     with eng.begin() as conn:
-        tid = conn.execute(
-            tenants.insert().returning(tenants.c.id), {"name": "Plan Test A"}).scalar()
-        other = conn.execute(
-            tenants.insert().returning(tenants.c.id), {"name": "Plan Test B"}).scalar()
+        target = conn.execute(
+            tenants.insert().returning(tenants.c.id), {"name": "Plan Test target"}).scalar()
+        noise = conn.execute(
+            tenants.insert().returning(tenants.c.id), {"name": "Plan Test noise"}).scalar()
 
         # The bulk rows stay as raw SQL: generate_series is the point, and clients has no
         # Python-side defaults among its required columns (tenant_id, full_name, email).
+        # 5,000 rows for the noise tenant, 25 for the one we then query — the selectivity a
+        # real multi-firm deployment has.
         conn.execute(text("""
             INSERT INTO clients (tenant_id, full_name, email, created_at)
-            SELECT CASE WHEN g % 2 = 0 THEN :tid ELSE :other END,
-                   'Client ' || g, 'c' || g || '@plan.example', CURRENT_TIMESTAMP
+            SELECT :noise, 'Noise ' || g, 'n' || g || '@plan.example', CURRENT_TIMESTAMP
               FROM generate_series(1, 5000) AS g
-        """), {"tid": tid, "other": other})
+        """), {"noise": noise})
+        conn.execute(text("""
+            INSERT INTO clients (tenant_id, full_name, email, created_at)
+            SELECT :target, 'Target ' || g, 't' || g || '@plan.example', CURRENT_TIMESTAMP
+              FROM generate_series(1, 25) AS g
+        """), {"target": target})
+        # ANALYZE after loading, so the planner has statistics rather than its defaults.
         conn.execute(text("ANALYZE clients"))
+        tid = target
 
     with eng.connect() as conn:
         plan = "\n".join(r[0] for r in conn.execute(
@@ -214,7 +232,9 @@ def test_tenant_scoped_query_uses_the_index_at_scale(db_engine):
         ))
 
     assert "Index" in plan or "Bitmap" in plan, (
-        "a tenant-scoped lookup over 5,000 rows is not using an index. Plan was:\n" + plan
+        "a tenant-scoped lookup selecting 25 rows out of 5,025 is not using an index. At this "
+        "selectivity a sequential scan is the wrong plan, so the index on clients.tenant_id "
+        "is missing or unusable. Plan was:\n" + plan
     )
 
 
