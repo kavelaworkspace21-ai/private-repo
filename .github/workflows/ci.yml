@@ -286,7 +286,7 @@ jobs:
       - name: Secret scan (BLOCKING — detect-secrets against the audited baseline)
         run: |
           pip install detect-secrets==1.5.0
-          detect-secrets-hook --baseline .secrets.baseline $(git ls-files)
+          python .github/scripts/secret_scan.py
 
       - name: pip-audit (fails on any unwaived known CVE in the LOCKED dependency set)
         run: |
