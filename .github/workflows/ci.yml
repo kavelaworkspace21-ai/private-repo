@@ -89,7 +89,19 @@ jobs:
         run: pytest tests/test_migrations.py -q
 
       - name: Full test suite (SQLite)
-        run: pytest tests/ -q
+        run: pytest tests/ -q --junitxml=junit-sqlite.xml
+
+      # A machine-readable result, uploaded even when the suite fails — especially then.
+      # Diagnosing run #10 meant scraping 5,000 lines of rendered HTML out of the Actions web
+      # UI in a browser, because the annotations API returns only "Process completed with exit
+      # code 1" and the logs API needs an authenticated token. A JUnit XML artifact gives every
+      # test id, outcome, duration and failure message without any of that.
+      - name: Upload test results (JUnit XML)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-sqlite
+          path: junit-sqlite.xml
 
   # ── Postgres parity: the Aurora rehearsal (S0.4) ───────────────────────────────
   test-postgres:
@@ -205,7 +217,17 @@ jobs:
       # This is diagnosis, not a fix. It does not weaken the gate: the step still fails on
       # any test failure, and the lane stays blocking.
       - name: Full test suite (Postgres)
-        run: pytest tests/ -v --durations=25
+        run: pytest tests/ -v --durations=25 --junitxml=junit-postgres.xml
+
+      # Uploaded even on failure — see the note in the SQLite job. This is the lane where it
+      # matters most: it is the one that cannot be reproduced locally (no Docker or Postgres
+      # on the dev box), so the CI artifact is the only evidence there is.
+      - name: Upload test results (JUnit XML)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-postgres
+          path: junit-postgres.xml
 
   # ── Dependency audit: BLOCKING, with documented waivers ────────────────────────
   audit:
