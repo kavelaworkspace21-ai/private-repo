@@ -133,9 +133,43 @@ next person re-deriving it.
 | Migrations apply to a populated database | `tests/test_migration_on_populated_db.py`, both lanes |
 | Rollback and re-apply work | `test_rollback_then_reapply`, `test_downgrade_to_base_and_back` |
 | Tenant isolation holds on PostgreSQL | `test_tenant_isolation_holds_on_the_configured_database`, both lanes |
-| Tenant-scoped queries use an index | `test_every_tenant_scoped_hot_table_has_a_tenant_id_index` (both) plus `test_tenant_scoped_query_uses_the_index_at_scale`, which seeds 5,000 rows so the planner has a real choice — asserting a plan shape against an empty table proves nothing |
+| Tenant-scoped queries use an index | `test_every_tenant_scoped_hot_table_has_a_tenant_id_index` (both) plus `test_tenant_scoped_query_uses_the_index_at_scale` — see §5 for why the *shape* of that data matters more than its size |
 
 **Reproducibility:** the PostgreSQL lane cannot be run on the current dev box (no Docker, no
 local PostgreSQL). CI is the only place it executes; its JUnit XML artifact uploads with
 `if: always()` so a failure is machine-readable. This is the one S2 acceptance criterion —
 "PostgreSQL suite is reproducible locally/CI" — that is met **only** on the CI half.
+
+**Evidence the PostgreSQL-only tests actually run.** A test that skips silently is
+indistinguishable from one that passes, and this project has been bitten by exactly that
+class of thing before. These are known to execute on the Postgres lane because they have been
+seen to *fail* there — three of them in run #18 and one in run #20 — which a skipped test
+cannot do. They pass on run #21 with the same `skipif` condition unchanged.
+
+---
+
+## 5. Two mistakes made writing this, kept because they generalise
+
+**Inspecting the wrong database.** The index test first read `app.db.config.engine`. On the
+Postgres lane that *is* the database under test; on SQLite it is the developer's real
+`./legal_server.db`, which is several migrations behind. It confidently reported four missing
+`tenant_id` indexes that are present in the models and in every migrated database. The rule
+that came out of it: **never inspect `app.db.config.engine` from a test** — take the engine
+the `client` fixture is bound to.
+
+**Asserting something false about the planner.** The same test then seeded 5,000 rows split
+*evenly* across two tenants and asserted an index scan. PostgreSQL returned
+
+```
+Seq Scan on clients  (cost=0.00..109.50 rows=2500)  Filter: (tenant_id = '1')
+```
+
+which is the **correct** plan — a query matching half a table is faster read sequentially.
+Row count was never the variable; **selectivity** is. Rebuilt with the shape multi-tenancy
+actually has: one target tenant with 25 clients beside a noise tenant with 5,000, `ANALYZE`d
+so the planner works from statistics. At ~0.5% selectivity an index scan is unambiguously
+right and a sequential scan is a real defect.
+
+Both were caught by the Postgres lane rather than by review, which is the argument for having
+the lane at all. Both were also *my* defects rather than the app's — worth stating, because a
+red parity lane is not automatically evidence of a parity bug.

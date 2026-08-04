@@ -156,6 +156,12 @@ agent level; **AWS-side revocation is owner-only and still open.**
   was in fixture setup, not test logic. There were no SQLite-only test assumptions to fix; the
   harness itself was the problem (abandoned scheduler jobs + leaked sessions deadlocking
   against `TRUNCATE`). Fixed 2026-08-04; see `docs/POSTGRES_MIGRATION_AUDIT.md`.
+- **GitHub Actions are running on a deprecated Node runtime.** CI run #20 annotated: "Node.js
+  20 is deprecated. The following actions target Node.js 20 but are being forced to run on
+  Node.js 24: `actions/cache@v4`, `actions/checkout@v4`, `actions/setup-python@v5`,
+  `actions/upload-artifact@v4`." Nothing is broken — GitHub is force-upgrading the runtime —
+  but the forcing will not last forever. **Action (agent, low priority):** bump each action to
+  the major version that targets Node 24, one commit, and confirm the annotation disappears.
 - **`actions/cache` no longer saves on a failed job.** `save-always: true` was removed from
   both cache steps in `.github/workflows/ci.yml` — GitHub deprecated it ("does not work as
   intended and will be removed"), so it was doing nothing while reading as solved. The

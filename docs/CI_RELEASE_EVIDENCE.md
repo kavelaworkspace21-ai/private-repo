@@ -13,15 +13,19 @@ to fail, because a gate nobody has watched fail is not known to work.
 
 | | |
 |---|---|
-| **Run** | [#15 — 30885314546](https://github.com/kavelaworkspace21-ai/private-repo/actions/runs/30885314546) |
-| **Commit** | `e4a6ee6` — *S1: repo-wide lint — add pyflakes (F) and a pre-push whole-tree gate* |
+| **Run** | [#21 — 30910900786](https://github.com/kavelaworkspace21-ai/private-repo/actions/runs/30910900786) |
+| **Commit** | `1cc5ffb` — *S2: fix the index-plan test — it was asserting something false* |
 | **Conclusion** | **success** — all three jobs |
 
 | Job | Result | Duration |
 |---|---|---|
-| `test` (SQLite) | success | 5.4 min |
-| `test-postgres` (real `postgres:16`) | success | 5.1 min |
-| `audit` (pip-audit, blocking) | success | 0.4 min |
+| `test` (SQLite) | success | 6.3 min |
+| `test-postgres` (real `postgres:16`) | success | 6.5 min |
+| `audit` (pip-audit, blocking) | success | 0.5 min |
+
+Earlier green baselines: **#12** (`0d0fac9`) was the first all-green run; **#15** (`e4a6ee6`)
+added the broadened lint gate. #21 is current and additionally carries the S2 parity and
+populated-migration suites.
 
 The first all-green run was **[#12 — 30884080213](https://github.com/kavelaworkspace21-ai/private-repo/actions/runs/30884080213)** at commit `0d0fac9`
 (`test` 5.8 min, `test-postgres` 5.7 min, `audit` 0.6 min). Run #15 is the current baseline
@@ -105,6 +109,34 @@ nobody ran it against a database that takes locks.
 
 Fixing it made the Postgres lane *faster than SQLite* (5.1 min vs 5.4 min), because 780
 spurious scheduler boots and their startup jobs went away.
+
+## 4a. S2 additions, and how a red run is now read
+
+Runs #18–#21 added the S2 suites and produced seven, then one, then zero failures — **every
+one of them a defect in the new tests rather than in the app**. Recorded because a red parity
+lane is not automatically evidence of a parity bug:
+
+| Run | Result | Cause |
+|---|---|---|
+| #18 | 7 failed | `str(URL)` redacts the password as `***`; a misspelled column (`filepath`/`file_path`); raw SQL bypassing a model-level default |
+| #20 | 1 failed | the index test asserted an index scan against a query matching **half** the table — PostgreSQL's `Seq Scan` was correct |
+| #21 | **green** | — |
+
+### Reading a failure without a login
+
+Both machine-readable routes into a run are shut without an authenticated token: the **logs**
+API and the **artifact download** API both return 401/403, verified on this public repo. The
+check-run **annotations** API is readable unauthenticated — but a failing `run:` step produces
+exactly one annotation, `Process completed with exit code 1`, and pytest emits none of its own.
+So diagnosing runs #10 and #18 meant scraping thousands of lines of rendered HTML out of the
+Actions web UI in a browser.
+
+`.github/scripts/annotate_junit.py` now converts the JUnit XML into one annotation per failing
+test, `if: failure()`. It paid for itself on the next run: the single remaining failure came
+back from one unauthenticated API call, complete with the assertion message and the query plan.
+
+It cannot change a result — it only reports what the XML already says, and the suite step's own
+exit code is what fails the job.
 
 ## 5. Gates NOT weakened
 
