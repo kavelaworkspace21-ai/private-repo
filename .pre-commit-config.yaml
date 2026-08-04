@@ -50,6 +50,16 @@ repos:
 
   # Secret scanning — the baseline (.secrets.baseline) records the audited clean state;
   # the hook fails the commit if a NEW secret appears.
+  #
+  # WINDOWS CAVEAT. detect-secrets keys the baseline by file path using the NATIVE separator.
+  # The committed baseline uses FORWARD SLASHES, because git stores paths that way and the
+  # authoritative gate is the blocking scan in CI, which runs on Linux. On Windows this hook
+  # will therefore report false positives, and regenerating the baseline here produces
+  # backslash keys that break CI on a clean tree — that is CI run #27, where 50 of 54 entries
+  # had backslashes and the audit job went red on the commit that added the scan.
+  #
+  # After regenerating, normalise the keys before committing.
+  # tests/test_secrets_baseline.py fails if you forget.
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
     hooks:
