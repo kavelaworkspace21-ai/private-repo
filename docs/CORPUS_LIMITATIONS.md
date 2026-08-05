@@ -12,6 +12,65 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
+## ⛔ OPEN — TEN provisions hold text that is not the law (found 2026-08-04, S6)
+
+**Ten sections across five acts contain something other than the provision they claim to be.**
+None was detectable by the existing contamination scanner, because none contains amending
+language — they contain a Statement of Objects and Reasons, drafting commentary, a decree form,
+an affidavit form, accounting standards, and a table fragment.
+
+| Act | § | Should be | Actually contains |
+|---|---|---|---|
+| `constitution_1950` | Art 2 | Admission or establishment of new States | The **GST Council** provision (Art 279A). Page 119; Arts 1/3/5 are pages 23–24 |
+| `constitution_1950` | Art 4 | Laws providing for amendment of the First and Fourth Schedules | Text about the **NJAC** being struck down. Page 84 |
+| `companies_2013` | s.3 | Formation of company | **Schedule III accounting standards**, 196,395 chars. 76 section numbers are absent from the act, consistent with a smear that swallowed them |
+| `cpc_1908` | s.1 | Short title, commencement and extent | A provision titled "Presidency Small Cause Courts" |
+| `cpc_1908` | s.2 | Definitions | A **decree form** template |
+| `cpc_1908` | s.6 | Pecuniary jurisdiction | A **pleading template** ("The agreement is uncertain in the following respects") |
+| `cpc_1908` | s.9 | Courts to try all civil suits unless barred | An **affidavit form** ("The following debts are due to me:") |
+| `cpc_1908` | s.12 | Bar to further suit | **Drafting commentary** on splitting provisions between the Bill and the Rules |
+| `motor_vehicles_1988` | s.5 | Responsibility of owners for contravention | A **Statement of Objects and Reasons** |
+| `income_tax_2025` | s.3 | *(the s.3 provision)* | A **table fragment**, titled "More than 1000000" |
+
+**Severity.** These are not obscure provisions. CPC s.9 (jurisdiction of civil courts), CPC s.2
+(Definitions), Companies Act s.3 (formation of a company) and Constitution Art 2 are cited
+constantly. An advocate retrieving any of them receives text that is not the law, presented
+exactly like text that is.
+
+**Why the existing checks missed it.** Every prior integrity check asked *is a section-shaped
+chunk present?* — counts, coverage, fingerprints, the citation gate — and each of these ten IS
+present, of plausible length, and retrieves normally. `test_corpus_contamination.py` asked the
+sharper question but only about **amending** text, which none of these is.
+
+**What is now in place** (`tests/test_corpus_integrity.py`) — four structural detectors, none
+keyed to a phrase from a specific act:
+
+* a **title that is a footnote fragment** rather than a heading (caught Constitution Arts 2, 4);
+* a **body opening with legislative apparatus** — SOR, drafting notes, court forms, accounting
+  schedules (caught Companies s.3, CPC ss.2/6/9, MV s.5);
+* a **page number that jumps far forward then back** (caught Companies s.3, Constitution Art 2,
+  CPC ss.2/12, MV s.5);
+* a **length outlier for its act**, reported separately because length alone proves nothing —
+  income_tax_1961 s.10 is 127,539 chars and entirely correct. Human triage of that list is what
+  found CPC s.1 and income_tax_2025 s.3.
+
+Verified deterministic: replacing Contract Act s.10 with a Statement of Objects and Reasons
+fails the suite naming `contract_1872 s.10`.
+
+**Also recorded, not claimed:** three sections show **trailing absorption** — a correct opening
+followed by swallowed schedules/forms/appendices: `crpc_1973` s.484 (158,187 chars),
+`bnss_2023` s.531 (192,028), `arbitration_1996` s.86 (34,758). `income_tax_1961` s.80GG
+(167,968) is suspected of the same — "Deductions in respect of rents paid" is a short provision
+— but this has not been confirmed. The provisions themselves are retrievable; the tails are
+foreign.
+
+**Status:** `PENDING_LEGAL_REVIEW` and **blocking for G1**. Recovery is parser work (S7). The
+tests pin the damage so it cannot grow silently, and `KNOWN_MISPARSED` must be reduced as fixes
+land — a test fails if an entry no longer trips a detector, so recovered provisions cannot stay
+listed as broken.
+
+---
+
 ## ✅ RESOLVED 2026-07-25 — the Income-tax Act corpus was its TABLE OF CONTENTS
 
 **The entire committed `income_tax_1961` corpus was Arrangement-of-Sections headings, not

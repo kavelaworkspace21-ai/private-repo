@@ -12,8 +12,17 @@
 > * **§4 B8 "Set the repo private" is still OPEN**, and was verified still open on 2026-08-04
 >   (`visibility: public`). Tracked as OWNER-13 in [`OWNER_QUEUE.md`](OWNER_QUEUE.md).
 >
-> Everything else — the corpus findings in §2, the risk register in §5, and blocking items
-> B2–B7 — stands as written, **except that §5's "Backup unrestorable — Unknown / Severe" row
+> **§5's first risk has materialised.** "Corpus contains wrong law in an unexamined act —
+> Medium / Severe" was rated a risk; on 2026-08-04 (S6) it was confirmed as fact. **Ten
+> provisions across five acts contain text that is not the law** — including CPC s.9
+> (jurisdiction of civil courts), CPC s.2 (Definitions), Companies Act s.3 (formation of a
+> company) and Constitution Art 2. None contains amending language, so the scanner built after
+> the July finding could not see them, and every other check only asked whether a
+> section-shaped chunk existed. Detection is now in place and pinned; recovery is S7. Tracked
+> as OWNER-15, **blocking for G1**. See [`CORPUS_LIMITATIONS.md`](CORPUS_LIMITATIONS.md).
+>
+> Everything else — the corpus findings in §2, the rest of the risk register in §5, and
+> blocking items B2–B7 — stands as written, **except that §5's "Backup unrestorable — Unknown / Severe" row
 > is now worse than Unknown.** S4 (2026-08-04) established that uploaded client files have no
 > backup at all: document rows are in PostgreSQL and covered by Aurora PITR, but the bytes are
 > on local disk under `data/uploads/`, and `app/services/storage.py` is filesystem-only. This

@@ -186,6 +186,18 @@ agent level; **AWS-side revocation is owner-only and still open.**
   CI and to deploy the current corpus. AWS billing is owner-only.
 - **OWNER-12 — Error-tracker + alert channel choice** (GlitchTip/Sentry, email/Slack webhook) —
   feeds Sprint 5 observability.
+- **OWNER-15 — TEN provisions contain text that is not the law.** Found 2026-08-04 (S6).
+  `constitution_1950` Arts 2 and 4, `companies_2013` s.3, `cpc_1908` ss.1/2/6/9/12,
+  `motor_vehicles_1988` s.5, `income_tax_2025` s.3. They hold a Statement of Objects and
+  Reasons, drafting commentary, a decree form, an affidavit form, accounting standards, and a
+  table fragment. These are not obscure: CPC s.9 (jurisdiction of civil courts), CPC s.2
+  (Definitions), Companies Act s.3 (formation of a company) and Constitution Art 2 are cited
+  constantly, and each retrieves normally with plausible length — an advocate gets text that is
+  not the law, presented exactly like text that is. No prior check could see them: they contain
+  no amending language, and every other integrity check asked only whether a section-shaped
+  chunk exists. **This is blocking for G1** and cannot be self-certified. Detection is now in
+  place and pinned (`tests/test_corpus_integrity.py`); recovery is parser work (S7). Full
+  detail in `docs/CORPUS_LIMITATIONS.md`.
 - **OWNER-14 — Uploaded client files: backup added, DURABILITY still yours.** Found in S4 and
   partially fixed the same day (2026-08-04). `run_backup()` now archives `data/uploads/` on
   both engines — the PostgreSQL branch previously did nothing at all — and **production now
