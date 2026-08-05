@@ -131,6 +131,10 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/handle/123456789/2191",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2191",
+        # S7 TRIAL: the body is ss.1-158; everything after is the FIRST SCHEDULE (Orders and
+        # Rules, which renumber from 1 inside every Order) and Appendices A-H (forms). Without
+        # a boundary those renumbered items parse as sections and overwrite the Code's own.
+        "body_before_schedule": (150, 158),
     },
     "ipc_1860": {
         "title": "Indian Penal Code, 1860", "short": "IPC", "year": 1860,

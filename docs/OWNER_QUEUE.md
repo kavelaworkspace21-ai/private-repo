@@ -186,7 +186,20 @@ agent level; **AWS-side revocation is owner-only and still open.**
   CI and to deploy the current corpus. AWS billing is owner-only.
 - **OWNER-12 — Error-tracker + alert channel choice** (GlitchTip/Sentry, email/Slack webhook) —
   feeds Sprint 5 observability.
-- **OWNER-15 — TEN provisions contain text that is not the law.** Found 2026-08-04 (S6).
+- **OWNER-15 (UPDATE 2026-08-05) — the CPC half is FIXED; five provisions remain.** S7 found
+  the five `cpc_1908` entries were not five bad sections but a whole broken act: the Code's
+  section numbers were populated with First Schedule Order/Rule headings and Appendix forms.
+  **"Res judicata" did not appear anywhere in the file**, nor did "courts to try all civil
+  suits unless barred" — CPC ss.11 and 9. Fixed with a body boundary; 179 entries → 156, page
+  range 27–350 → 27–85, page-order score 0.76 → 1.00, and twelve absent sections recovered
+  including s.148A (caveat) and s.44A (foreign decrees). Every one of the 35 removed entries
+  was checked and none was a CPC section. **Still open:** 13 of ss.1–158 have no entry (some
+  legitimately repealed); s.60 and s.92 exist under mangled numbers (`860`, `392`) from glued
+  footnote markers; and the First Schedule **Orders and Rules are now not ingested at all** —
+  a real coverage gap for a litigation tool, needing `Ord.X.R.Y` namespacing before
+  reinstatement. Remaining contaminated: `constitution_1950` Arts 2/4, `companies_2013` s.3,
+  `motor_vehicles_1988` s.5, `income_tax_2025` s.3. **Still blocking for G1.**
+- **OWNER-15 (original finding) — TEN provisions contain text that is not the law.** Found 2026-08-04 (S6).
   `constitution_1950` Arts 2 and 4, `companies_2013` s.3, `cpc_1908` ss.1/2/6/9/12,
   `motor_vehicles_1988` s.5, `income_tax_2025` s.3. They hold a Statement of Objects and
   Reasons, drafting commentary, a decree form, an affidavit form, accounting standards, and a

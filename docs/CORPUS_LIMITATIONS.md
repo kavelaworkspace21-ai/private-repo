@@ -12,7 +12,64 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
+## ✅ RESOLVED 2026-08-05 (S7) — the CPC corpus was Orders, Rules and Appendix forms
+
+**The Code of Civil Procedure's section corpus was not its sections.** Investigating the five
+CPC entries flagged in the S6 finding below showed the problem was not five sections — it was
+the whole act.
+
+| Cited as | Held the text of |
+|---|---|
+| s.1 *Short title, commencement and extent* | "Presidency Small Cause Courts", page 234 |
+| s.2 *Definitions* | a **decree form** template, page 290 |
+| s.9 *Courts to try all civil suits unless barred* | an **affidavit form** ("The following debts are due to me:"), page 304 |
+| s.10 *Stay of suit* | "Deposit of money, etc., in Court" (Order XXIV) |
+| s.11 **Res judicata** | "Oral application" |
+| s.89 *Settlement of disputes outside the Court* | "Application to set aside sale on deposit" (Order XXI r.89) |
+
+**The phrase "res judicata" did not appear anywhere in the file.** Neither did "courts to try
+all civil suits unless barred". Two of the most-cited provisions in Indian civil procedure were
+absent from the corpus of a tool built for litigators, while their numbers returned Order/Rule
+text that looked exactly like law.
+
+**Cause.** The Code's body is ss.1–158. Everything after is the **First Schedule** — Orders I
+to LI, whose Rules renumber from 1 inside *every* Order — and **Appendices A–H** (forms).
+With no boundary, those renumbered Rules and forms parsed as sections and overwrote the Code's
+own numbering. It is the same failure mode as the IBC Schedules, and the existing
+`body_before_schedule` flag fixes it: `(150, 158)` cuts the page range at the body's tail.
+
+**Result, verified by `scripts/corpus_diff.py`:** 179 entries → 156; page range 27–350 → 27–85.
+
+* **Recovered:** ss.1, 2, 9, 10, 11 (res judicata), 89, and twelve sections that were absent
+  altogether — 100A, 109, 126, 130, 138, **148A** (caveat), 153A, 21A, **35A** and **35B**
+  (compensatory costs / costs for delay), 43, **44A** (execution of foreign decrees).
+* **Removed:** 35 entries. Every one was checked; **not a single one was a CPC section.** All
+  were Order/Rule headings ("Order against garnishee" = O.XXI r.46B, "Mode of making
+  proclamation" = r.67, "Attachment of agricultural produce" = r.44) or Appendix forms.
+* Page-order score, the act-level metric added with this fix: **0.76 → 1.00**.
+
+### What is still missing, stated plainly
+
+* **13 of ss.1–158 have no entry**: 18, 48, 60, 67, 85, 92, 95, 99, 110, 111, 154, 155, 156.
+  ss.110/111 and 154–156 were omitted or repealed by amendment and are legitimately absent.
+  The rest are **not yet recovered**.
+* **s.60 and s.92 exist but under mangled numbers** — `s.860` ("Property liable to attachment
+  and sale in execution of decree") and `s.392` ("Public charities"). A footnote marker is
+  glued to the section number (`8`+`60`, `3`+`92`). This is the `glued_starts` class and is the
+  obvious next fix.
+* **The First Schedule Orders and Rules are now NOT INGESTED AT ALL.** They were never usable
+  before — they were masquerading as sections — but a litigation tool without CPC Orders is a
+  real coverage gap. They need proper namespacing (`Ord.XXI.R.46B`, as the `Sch.*` work did for
+  schedules) before they can be reinstated. **Do not simply remove the boundary flag**: that
+  restores the corruption.
+
+---
+
 ## ⛔ OPEN — TEN provisions hold text that is not the law (found 2026-08-04, S6)
+
+> **UPDATE 2026-08-05:** the five `cpc_1908` entries below are **RESOLVED** — see the section
+> above. Four remain open: `constitution_1950` Arts 2 and 4, `companies_2013` s.3,
+> `motor_vehicles_1988` s.5, plus `income_tax_2025` s.3.
 
 **Ten sections across five acts contain something other than the provision they claim to be.**
 None was detectable by the existing contamination scanner, because none contains amending

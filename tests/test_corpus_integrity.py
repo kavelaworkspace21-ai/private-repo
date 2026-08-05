@@ -161,14 +161,16 @@ def all_suspect():
 #                           ("The agreement is uncertain in the following respects").
 #   cpc_1908 s.9            Should be "Courts to try all civil suits unless barred". Contains
 #                           an affidavit form ("The following debts are due to me:").
+#
+# RECOVERED 2026-08-05 (S7): every cpc_1908 entry — ss.1, 2, 6, 9, 12 — is fixed and removed
+# from this set. The Code's body is ss.1-158; everything after is the First Schedule (Orders
+# and Rules, which renumber from 1 inside every Order) and Appendices A-H (forms). With no
+# boundary, those renumbered items parsed as sections and overwrote the Code's own. The
+# `body_before_schedule` flag cuts the page range at the body's tail.
 KNOWN_MISPARSED = {
     ("constitution_1950", "2"),
     ("constitution_1950", "4"),
     ("companies_2013", "3"),
-    ("cpc_1908", "2"),
-    ("cpc_1908", "6"),
-    ("cpc_1908", "9"),
-    ("cpc_1908", "12"),
     ("motor_vehicles_1988", "5"),
 }
 
@@ -412,8 +414,9 @@ def test_act_status_is_a_known_value():
 KNOWN_OVERSIZED = {
     ("arbitration_1996", "86"), ("bnss_2023", "531"), ("crpc_1973", "484"),
     ("cgst_2017", "2"), ("cgst_2017", "60"), ("cgst_2017", "140"),
-    ("companies_2013", "3"), ("cpc_1908", "1"), ("cpc_1908", "2"),
-    ("cpc_1908", "6"), ("cpc_1908", "9"),
+    ("companies_2013", "3"),
+    # cpc_1908 ss.1/2/6/9 were here until 2026-08-05. They were Appendix forms and Order/Rule
+    # headings, and are gone now that the body boundary stops the parse at s.158.
     ("income_tax_1961", "2"), ("income_tax_1961", "10"), ("income_tax_1961", "80GG"),
     ("income_tax_2025", "3"), ("income_tax_2025", "393"),
     ("income_tax_rules_2026", "225"), ("income_tax_rules_2026", "238"),
@@ -435,3 +438,61 @@ def test_no_new_oversized_sections():
         "Read each one. If it is a genuine long provision, record it in KNOWN_OVERSIZED with "
         "that finding; if its text is not its provision, it belongs in KNOWN_MISPARSED."
     )
+
+
+# ── act-level health: do section numbers advance through the document? ──────────
+
+# A correctly parsed act reads front to back: as section numbers increase, page numbers do
+# too. Sorting by section number and counting how often the page goes BACKWARDS is therefore a
+# single number that says whether an act was segmented coherently at all.
+#
+# It is the check that would have caught the CPC in one line. Before the fix cpc_1908 scored
+# 0.76 with 43 inversions while every other act scored >= 0.95 and 35 scored a perfect 1.00 —
+# because its "sections" were Order/Rule headings and Appendix forms scattered across 350
+# pages. Section-level detectors found five bad sections; this found that the whole act was
+# wrong.
+MIN_PAGE_ORDER_SCORE = 0.90
+
+# Acts that legitimately score below the floor, each with the reason. Empty is the goal.
+KNOWN_LOW_PAGE_ORDER: dict[str, str] = {}
+
+
+def page_order_scores() -> dict[str, tuple[float, int, int]]:
+    """act_id -> (score, inversions, sections_considered). 1.00 = perfectly in order."""
+    scores = {}
+    for act in _acts():
+        points = []
+        for sec in _body_sections(act):
+            m = re.match(r"^(\d+)", str(sec["num"]))
+            try:
+                page = int(str(sec.get("page") or 0))
+            except ValueError:
+                continue
+            if m and page:
+                points.append((int(m.group(1)), page))
+        if len(points) < 20:                 # too few to be meaningful
+            continue
+        points.sort(key=lambda t: t[0])
+        inversions = sum(1 for i in range(1, len(points)) if points[i][1] < points[i - 1][1])
+        scores[act["id"]] = (1 - inversions / max(1, len(points) - 1), inversions, len(points))
+    return scores
+
+
+def test_sections_advance_through_the_source_document():
+    """An act whose sections jump backwards through the PDF was not segmented coherently."""
+    bad = {a: s for a, s in page_order_scores().items()
+           if s[0] < MIN_PAGE_ORDER_SCORE and a not in KNOWN_LOW_PAGE_ORDER}
+    listed = ", ".join(f"{a} score={s[0]:.2f} ({s[1]} inversions of {s[2]})"
+                       for a, s in sorted(bad.items()))
+    assert not bad, (
+        f"acts whose section numbering does not advance through the source document: {listed}. "
+        f"This is the signature of foreign material — schedules, orders, appendix forms — being "
+        f"parsed as sections and overwriting the act's own numbering."
+    )
+
+
+def test_the_page_order_metric_is_actually_measuring_something():
+    """Guards the metric: it must score real acts high and a shuffled one low."""
+    scores = page_order_scores()
+    assert len(scores) >= 40, f"only {len(scores)} acts scored; the metric is not running"
+    assert scores["contract_1872"][0] >= 0.99, "a known-clean act no longer scores clean"
