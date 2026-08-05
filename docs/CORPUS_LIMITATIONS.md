@@ -46,7 +46,9 @@ own numbering. It is the same failure mode as the IBC Schedules, and the existin
 * **Removed:** 35 entries. Every one was checked; **not a single one was a CPC section.** All
   were Order/Rule headings ("Order against garnishee" = O.XXI r.46B, "Mode of making
   proclamation" = r.67, "Attachment of agricultural produce" = r.44) or Appendix forms.
-* Page-order score, the act-level metric added with this fix: **0.76 → 1.00**.
+* Page-order score, the act-level metric added with this fix: **0.76 → 0.97**. (An earlier
+  note here claimed 1.00; that was read off the spot-checked sections rather than recomputed.
+  0.97 is the measured value — the residual inversions are the mangled-number entries below.)
 
 ### What is still missing, stated plainly
 
@@ -65,11 +67,62 @@ own numbering. It is the same failure mode as the IBC Schedules, and the existin
 
 ---
 
+## ✅ RESOLVED 2026-08-05 (S7) — Companies, Motor Vehicles and the Constitution
+
+The remaining four entries from the S6 finding below are fixed. Two distinct causes.
+
+**Body boundary** — the same defect as the CPC, in two more acts:
+
+| Act | § | Was | Fix |
+|---|---|---|---|
+| `companies_2013` | s.3 | 196,395 chars of **Schedule III accounting formats** instead of "Formation of company"; 76 section numbers absent | `body_before_schedule: (465, 470)` |
+| `motor_vehicles_1988` | s.5 | the **Statement of Objects and Reasons** instead of "Responsibility of owners" | `body_before_schedule: (210, 217)` |
+
+Companies: 433 → 456 entries, **16 previously-absent sections recovered**, largest section
+196,395 → 30,750 chars (s.2 Definitions, genuine), page range now 16–252. Motor Vehicles: 250
+entries unchanged, page range 9–118.
+
+**Footnote apparatus parsed as headings** — Constitution Arts 2 and 4:
+
+India Code prints, in the footnote blocks at the bottom of pages 119 and 84:
+
+```
+2. Proviso omitted by ibid.
+4. Proviso omitted by s. 11, ibid.
+```
+
+`_FOOTNOTE_RE` already dropped editorial footnotes — `Subs.`, `Ins.`, `Rep.`, `Omitted` and a
+dozen more — but **not `Proviso`**. So both lines opened a *section*. `_FOOTNOTE_RE2`, which
+keys on a statutory citation, could not catch them either: "Proviso omitted by ibid." carries
+no Act or year. Adding `Proviso`, `Cls.` and `Sub-clause` fixed all four articles.
+
+This recovered more than the two articles. **Art 279A (Goods and Services Tax Council) went
+453 → 3,910 chars and Art 124 (Establishment and constitution of the Supreme Court) 1,870 →
+3,497** — Arts 2 and 4 had been holding their text. Arts 1–4 now sit contiguously on page 23,
+as they should.
+
+> An intermediate attempt adding only `Proviso` fixed Art 2 but **broke Art 3**, which had been
+> correct: dropping one footnote shifted the segmentation so a later footnote-derived Art 3
+> won instead. Recorded because it is the argument against shipping a keyword-list fix on the
+> first green result — the list is inherently incomplete, and the failure mode is silent
+> substitution of a provision that was previously right.
+
+### Still open in these acts
+
+* **`companies_2013` s.37ZA** — the text is real law (Producer Company "Annual general
+  meetings", Chapter XXIA, inserted 2020) but the number should be **378ZA**; a digit was
+  dropped. The provision is present and correct yet unreachable by its true citation — the
+  same class as `cpc_1908`'s `s.860` (really s.60) and `s.392` (s.92).
+* **`income_tax_2025` s.3** — still holds a table fragment titled "More than 1000000", 52,197
+  chars. That act parses through `chain_rules`, a different code path from the two fixed here,
+  and has not been investigated.
+
+---
+
 ## ⛔ OPEN — TEN provisions hold text that is not the law (found 2026-08-04, S6)
 
-> **UPDATE 2026-08-05:** the five `cpc_1908` entries below are **RESOLVED** — see the section
-> above. Four remain open: `constitution_1950` Arts 2 and 4, `companies_2013` s.3,
-> `motor_vehicles_1988` s.5, plus `income_tax_2025` s.3.
+> **UPDATE 2026-08-05: nine of the ten are RESOLVED.** The five `cpc_1908` entries and the four
+> above are fixed — see the two sections above. **`income_tax_2025` s.3 remains open.**
 
 **Ten sections across five acts contain something other than the provision they claim to be.**
 None was detectable by the existing contamination scanner, because none contains amending

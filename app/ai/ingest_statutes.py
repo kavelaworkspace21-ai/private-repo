@@ -249,6 +249,11 @@ STATUTE_REGISTRY: dict[str, dict] = {
         #
         # glued_starts and both dash flags were measured and change nothing.
         "wrapped_headings": True,
+        # S7: the body is ss.1-217; the Statement of Objects and Reasons and the Schedules
+        # follow it. Without a boundary the SOR parsed as sections — s.5 ("Responsibility of
+        # owners of motor vehicles for contravention") held "The proposed legislation has been
+        # prepared in the light of the above background", from page 174.
+        "body_before_schedule": (210, 217),
     },
     "arbitration_1996": {
         "title": "Arbitration and Conciliation Act, 1996", "short": "Arbitration Act", "year": 1996,
@@ -285,6 +290,11 @@ STATUTE_REGISTRY: dict[str, dict] = {
         "title": "Companies Act, 2013", "short": "Companies Act", "year": 2013, "status": "in_force",
         "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2114/3/a2013-18.pdf",
         "landing":    "https://www.indiacode.nic.in/handle/123456789/2114",
+        # S7: the body is ss.1-470; after it come Schedules I-VII, including Schedule III
+        # (the accounting formats). Without a boundary those parse as sections — s.3
+        # ("Formation of company") held 196,395 chars of Schedule III accounting standards
+        # and 76 section numbers were missing from the act.
+        "body_before_schedule": (465, 470),
     },
     "consumer_protection_2019": {
         "title": "Consumer Protection Act, 2019", "short": "Consumer Protection Act", "year": 2019,
@@ -837,10 +847,19 @@ _CHAIN_LOOSE_RE = re.compile(r"^\s*(\d{1,3})([A-Z]{0,2})\s?\.\s*((?:\d{1,3}\[|[(
 # Openers: an India Code footnote's first word after "N." is an editorial verb or a
 # cross-reference phrase ("Subs.", "Ins.", "See", "Cf.", "As to", "The Act has been
 # extended…"). No real section heading begins this way, so these are safe to drop.
+#
+# `Proviso` was missing until 2026-08-05 and cost two Articles of the Constitution. India Code
+# prints "2. Proviso omitted by ibid." and "4. Proviso omitted by s. 11, ibid." in the footnote
+# blocks of pages 119 and 84. Neither matched, so both opened a SECTION — and Article 2
+# ("Admission or establishment of new States") ended up holding the GST Council provision from
+# Art 279A, while Article 4 held text about the NJAC being struck down. `_FOOTNOTE_RE2`, which
+# keys on a statutory citation, could not catch them either: "Proviso omitted by ibid." carries
+# no Act or year.
 _FOOTNOTE_RE = re.compile(
     r"^\s*\d{1,2}\.\s+(Subs\.|Ins\.|Rep\.|Added|Omitted|Renumbered|Deleted|Earlier|Now\b|See\b|"
     r"Cf\.|Cl\.|As to\b|Certain words|The words?|The word\b|The Act\b|This Act\b|This\b|Ss?\.\s|"
-    r"Sub-s|before\b|after\b|Provided\b|Clause\b|Words\b|Inserted|Substituted|Repealed)", re.I)
+    r"Sub-s|before\b|after\b|Provided\b|Proviso\b|Clause\b|Cls?\.|Sub-clause\b|Words\b|"
+    r"Inserted|Substituted|Repealed)", re.I)
 # Signature: a short-numbered line whose text carries a statutory-citation marker
 # (Act/Reg N of YYYY · w.e.f. · A.O. · commencement) is an amendment note, not a section.
 # EXCEPT when the number is followed by a bracketed heading — India Code prints a REPEALED

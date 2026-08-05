@@ -167,11 +167,28 @@ def all_suspect():
 # and Rules, which renumber from 1 inside every Order) and Appendices A-H (forms). With no
 # boundary, those renumbered items parsed as sections and overwrote the Code's own. The
 # `body_before_schedule` flag cuts the page range at the body's tail.
+#
+# RECOVERED 2026-08-05 (S7), all four:
+#   companies_2013 s.3        body boundary at ss.465-470 — Schedule III's accounting formats
+#                             were parsing as sections. s.3 is "Formation of company" again,
+#                             196,395 chars -> normal, and 16 absent sections came back.
+#   motor_vehicles_1988 s.5   body boundary at ss.210-217 — the Statement of Objects and
+#                             Reasons was parsing as sections. No entries lost.
+#   constitution_1950 s.2/s.4 `Proviso`, `Cls.` and `Sub-clause` added to _FOOTNOTE_RE. India
+#                             Code prints "2. Proviso omitted by ibid." in the footnote block
+#                             of page 119 and "4. Proviso omitted by s. 11, ibid." on page 84;
+#                             neither matched, so both opened a SECTION. Also restored Art 279A
+#                             (Goods and Services Tax Council, 453 -> 3,910 chars) and Art 124
+#                             (Supreme Court, 1,870 -> 3,497), whose text those two had taken.
+#
+# STILL LISTED — a different defect class, recorded rather than mixed in:
+#   companies_2013 s.37ZA     The TEXT is real law: "Annual general meetings" for Producer
+#                             Companies, Chapter XXIA inserted in 2020. The NUMBER is wrong —
+#                             it should be 378ZA and a digit was dropped. So the provision is
+#                             present and correct but unreachable by its true citation, the
+#                             same class as cpc_1908's s.860 (really s.60) and s.392 (s.92).
 KNOWN_MISPARSED = {
-    ("constitution_1950", "2"),
-    ("constitution_1950", "4"),
-    ("companies_2013", "3"),
-    ("motor_vehicles_1988", "5"),
+    ("companies_2013", "37ZA"),
 }
 
 
@@ -414,7 +431,10 @@ def test_act_status_is_a_known_value():
 KNOWN_OVERSIZED = {
     ("arbitration_1996", "86"), ("bnss_2023", "531"), ("crpc_1973", "484"),
     ("cgst_2017", "2"), ("cgst_2017", "60"), ("cgst_2017", "140"),
-    ("companies_2013", "3"),
+    # companies_2013 s.3 was here until 2026-08-05 (196,395 chars of Schedule III accounting
+    # formats). The body boundary fixed it; s.2 (Definitions, 30,750) now tops the act and is
+    # a genuine long provision.
+    ("companies_2013", "2"),
     # cpc_1908 ss.1/2/6/9 were here until 2026-08-05. They were Appendix forms and Order/Rule
     # headings, and are gone now that the body boundary stops the parse at s.158.
     ("income_tax_1961", "2"), ("income_tax_1961", "10"), ("income_tax_1961", "80GG"),

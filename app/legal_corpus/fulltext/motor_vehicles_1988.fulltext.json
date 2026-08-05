@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/handle/123456789/1798",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1798",
         "sha256": "be5bac906607cb2ac902d5c113c42c7f89142be3591a81ccb825cfbb7ee5d50d",
-        "fetched_on": "2026-07-30",
+        "fetched_on": "2026-08-05",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -56,9 +56,9 @@
         },
         {
           "num": "5",
-          "text": "The proposed legislation has been prepared in the light of the above background. Some of the more important provisions of the Bill provide for the following matters, namely:—\n(a) rationalization of certain definitions with additions of certain new definitions of new types of\nvehicles:\n(b) stricter procedures relating to grant of driving licences and the period of validity thereof;\n(c) laying down of standards for the components and parts of motor vehicles;\n(d) standards for anti-pollution control devices;\n(e) provision for issuing fitness certificates of vehicles also by the authorised testing stations;\n(f) enabling provision for updating the system of registration marks;\n(g) liberalised schemes for grant of stage carriage permits on non-nationalised routes, all-India\nTourist permits and also national permits for goods carriages;\n(h) administration of the Solatium Scheme by the General Insurance Corporation;\n174\n(i) Provision for enhanced compensation in cases of “no fault liability” and in hit and run motor\naccidents;\n(j) provision for payment of compensation by the insurer to the extent of actual liability to the\nvictims of motor accidents irrespective of the class of vehicles;\n(k) maintenance of State registers for driving licences and vehicle registration:\n(l) constitution of Road Safety Councils.",
-          "page": 174,
-          "title": "The proposed legislation has been prepared in the light of the above background"
+          "text": "Responsibility of owners of motor vehicles for contravention of sections 3 and 4.—No owner\nor person in charge of a motor vehicle shall cause or permit any person who does not satisfy the\nprovisions of section 3 or section 4 to drive the vehicle.",
+          "page": 14,
+          "title": "Responsibility of owners of motor vehicles for contravention of sections 3 and 4"
         },
         {
           "num": "6",
@@ -1514,8 +1514,8 @@
         },
         {
           "num": "217A",
-          "text": "Renewal of permits, driving licences and registration granted under the Motor Vehicles Act, 1939.—Notwithstanding the repeal by sub-section (1) of section 217 of the enactments referred to in\nthat sub-section, any certificate of fitness or registration or licence or permit issued or granted under the\nsaid enactments may be renewed under this Act.]\n119\n1[2[THE FIRST SCHEDULE]]\nMANDATORY SIGNS OF SCHEDULE OF THE MOTOR VEHICLES ACT, 1988\n120\n121\n122\n123\n124\n125\n126\n127\n128\n129\n130\n131\n132\n133\n134\n135\n136\n137\n138\n139\n140\n141\n142\n143\n144\n145\n146\n147\n148\n149\n150\n151\n152\n153\n154\n155\n156\n157\n158\n159\n160\n161\n162\n163\n164\n165\n166\n167\n168\n169\n170\n171\n“Explanatory Notes”\n(i) Normal size, wherever specified is the minimum size of the sign which is intended to be used in\nrural areas on highways declared to be National Highways or State Highways under any law for the time\nbeing in force in such rural areas,\n(ii) The Small Size, wherever specified is the minimum size of the sign which is intended to be used—\n(a) on all roads, other than the said National Highways and the State Highways, in the rural areas,\nand\n(b) in all roads within the urban areas:\nProvided that sign of any appropriate size may be used on bollards or alongside traffic light signals on\nsuch roads,\n(iii) the colour scheme of these signs shall be as specified therein and the reverse side of all such sign\nplates shall be painted grey,\n(iv) the posts of all these signs shall be painted in 25 cms. wide bands, alternatively black and white\nand the lowest band next to the ground shall be black,\n(v) the definition plate, whenever specified with a sign or where required to make the meaning of a\nsign more explicit shall have white background, black border 20 mm. wide and shall be of adequate size\nfor legibility but not too large as to be obtrusive.\n172\n1[THE SECOND SCHEDULE.—[Schedule for compensation for third party fatal accidents/injury cases\nclaims] Omitted by the Motor Vehicles (Amendment) Act, 2019 (32 of 2019), s. 93 (w.e.f. 1-4-2022).]\n173\nSTATEMENT OF OBJECTS AND REASONS\nThe Motor Vehicles Act, 1939 (4 of 1939), consolidates and amends the law relating to motor\nvehicles. This has been amended several times to keep it up to date. The need was, however, felt that this\nAct should, now inter aria, take into account also changes in the road transport technology, pattern of\npassenger and freight movements, development of the road network in the country and particularly the\nimprove techniques in the motor vehicles management.",
-          "page": 119,
+          "text": "Renewal of permits, driving licences and registration granted under the Motor Vehicles Act, 1939. THE FIRST SCHEDULE. THE SECOND SCHEDULE. [Omitted]. 9 THE MOTOR VEHICLES ACT, 1988 ACT NO. 59 OF 1988 [14th October, 1988.] An Act to consolidate and amend the law relating to motor vehicles. BE it enacted by Parliament in the Thirty-ninth Year of the Republic of India as follows:—\nCHAPTER I\nPRELIMINARY",
+          "page": 9,
           "title": "Renewal of permits, driving licences and registration granted under the Motor Vehicles Act, 1939"
         }
       ]

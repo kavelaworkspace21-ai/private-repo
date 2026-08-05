@@ -186,7 +186,19 @@ agent level; **AWS-side revocation is owner-only and still open.**
   CI and to deploy the current corpus. AWS billing is owner-only.
 - **OWNER-12 — Error-tracker + alert channel choice** (GlitchTip/Sentry, email/Slack webhook) —
   feeds Sprint 5 observability.
-- **OWNER-15 (UPDATE 2026-08-05) — the CPC half is FIXED; five provisions remain.** S7 found
+- **OWNER-15 (UPDATE 2 — 2026-08-05) — NINE of the ten are now fixed; ONE remains.**
+  `companies_2013` s.3 and `motor_vehicles_1988` s.5 were the same body-boundary defect as the
+  CPC (Schedule III accounting formats and a Statement of Objects and Reasons parsing as
+  sections); Companies also recovered 16 previously-absent provisions. `constitution_1950`
+  Arts 2 and 4 were footnote lines — India Code prints "2. Proviso omitted by ibid." in the
+  page-119 footnote block and `_FOOTNOTE_RE` did not list `Proviso` — and fixing that also
+  restored **Art 279A (GST Council, 453 → 3,910 chars)** and **Art 124 (Supreme Court,
+  1,870 → 3,497)**, whose text those two had been holding. **Still open: `income_tax_2025`
+  s.3**, a table fragment on the separate `chain_rules` code path. Also newly recorded, a
+  different class: provisions that are correct but filed under a wrong number and so
+  unreachable by citation — `companies_2013` s.37ZA (should be 378ZA), `cpc_1908` s.860 (s.60)
+  and s.392 (s.92). **G1 review should now cover one substituted provision rather than ten.**
+- **OWNER-15 (UPDATE 1) — the CPC half is FIXED; five provisions remain.** S7 found
   the five `cpc_1908` entries were not five bad sections but a whole broken act: the Code's
   section numbers were populated with First Schedule Order/Rule headings and Appendix forms.
   **"Res judicata" did not appear anywhere in the file**, nor did "courts to try all civil
