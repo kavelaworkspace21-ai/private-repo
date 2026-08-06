@@ -181,12 +181,28 @@ def all_suspect():
 #                             (Goods and Services Tax Council, 453 -> 3,910 chars) and Art 124
 #                             (Supreme Court, 1,870 -> 3,497), whose text those two had taken.
 #
-# STILL LISTED — a different defect class, recorded rather than mixed in:
+# STILL LISTED — and it is NOT a parser defect. Recorded, deliberately not "fixed":
+#
 #   companies_2013 s.37ZA     The TEXT is real law: "Annual general meetings" for Producer
-#                             Companies, Chapter XXIA inserted in 2020. The NUMBER is wrong —
-#                             it should be 378ZA and a digit was dropped. So the provision is
-#                             present and correct but unreachable by its true citation, the
-#                             same class as cpc_1908's s.860 (really s.60) and s.392 (s.92).
+#                             Companies, Chapter XXIA inserted in 2020. The number should be
+#                             378ZA. **The official India Code PDF itself prints "37ZA."** —
+#                             page 213 reads 378X, 378Y, 378Z, then 37ZA. The parser
+#                             reproduced the source faithfully.
+#
+#                             The evidence that 378ZA is meant is arithmetic: 378Z is present,
+#                             378ZB is present, 378ZA is absent, and this entry carries exactly
+#                             the content that belongs between them — while sorting under "37",
+#                             which files it among ss.35-40, a different part of the Act.
+#
+#                             Renumbering it would make the corpus assert a section number the
+#                             official source does not print. That is a claim about what the
+#                             law says, and this project's rule is that the agent does not
+#                             adjudicate legal-correctness questions. PENDING_LEGAL_REVIEW,
+#                             for G1.
+#
+# cpc_1908's s.860 (really s.60) and s.392 (s.92) looked like the same class but were NOT: the
+# source printed them correctly and a footnote marker glued to the number during extraction.
+# That was ours to fix, and it is fixed — see `strip_marker_digits`.
 KNOWN_MISPARSED = {
     ("companies_2013", "37ZA"),
 }

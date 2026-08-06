@@ -12,6 +12,56 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
+## ✅ RESOLVED 2026-08-05 (S7) — CPC ss.60 and 92 were unreachable by citation
+
+A footnote marker glued to the section number during extraction. India Code prints an
+amendment marker immediately before an amended section's number; where it is bracketed
+(`8[60.`) the parser already handled it, but where it is bare it merges:
+
+```
+59. Release on ground of illness. ...
+860. Property liable to attachment and sale in execution of decree.   ← 8 + 60
+91. Public nuisances and other wrongful acts affecting the public.
+392. Public charities.                                                ← 3 + 92
+```
+
+Both provisions were **present, correct and complete** — filed under numbers that do not
+exist. An advocate citing CPC s.60 (property liable to attachment) or s.92 (public charities,
+the representative-suit provision) found nothing.
+
+**Fix:** `strip_marker_digits`, opt-in per act. The test is arithmetic, not textual — the
+number must be implausibly far ahead of the previous section **and** dropping its first digit
+must land back in sequence. A genuine jump fails the second condition (150 after 100 strips to
+50, which is behind, so it is left alone), which is what stops it renumbering real provisions.
+Six cases were unit-checked before re-ingesting.
+
+> It had to be applied to **both** competing strategies. `_segment_sections` scores
+> `_seg_dash` against `_seg_monotonic` and keeps the winner; fixing only `_seg_monotonic`
+> changed nothing in the shipped corpus because `_seg_dash` was winning. Worth remembering:
+> in this parser, a fix that is not in the winning strategy is not a fix.
+
+**Result:** every gained entry was checked and all 17 are genuine CPC sections — ss.18, 44, 48,
+60, 67, 85, 92, 95, 99, 99A, 110, 111, 111A, 135A, 154, 155, 156. Only the two bogus numbers
+were lost. **All 158 of ss.1–158 now have an entry (was 145), and the act's page-order score
+is 1.00 with zero inversions** (0.76 before any of today's work).
+
+### ⛔ OPEN, and NOT a parser defect — `companies_2013` s.37ZA
+
+The text is real law: "Annual general meetings" for Producer Companies, Chapter XXIA inserted
+2020. The number should be **378ZA**. **The official India Code PDF itself prints `37ZA.`** —
+page 213 reads 378X, 378Y, 378Z, then 37ZA. The parser reproduced the source faithfully.
+
+That 378ZA is meant is arithmetic: 378Z present, 378ZB present, 378ZA absent, and this entry
+carries exactly the content that belongs between them — while sorting under "37", which files
+it among ss.35–40, a different part of the Act entirely.
+
+**Deliberately not corrected.** Renumbering would make the corpus assert a section number the
+official source does not print, which is a claim about what the law says.
+`PENDING_LEGAL_REVIEW`, for G1. The owner may reasonably decide to normalise it with recorded
+provenance — that is a human call, not the agent's.
+
+---
+
 ## ✅ RESOLVED 2026-08-05 (S7) — the CPC corpus was Orders, Rules and Appendix forms
 
 **The Code of Civil Procedure's section corpus was not its sections.** Investigating the five

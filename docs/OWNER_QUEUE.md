@@ -186,6 +186,25 @@ agent level; **AWS-side revocation is owner-only and still open.**
   CI and to deploy the current corpus. AWS billing is owner-only.
 - **OWNER-12 — Error-tracker + alert channel choice** (GlitchTip/Sentry, email/Slack webhook) —
   feeds Sprint 5 observability.
+- **OWNER-16 — a section number is WRONG IN THE OFFICIAL PDF, and I did not "fix" it.**
+  `companies_2013` s.37ZA holds real law — Producer Company "Annual general meetings",
+  Chapter XXIA — and should be numbered **378ZA**. The India Code PDF itself prints `37ZA.`
+  on page 213 (the sequence there reads 378X, 378Y, 378Z, **37ZA**). The evidence that 378ZA
+  is intended is arithmetic: 378Z present, 378ZB present, 378ZA absent, and this entry carries
+  exactly the content that belongs between them — while sorting under "37", which files it
+  among ss.35–40. **Left as the source prints it**, because renumbering would make the corpus
+  assert a section number the official document does not, and that is a claim about what the
+  law says rather than a parsing decision. `PENDING_LEGAL_REVIEW` for G1. **Your call:**
+  normalise it to 378ZA with recorded provenance, or leave it and disclose the gap. Note that
+  today an advocate citing s.378ZA finds nothing.
+- **OWNER-15 (UPDATE 3 — 2026-08-05) — CPC ss.60 and 92 recovered; all ten substitutions
+  closed.** The misnumbered CPC entries were a real parser defect — a bare amendment marker
+  glued to the section number (`860.` = 8+60, `392.` = 3+92) — and are fixed by
+  `strip_marker_digits`. Both provisions had been complete but unreachable by citation. The
+  re-ingest gained 17 genuine sections (18, 44, 48, 60, 67, 85, 92, 95, 99, 99A, 110, 111,
+  111A, 135A, 154, 155, 156) and lost only the two bogus numbers. **All 158 of ss.1–158 now
+  have an entry (was 145); page-order score 1.00, zero inversions.** No act in the corpus now
+  scores below 0.95.
 - **OWNER-15 (UPDATE 2 — 2026-08-05) — NINE of the ten are now fixed; ONE remains.**
   `companies_2013` s.3 and `motor_vehicles_1988` s.5 were the same body-boundary defect as the
   CPC (Schedule III accounting formats and a Statement of Objects and Reasons parsing as

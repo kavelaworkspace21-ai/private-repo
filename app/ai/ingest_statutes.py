@@ -135,6 +135,9 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # Rules, which renumber from 1 inside every Order) and Appendices A-H (forms). Without
         # a boundary those renumbered items parse as sections and overwrite the Code's own.
         "body_before_schedule": (150, 158),
+        # s.60 printed as "860." and s.92 as "392." — a bare amendment marker glued
+        # to the number. Both provisions were complete but unreachable by citation.
+        "strip_marker_digits": True,
     },
     "ipc_1860": {
         "title": "Indian Penal Code, 1860", "short": "IPC", "year": 1860,
@@ -918,13 +921,18 @@ def _flat_lines(pages: list[str]) -> list[tuple[str, int]]:
 
 def _seg_dash(lines: list[tuple[str, int]]) -> list[dict]:
     """Section starts at "N. heading—text" lines (em-dash present); de-dupe by longest."""
-    sections, current = [], None
+    sections, current, last = [], None, 0
     for line, page_no in lines:
         m = _match_start(line)
         if m and "—" in line:
             if current:
                 sections.append(current)
-            current = {"num": m.group(1) + m.group(2), "text": m.group(3).strip(), "page": page_no}
+            # Strip a glued footnote marker, using the previous section number as context.
+            # Applied here as well as in _seg_monotonic because the two compete on score and
+            # THIS one wins for the CPC: fixing only the loser changed nothing in the corpus.
+            n = _strip_marker_digit(int(m.group(1)), last)
+            last = n
+            current = {"num": f"{n}{m.group(2)}", "text": m.group(3).strip(), "page": page_no}
         elif current is not None and line.strip():
             current["text"] += "\n" + line.strip()
     if current:
@@ -988,6 +996,38 @@ def _seg_dash_wrapped(lines: list[tuple[str, int]]) -> list[dict]:
     return list(best.values())
 
 
+# Set per-act: strip a superscript FOOTNOTE MARKER that extracted as a leading digit of the
+# section number.
+#
+# India Code prints an amendment marker immediately before an amended section's number. Where
+# the marker is bracketed ("8[60.") _START_RE already handles it, but where it is bare it glues
+# on and the section parses under a number that does not exist. CPC page 55:
+#     59. Release on ground of illness. ...
+#     860. Property liable to attachment and sale in execution of decree.   <- 8 + 60
+# and page 66:
+#     91. Public nuisances and other wrongful acts affecting the public.
+#     392. Public charities.                                                <- 3 + 92
+# Both provisions were present, correct and complete — and unreachable by their real citation.
+#
+# The test is arithmetic, not textual: the number must be implausibly far ahead of the previous
+# section AND dropping its first digit must land back in sequence. A genuine jump does not
+# satisfy the second condition (150 after 100 strips to 50, which is behind, so it is left
+# alone), which is what keeps this from renumbering real provisions.
+_STRIP_MARKER_DIGITS = False
+_MARKER_MAX_GAP = 30
+
+
+def _strip_marker_digit(n: int, last: int) -> int:
+    """Return the section number with a glued footnote marker removed, or `n` unchanged."""
+    if not _STRIP_MARKER_DIGITS or last <= 0 or n <= last + _MARKER_MAX_GAP:
+        return n
+    tail = str(n)[1:]
+    if not tail:
+        return n
+    stripped = int(tail)
+    return stripped if last < stripped <= last + _MARKER_MAX_GAP else n
+
+
 def _seg_monotonic(lines: list[tuple[str, int]]) -> list[dict]:
     """Monotonic-number runs; numbering resets to 1 start a new run; keep the run with most text."""
     runs, current_run, current, last = [], [], None, 0
@@ -1003,6 +1043,7 @@ def _seg_monotonic(lines: list[tuple[str, int]]) -> list[dict]:
         is_start = False
         if m:
             n = int(m.group(1))
+            n = _strip_marker_digit(n, last)
             if n == 1 and last >= 1:
                 close()
                 if current_run:
@@ -1014,8 +1055,8 @@ def _seg_monotonic(lines: list[tuple[str, int]]) -> list[dict]:
                 is_start = True
         if is_start:
             close()
-            current = {"num": m.group(1) + m.group(2), "text": m.group(3).strip(), "page": page_no}
-            last = int(m.group(1))
+            current = {"num": f"{n}{m.group(2)}", "text": m.group(3).strip(), "page": page_no}
+            last = n
         elif current is not None and line.strip():
             current["text"] += "\n" + line.strip()
     close()
@@ -1497,11 +1538,13 @@ def ingest(act_id: str) -> dict:
     _DOUBLE_ENDASH_ACTS = bool(meta.get("double_endash"))
     _BARE_SCHEDULE = (meta.get("article_schedule") == "bare")
     global _SINGLE_ENDASH, _CHAIN_TITLE_ABOVE, _CHAIN_HEADER_LINES, _CHAIN_LOOSE, _GLUED_STARTS
+    global _STRIP_MARKER_DIGITS
     global _CHAIN_NO_LIST_ROWS
     _SINGLE_ENDASH = bool(meta.get("single_endash"))
     _CHAIN_TITLE_ABOVE = bool(meta.get("chain_title_above"))
     _CHAIN_HEADER_LINES = tuple(meta.get("page_header_lines", ()))
     _CHAIN_NO_LIST_ROWS = bool(meta.get("chain_no_list_rows"))
+    _STRIP_MARKER_DIGITS = bool(meta.get("strip_marker_digits"))
     _CHAIN_LOOSE = bool(meta.get("chain_loose_starts"))
     _GLUED_STARTS = bool(meta.get("glued_starts"))
     try:
