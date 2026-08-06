@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/20095/1/the_indian_stamp_act%2C_1899.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/15510",
         "sha256": "80fd54af33dc908e9659779f771a3156a5585df5a15ad930ec12c1a23a205888",
-        "fetched_on": "2026-07-30",
+        "fetched_on": "2026-08-06",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

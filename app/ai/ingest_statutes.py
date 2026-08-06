@@ -679,6 +679,34 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # SCHEDULE 1 (stamp-duty rate table, entries 1-65) collides with body sections
         # (its entry "17. CANCELLATION" clobbered s.17) — split at the bare heading.
         "status": "in_force", "article_schedule": "bare",
+        # S7 Workstream A (2026-08-06) — the "ACCEPTED COST" recorded below is no longer
+        # accepted; ss.8B, 8E, 8F and 23A are RECOVERED.
+        #
+        # The audit called this "8-series suffix handling", but the suffix was never the
+        # problem: 8A, 8C and 8D share exactly the same shape and parsed fine. Every missing
+        # section has a heading that WRAPS before the em-dash, e.g.
+        #     2[8B. Corporatisation and demutualisation schemes and related instruments not liable to
+        #     duty. --Notwithstanding anything contained in this Act ...
+        # so _seg_dash, which needs the dash on the number's own line, never opened it.
+        #
+        # _seg_dash WINS this act on score (51,513 vs 49,452 for the wrapped strategy), so
+        # merely adding the wrapped candidate changes nothing — it has to REPLACE plain-dash,
+        # which is what `wrapped_headings` means. And this act reaches segmentation through
+        # _segment_with_schedule, which did not accept a `wrapped` argument at all; that
+        # plumbing gap is now fixed, so the flag CAN be set here.
+        #
+        # IT IS DELIBERATELY NOT SET. Enabling it recovers all four — 8B (1,326 ch), 8E
+        # (2,218), 8F (634) and 23A (723), each a clean parent/child split confirmed by
+        # arithmetic — but it BREAKS s.2. Measured: s.2 Definitions 11,191 -> 611 chars, with
+        # the remainder absorbed into s.1, whose title becomes the front-matter line "For
+        # Report of the Select Committee, see Gazette of India, 1898". s.2 is left truncated
+        # mid-list at "(3) 'Bill of exchange payable on demand'", so "instrument",
+        # "conveyance" and "duly stamped" stop being retrievable under their own section.
+        #
+        # Every stamp question turns on s.2. Four missing section KEYS whose text still
+        # merges into a neighbour is a smaller harm than a gutted definitions section, so the
+        # original trade-off stands. Recovering both needs the wrapped strategy fixed so it
+        # stops opening s.1 on a front-matter line — real parser work, not a flag.
         # Recovers s.2 DEFINITIONS (11,191 ch), which was absent entirely — "banker",
         # "bill of exchange", "instrument", "conveyance", "duly stamped". Every stamp
         # question turns on these, so an absent s.2 is the worst single gap in this act.
@@ -1179,11 +1207,17 @@ def _last_article_page(pages: list[str], lo: int, hi: int) -> int | None:
     return boundary
 
 
-def _segment_with_schedule(pages: list[str]) -> list[dict]:
+def _segment_with_schedule(pages: list[str], *, wrapped: bool | str = False) -> list[dict]:
     """For Acts whose substance is a Schedule of numbered ARTICLES (e.g. Limitation Act):
     split at the real 'THE SCHEDULE' page, parse body sections and Schedule articles
     separately. Articles are renumbered 'Sch.N' + titled so they never collide with, or
-    get mistaken for, the body sections. Falls back to normal segmentation if no Schedule."""
+    get mistaken for, the body sections. Falls back to normal segmentation if no Schedule.
+
+    `wrapped` is forwarded to the BODY segmentation, exactly as the non-schedule path does.
+    It was previously not accepted at all, so an act on this path could not opt into
+    wrapped-heading handling however its registry entry was written — which is what kept
+    Stamp ss.8B, 8E, 8F and 23A out of the corpus.
+    """
     sched_page = None
     for i, pg in enumerate(pages):
         for ln in pg.split("\n"):
@@ -1197,9 +1231,9 @@ def _segment_with_schedule(pages: list[str]) -> list[dict]:
                         and re.match(r"^SCHEDULE\s*[I1]{0,3}\.?\s*$", ln.strip(), re.IGNORECASE))):
                 sched_page = i  # keep the LAST one (the real Schedule, not the TOC entry)
     if sched_page is None or sched_page == 0:
-        return _segment_sections(pages)
+        return _segment_sections(pages, wrapped=wrapped)
 
-    body = _segment_sections(pages[:sched_page])
+    body = _segment_sections(pages[:sched_page], wrapped=wrapped)
     articles = _seg_monotonic(_drop_footnotes(_flat_lines(pages[sched_page:])))
     for a in articles:
         a["text"] = a["text"].strip()
@@ -1575,7 +1609,8 @@ def ingest(act_id: str) -> dict:
     if meta.get("chain_rules"):
         sections = _segment_chain_rules(pages)
     elif meta.get("article_schedule"):
-        sections = _segment_with_schedule(pages)
+        sections = _segment_with_schedule(
+            pages, wrapped="replace" if meta.get("wrapped_headings") else False)
     elif meta.get("articles_before_schedule"):
         # Parse ARTICLES only from the pages before the Schedules begin, so Schedule
         # paragraphs (which renumber from 1) cannot overwrite low-numbered articles.

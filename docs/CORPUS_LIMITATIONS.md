@@ -12,6 +12,57 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
+## ⛔ OPEN — Stamp ss.8B/8E/8F/23A: diagnosed, fix found, **deliberately not shipped**
+
+S7 Workstream A. The audit calls this "8-series suffix handling". **The suffix is not the
+problem.** ss.8A, 8C and 8D share exactly the same shape — an amendment-bracket prefix and a
+letter suffix — and parse fine. Every missing section has a heading that **wraps before the
+em-dash**:
+
+```
+2[8B. Corporatisation and demutualisation schemes and related instruments not liable to
+duty. —Notwithstanding anything contained in this Act ...
+
+2[23A. Certain instruments connected with mortgages of marketable securities to be chargeable
+as agreements. — (1) Where an instrument ...
+```
+
+`_seg_dash` requires the em-dash on the number's own line, so it never opens them and the text
+merges into the preceding section (8B→8A, 8E/8F→8D, 23A→23).
+
+**Two things had to be true to fix it, and only one of them was.** `_seg_dash` *wins* this act
+on score (51,513 vs 49,452), so merely adding the wrapped candidate changes nothing — it must
+**replace** plain-dash, which is what `wrapped_headings` means. And this act reaches
+segmentation through `_segment_with_schedule`, **which did not accept a `wrapped` argument at
+all** — so the flag had no route in however the registry was written. That plumbing gap is now
+fixed; the flag works on this path.
+
+### Why it is still not enabled
+
+Enabling it **recovers all four** — 8B (1,326 ch), 8E (2,218), 8F (634), 23A (723), each a
+clean parent/child split confirmed by arithmetic (8A −1,333 ≈ 8B; 8D −2,866 ≈ 8E+8F; 23 −731 ≈
+23A). Exactly what "do not flatten suffix sections into neighbouring base sections" asks for.
+
+**And it breaks s.2.** Measured, not predicted:
+
+| | before | with `wrapped_headings` |
+|---|---|---|
+| s.2 *Definitions* | 11,191 ch | **611 ch**, truncated mid-list at "(3) 'Bill of exchange payable on demand'" |
+| s.1 | 605 ch, "Short title, extent and commencement" | 10,576 ch, titled **"For Report of the Select Committee, see Gazette of India, 1898"** |
+
+The definitions are absorbed into s.1, whose heading becomes a front-matter line. "instrument",
+"conveyance" and "duly stamped" stop being retrievable under their own section — and every
+stamp question turns on s.2. The registry already recorded the original trade-off as a
+deliberate **ACCEPTED COST**; four missing section *keys* whose text still merges into a
+neighbour is the smaller harm.
+
+**So the corpus is unchanged** (`corpus_diff` reports "No corpus differences" after the
+revert). Recovering both needs the wrapped strategy fixed so it stops opening s.1 on a
+front-matter line — real parser work, not a flag. The diagnosis and the exact numbers are here
+so that work starts from evidence rather than from the audit's mis-framing.
+
+---
+
 ## ✅ RESOLVED 2026-08-05 (S7) — CPC ss.60 and 92 were unreachable by citation
 
 A footnote marker glued to the section number during extraction. India Code prints an
