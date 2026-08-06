@@ -438,7 +438,10 @@ KNOWN_OVERSIZED = {
     # cpc_1908 ss.1/2/6/9 were here until 2026-08-05. They were Appendix forms and Order/Rule
     # headings, and are gone now that the body boundary stops the parse at s.158.
     ("income_tax_1961", "2"), ("income_tax_1961", "10"), ("income_tax_1961", "80GG"),
-    ("income_tax_2025", "3"), ("income_tax_2025", "393"),
+    # income_tax_2025 s.3 was here until 2026-08-05: a numbered TABLE ROW on page 3
+    # ("3. More than 1000000. Eight kilometres;") had become s.3 and swallowed pages
+    # 3-13. Fixed; s.2 (Definitions, 61,181 chars) is the act's genuine giant.
+    ("income_tax_2025", "2"), ("income_tax_2025", "393"),
     ("income_tax_rules_2026", "225"), ("income_tax_rules_2026", "238"),
     ("income_tax_rules_2026", "240"),
 }

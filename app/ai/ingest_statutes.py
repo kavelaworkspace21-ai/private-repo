@@ -711,6 +711,11 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # data/source_pdfs/income_tax_2025.pdf, then run the ingest slice.
         "source_name": "Income Tax Department (incometaxindia.gov.in)",
         "chain_rules": True, "chain_title_above": True, "chain_loose_starts": True,
+        # A numbered TABLE row on page 3 ("3. More than 1000000. Eight kilometres;") was
+        # parsed as s.3 and swallowed pages 3-13, while the real s.3 on page 12 — the
+        # Act's definition of "tax year", its central concept — was rejected as a
+        # duplicate number. See _CHAIN_NO_LIST_ROWS.
+        "chain_no_list_rows": True,
         "page_header_lines": ["Income Tax Department",
                               "Ministry of Finance, Government of India"],
         "source_url": "https://www.incometaxindia.gov.in/documents/20117/43006/Income-tax-Act-2025_2026_2026-06-10_03-46-08_691051_en.pdf/b6240d88-c54c-d2b6-04ee-5703d0bcde4f?version=6.0",
@@ -759,6 +764,21 @@ _SINGLE_ENDASH = False       # set per-act; gazette prints use ".–(1)" (EN das
 _CHAIN_TITLE_ABOVE = False   # set per-act; ITA-2025 prints the marginal note ABOVE the number
 _CHAIN_HEADER_LINES: tuple = ()  # set per-act; repeating page-header lines to strip
 _CHAIN_LOOSE = False         # set per-act; accept glued/spaced section starts inside a chain
+# Set per-act: reject a chain candidate that is really a row of a NUMBERED TABLE.
+#
+# ITA-2025 page 3 prints, inside s.2's definitions, the "specified area" table:
+#     1. More than 10000 and upto 100000.   Two kilometres.
+#     2. More than 100000 and upto 1000000. Six kilometres.
+#     3. More than 1000000.                 Eight kilometres;
+# Row "3." matches a section start and satisfies the ascending chain (prev was 2), so it
+# BECAME s.3 — 52,197 chars swallowing pages 3-13 — and the real s.3 on page 12
+# ("3. (1) ... 'tax year' means the twelve months period ...") was then rejected as a
+# duplicate number. The Act's definition of its own central concept was not in the corpus.
+#
+# The discriminator is structural, not textual: a table row is immediately preceded by the
+# row numbered exactly one less. A genuine section start is preceded by its marginal note or
+# by the tail of the previous section, never by "N-1." on the line directly above.
+_CHAIN_NO_LIST_ROWS = False
 _BARE_SCHEDULE = False       # set per-act by ingest(); bare "SCHEDULE" heading (Commercial Courts)
 
 
@@ -855,8 +875,11 @@ _CHAIN_LOOSE_RE = re.compile(r"^\s*(\d{1,3})([A-Z]{0,2})\s?\.\s*((?:\d{1,3}\[|[(
 # Art 279A, while Article 4 held text about the NJAC being struck down. `_FOOTNOTE_RE2`, which
 # keys on a statutory citation, could not catch them either: "Proviso omitted by ibid." carries
 # no Act or year.
+#
+# `Subs?\.` covers both spellings: India Code prints "Subs. by" in most Acts and "Sub. by" in
+# the Income-tax Act 2025 ("3. Sub. by the Act No. 4 of 2026, w.e.f. 1-4-2026.").
 _FOOTNOTE_RE = re.compile(
-    r"^\s*\d{1,2}\.\s+(Subs\.|Ins\.|Rep\.|Added|Omitted|Renumbered|Deleted|Earlier|Now\b|See\b|"
+    r"^\s*\d{1,2}\.\s+(Subs?\.|Ins\.|Rep\.|Added|Omitted|Renumbered|Deleted|Earlier|Now\b|See\b|"
     r"Cf\.|Cl\.|As to\b|Certain words|The words?|The word\b|The Act\b|This Act\b|This\b|Ss?\.\s|"
     r"Sub-s|before\b|after\b|Provided\b|Proviso\b|Clause\b|Cls?\.|Sub-clause\b|Words\b|"
     r"Inserted|Substituted|Repealed)", re.I)
@@ -1384,6 +1407,41 @@ def _segment_chain_rules(pages: list[str]) -> list[dict]:
             if t.strip() in headers:      # repeating page furniture (ITA-2025 dept header)
                 continue
             flat.append((t, pno))
+    # Drop editorial footnotes, as every OTHER segmenter already does. This path built its
+    # own line list and never called it, so amendment notes could open sections here while
+    # being filtered everywhere else. ITA-2025 page 11 prints
+    #     3. Sub. by the Act No. 4 of 2026, w.e.f. 1-4-2026.
+    # which became s.3, and the real s.3 on page 12 — the definition of "tax year", the
+    # Act's central concept — was then rejected as a duplicate number.
+    #
+    # _FOOTNOTE_RE ONLY, deliberately not the full _drop_footnotes(). _FOOTNOTE_RE2 fires on a
+    # statutory citation appearing ANYWHERE in the first 120 characters, which is right for a
+    # footnote block and wrong here: it swallowed a genuine provision on the first attempt —
+    # income_tax_rules_2026 rule 48 ("Other electronic modes of payment"), whose own text
+    # mentions a citation early. _FOOTNOTE_RE keys on the FIRST WORD after the number, so a
+    # real heading can never match it.
+    flat = [(ln, pno) for ln, pno in flat if not _FOOTNOTE_RE.match(ln)]
+    def _is_numbered_list_row(flat_lines, idx: int, num: int) -> bool:
+        """Is this candidate row `num` of a contiguous numbered list, rather than a section?
+
+        Looks at the nearest preceding non-blank line only. If it opens with `num - 1.` then
+        the two are consecutive rows of one list — the ITA-2025 "specified area" table is
+        exactly this — and the candidate is not a section start.
+
+        Deliberately narrow. Requiring the predecessor to be EXACTLY one less means a genuine
+        section that happens to follow a numbered list still parses: a list ending "3." before
+        section 4 is not contiguous with it in the way a table's own rows are. Anything
+        looser would start rejecting real provisions, which is the failure this whole sprint
+        has been about.
+        """
+        for back in range(idx - 1, max(idx - 3, -1), -1):
+            prev_line = flat_lines[back][0].strip()
+            if not prev_line:
+                continue
+            pm = _START_RE.match(prev_line) or (_CHAIN_LOOSE and _CHAIN_LOOSE_RE.match(prev_line))
+            return bool(pm and not pm.group(2) and int(pm.group(1)) == num - 1)
+        return False
+
     chain: list[tuple[int, int, str, int, str]] = []
     prev = 0
     for i, (ln, pno) in enumerate(flat):
@@ -1393,6 +1451,8 @@ def _segment_chain_rules(pages: list[str]) -> list[dict]:
         if not m:
             continue
         n = int(m.group(1)); suf = m.group(2)
+        if _CHAIN_NO_LIST_ROWS and not suf and _is_numbered_list_row(flat, i, n):
+            continue
         if (prev == 0 and n == 1) or (prev and 0 < n - prev <= 30) or (n == prev and suf):
             chain.append((i, n, suf, pno, m.group(3)))
             prev = n
@@ -1437,9 +1497,11 @@ def ingest(act_id: str) -> dict:
     _DOUBLE_ENDASH_ACTS = bool(meta.get("double_endash"))
     _BARE_SCHEDULE = (meta.get("article_schedule") == "bare")
     global _SINGLE_ENDASH, _CHAIN_TITLE_ABOVE, _CHAIN_HEADER_LINES, _CHAIN_LOOSE, _GLUED_STARTS
+    global _CHAIN_NO_LIST_ROWS
     _SINGLE_ENDASH = bool(meta.get("single_endash"))
     _CHAIN_TITLE_ABOVE = bool(meta.get("chain_title_above"))
     _CHAIN_HEADER_LINES = tuple(meta.get("page_header_lines", ()))
+    _CHAIN_NO_LIST_ROWS = bool(meta.get("chain_no_list_rows"))
     _CHAIN_LOOSE = bool(meta.get("chain_loose_starts"))
     _GLUED_STARTS = bool(meta.get("glued_starts"))
     try:

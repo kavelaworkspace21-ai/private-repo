@@ -14,7 +14,7 @@
         "url": "https://www.incometaxindia.gov.in/pages/rules/income-tax-rules-2026.aspx",
         "landing": "https://www.incometaxindia.gov.in/pages/rules/income-tax-rules-2026.aspx",
         "sha256": "f565e0f5ff3bf8f717daeb507f5e8569e720abc3309e6719f6f085889c9b802f",
-        "fetched_on": "2026-07-17",
+        "fetched_on": "2026-08-06",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
