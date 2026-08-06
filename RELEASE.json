@@ -8,5 +8,5 @@
   "verified_acts": 50,
   "generated_at": "2026-08-06",
   "note": "Pinned identity of the verified release. The Chroma index is DERIVED from the versioned app/legal_corpus/fulltext/*.json; a clean build regenerates it via reseed() and MUST match corpus_fingerprint. Preflight fails closed on any mismatch. Regenerate this file with: python -m app.ops.release freeze",
-  "commit": "abb7641"
+  "commit": "2fb95ed"
 }
