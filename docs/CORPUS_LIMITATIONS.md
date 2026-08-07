@@ -12,6 +12,83 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
+## ✅ RESOLVED 2026-08-07 (S7 Workstream D) — Mediation Act: ss.49, 55, 58, 59 recovered
+
+**Every section of ss.1–65 is now present.** Four were absent, from two unrelated causes.
+
+### ss.58 and 59 — a footnote filter firing on a real heading
+
+`_FOOTNOTE_RE2` drops a line if a statutory citation appears anywhere in its first 120
+characters. That is right for a footnote block and wrong for a heading that legitimately cites
+an Act:
+
+```
+58. Amendment of Act 9 of 1872.—The Indian Contract Act, 1872, shall be amended …
+59. Amendment of Act 5 of 1908.—The Code of Civil Procedure, 1908, shall be amended …
+```
+
+Both were dropped. **s.60 survived only because its heading reads "Amendment of 39 of 1987"
+and omits the word "Act".** A parser whose output turns on that is flipping a coin.
+
+Fixed with a structural guard: a SECTION prints `N. <marginal note>.—<body>`; a footnote never
+does. `_drop_footnotes` now keeps a line matching that shape even when `_FOOTNOTE_RE2` fires.
+`_FOOTNOTE_RE` is deliberately left unguarded — it keys on the first word after the number
+("Subs.", "Ins.", "Rep."), which no heading begins with. Eight cases unit-checked, including
+the bracketed repeal-stub form `28. [Amendment of certain Acts.]—Rep. by …`.
+
+*This is the same false-positive class that removed `income_tax_rules_2026` rule 48 earlier in
+this sprint — the third time `_FOOTNOTE_RE2` has eaten a real provision.*
+
+### ss.49 and 55 — wrapped headings, and a rejection that was wrong
+
+Both headings wrap before the em-dash, so `_seg_dash` never opened them:
+
+```
+49. Mediated settlement agreement where Government or its, agency, etc., is a
+party.—Notwithstanding anything contained in this Act …
+```
+
+The registry **explicitly rejected** `wrapped_headings` for this act, recording:
+
+```
+glued_starts      s.65 = 4,917 ch   s.64 intact
+glued + wrapped   s.65 =   201 ch   s.64 destroyed 9/12 probes, 5,041 -> 120
+```
+
+**That rejection was wrong, and the reason is instructive enough that the original note is
+kept in the registry.** ss.63, 64 and 65 are one-sentence amending provisions whose substance
+lives in a Schedule — ~120 characters is what they are *supposed* to be. s.65's real text is:
+
+> "Amendment of 35 of 2019.—The Consumer Protection Act, 2019, shall be amended in the manner
+> specified in the Tenth Schedule."
+
+The other ~4,800 characters were **the Act's own Schedules**, absorbed: the text ran straight
+into "THE FIRST SCHEDULE (See section 6)" and continued to the end of the document. So
+4,917 → 201 is the *fix*; the "9/12 probes destroyed" were probes matching Schedule text that
+s.64 had wrongly swallowed. **Judging a split by size instead of content reads every correct
+parent/child separation as a loss.**
+
+Verified by arithmetic: s.48 1,099 → 499 with s.49 at 595 (499+595 ≈ 1,099); s.54 1,204 → 592
+with s.55 at 607 (592+607 ≈ 1,199). Clean splits, not losses.
+
+### Also removed: a CPC provision filed under the Mediation Act
+
+`s.89 "Settlement of disputes outside the Court"` (1,867 ch) was being parsed out of the Tenth
+Schedule, which *substitutes* CPC s.89. The Mediation Act has no s.89, so a query for
+"Mediation Act s.89" returned the Civil Procedure Code's text. Pre-dates this sprint; fixed
+with `max_section: 65`.
+
+**Net:** 65 → 68 entries. Gained 49, 55, 58, 59; lost only the bogus s.89.
+
+### Still open
+
+The Act's **First–Tenth Schedules are no longer in the corpus**. They were previously inside
+s.65, which made them unusable (and made s.65 wrong); they are now absent, which is honest but
+still a gap. They need the `Sch.*` namespace treatment, as other acts have. Same shape as the
+CPC First Schedule Orders.
+
+---
+
 ## ⛔ OPEN — Stamp ss.8B/8E/8F/23A: diagnosed, fix found, **deliberately not shipped**
 
 S7 Workstream A. The audit calls this "8-series suffix handling". **The suffix is not the

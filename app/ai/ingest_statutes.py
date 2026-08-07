@@ -625,10 +625,31 @@ STATUTE_REGISTRY: dict[str, dict] = {
         #   glued_starts        s.65 = 4,917 ch    s.64 intact
         #   glued + wrapped     s.65 =   201 ch    s.64 destroyed 9/12 probes, 5,041 -> 120
         #
-        # Adding wrapped_headings guts s.64 AND collapses the very section glued_starts
-        # recovers. This is the exact inverse of sarfaesi_2002, where the two flags were
-        # only safe TOGETHER. Neither outcome is predictable from single-flag results, which
-        # is why combinations are tested every time.
+        # ^^^ THAT REJECTION WAS WRONG, and it is kept above because the reasoning is
+        # instructive. Re-examined 2026-08-07 (S7 Workstream D) by reading the text rather
+        # than measuring it.
+        #
+        # s.65's real provision is ~130 characters:
+        #     "Amendment of 35 of 2019.—The Consumer Protection Act, 2019, shall be amended
+        #      in the manner specified in the Tenth Schedule."
+        # The other ~4,800 are THE ACT'S OWN SCHEDULES — the text runs straight on into
+        # "THE FIRST SCHEDULE (See section ...)" and continues to the end of the document.
+        # ss.63, 64 and 65 are all one-sentence amending provisions whose substance lives in a
+        # Schedule; ~120 characters is what they are SUPPOSED to be.
+        #
+        # So "s.65 4,917 -> 201" and "s.64 5,041 -> 120" are the FIX, not the damage, and the
+        # "9/12 probes destroyed" were probes matching Schedule text that s.64 had wrongly
+        # absorbed. Judging a split by size instead of content reads every correct
+        # parent/child separation as a loss.
+        #
+        # wrapped_headings also recovers ss.49 and 55, whose headings wrap before the em-dash.
+        "wrapped_headings": True,
+        # The Act ends at s.65. An "s.89" was being parsed out of the TENTH SCHEDULE, which
+        # substitutes CPC s.89 — so the entry held "Settlement of disputes outside the
+        # Court.—Where it appears to the Court that the dispute between the parties may be
+        # settled…", the Civil Procedure Code's text, filed under the Mediation Act. Pre-dates
+        # this sprint; a query for "Mediation Act s.89" returned another statute's provision.
+        "max_section": 65,
         "glued_starts": True,
     },
     "registration_1908": {
@@ -925,9 +946,27 @@ _FOOTNOTE_RE2 = re.compile(
     r"\bReg\. \d+ of \d{4}|the A\.O\.|Schedule [IVX]|extended to|came into force)", re.I)
 
 
+# A SECTION prints its marginal note terminated by a period and then an em-dash:
+#     58. Amendment of Act 9 of 1872.—The Indian Contract Act, 1872, shall be amended …
+# A footnote never has that shape. This guard exists because _FOOTNOTE_RE2 fires on a
+# statutory citation appearing ANYWHERE in the first 120 characters, which is right for a
+# footnote block and wrong for a heading that legitimately cites an Act.
+#
+# It cost real provisions. Mediation Act ss.58 and 59 ("Amendment of Act 9 of 1872",
+# "Amendment of Act 5 of 1908") were dropped, while s.60 survived purely because its heading
+# reads "Amendment of 39 of 1987" and omits the word "Act". A parser whose output depends on
+# that is not making a decision, it is flipping a coin.
+#
+# _FOOTNOTE_RE is deliberately NOT guarded: it keys on the first word after the number
+# ("Subs.", "Ins.", "Rep."), which no section heading begins with, so it has no false
+# positives of this kind.
+_SECTION_HEADING_RE = re.compile(r"^\s*\d{1,3}[A-Z]{0,2}\s*\.\s*\S.{0,160}?\.\s*[—–]")
+
+
 def _drop_footnotes(lines: list[tuple[str, int]]) -> list[tuple[str, int]]:
     return [(ln, pg) for (ln, pg) in lines
-            if not (_FOOTNOTE_RE.match(ln) or _FOOTNOTE_RE2.match(ln))]
+            if not (_FOOTNOTE_RE.match(ln)
+                    or (_FOOTNOTE_RE2.match(ln) and not _SECTION_HEADING_RE.match(ln)))]
 
 
 def _derive_title(text: str) -> str:
