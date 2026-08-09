@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/2079/1/AA2012-32.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2079",
         "sha256": "def90f072fdb6b62fe95adafa0f5e1ef08f5f1002dbb6067f8af4b1cd94a5c5b",
-        "fetched_on": "2026-07-29",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/15338/1/scheduled_castes_and_the_scheduled_tribes.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1920",
         "sha256": "da27a14c693173fc7871aacf598fdc3daf6ae53273535288d1c419d5f7a9a5f0",
-        "fetched_on": "2026-07-17",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

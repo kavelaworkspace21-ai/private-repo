@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/handle/123456789/1798",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1798",
         "sha256": "be5bac906607cb2ac902d5c113c42c7f89142be3591a81ccb825cfbb7ee5d50d",
-        "fetched_on": "2026-08-05",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -1514,8 +1514,8 @@
         },
         {
           "num": "217A",
-          "text": "Renewal of permits, driving licences and registration granted under the Motor Vehicles Act, 1939. THE FIRST SCHEDULE. THE SECOND SCHEDULE. [Omitted]. 9 THE MOTOR VEHICLES ACT, 1988 ACT NO. 59 OF 1988 [14th October, 1988.] An Act to consolidate and amend the law relating to motor vehicles. BE it enacted by Parliament in the Thirty-ninth Year of the Republic of India as follows:—\nCHAPTER I\nPRELIMINARY",
-          "page": 9,
+          "text": "Renewal of permits, driving licences and registration granted under the Motor Vehicles Act, 1939.—Notwithstanding the repeal by sub-section (1) of section 217 of the enactments referred to in\nthat sub-section, any certificate of fitness or registration or licence or permit issued or granted under the\nsaid enactments may be renewed under this Act.]\n119",
+          "page": 119,
           "title": "Renewal of permits, driving licences and registration granted under the Motor Vehicles Act, 1939"
         }
       ]

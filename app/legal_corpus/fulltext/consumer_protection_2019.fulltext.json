@@ -6,13 +6,15 @@
       "short": "Consumer Protection Act",
       "year": 2019,
       "status": "in_force",
+      "repealed_by": "",
+      "note": "",
       "source_verified": true,
       "source": {
         "name": "India Code (indiacode.nic.in)",
         "url": "https://www.indiacode.nic.in/bitstream/123456789/15256/1/a2019-35.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/15256",
         "sha256": "414fb1edd9b0f7fbc2839ad92fb2b29ebfa3b557e70e928ab4a535802199e3e7",
-        "fetched_on": "2026-06-25",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -342,7 +344,7 @@
         },
         {
           "num": "58",
-          "text": "Jurisdiction of National Commission.—(1) Subject to the other provisions of this Act, the\nNational Commission shall have jurisdiction—\n(a) to entertain—\n(i) complaints where the value of the goods or services paid as consideration exceeds rupees\nten crore:\nProvided that where the Central Government deems it necessary so to do, it may prescribe\nsuch other value, as it deems fit;\n(ii) complaints against unfair contracts, where the value of goods or services paid as\nconsideration exceeds ten crore rupees;\n(iii) appeals against the orders of any State Commission;\n(iv) appeals against the orders of the Central Authority; and\n(b) to call for the records and pass appropriate orders in any consumer dispute which is pending\nbefore or has been decided by any State Commission where it appears to the National Commission\n1. Ins. by Act 33 of 2021, s. 30 (w.e.f. 4-4-2021).\n26\nthat such State Commission has exercised a jurisdiction not vested in it by law, or has failed to\nexercise a jurisdiction so vested, or has acted in the exercise of its jurisdiction illegally or with\nmaterial irregularity.\n(2) The jurisdiction, powers and authority of the National Commission may be exercised by Benches\nthereof and a Bench may be constituted by the President with one or more members as he may deem fit:\nProvided that the senior-most member of the Bench shall preside over the Bench.\n(3) Where the members of a Bench differ in opinion on any point, the points shall be decided\naccording to the opinion of the majority, if there is a majority, but if the members are equally divided,\nthey shall state the point or points on which they differ, and make a reference to the President who shall\neither hear the point or points himself or refer the case for hearing on such point or points by one or more\nof the other members and such point or points shall be decided according to the opinion of the majority of\nthe members who have heard the case, including those who first heard it:\nProvided that the President or the other member, as the case may be, shall give opinion on the point or\npoints so referred within a period of two months from the date of such reference.",
+          "text": "Jurisdiction of National Commission.—(1) Subject to the other provisions of this Act, the\nNational Commission shall have jurisdiction—\n(a) to entertain—\n(i) complaints where the value of the goods or services paid as consideration exceeds rupees\nten crore:\nProvided that where the Central Government deems it necessary so to do, it may prescribe\nsuch other value, as it deems fit;\n(ii) complaints against unfair contracts, where the value of goods or services paid as\nconsideration exceeds ten crore rupees;\n(iii) appeals against the orders of any State Commission;\n(iv) appeals against the orders of the Central Authority; and\n(b) to call for the records and pass appropriate orders in any consumer dispute which is pending\nbefore or has been decided by any State Commission where it appears to the National Commission\n26\nthat such State Commission has exercised a jurisdiction not vested in it by law, or has failed to\nexercise a jurisdiction so vested, or has acted in the exercise of its jurisdiction illegally or with\nmaterial irregularity.\n(2) The jurisdiction, powers and authority of the National Commission may be exercised by Benches\nthereof and a Bench may be constituted by the President with one or more members as he may deem fit:\nProvided that the senior-most member of the Bench shall preside over the Bench.\n(3) Where the members of a Bench differ in opinion on any point, the points shall be decided\naccording to the opinion of the majority, if there is a majority, but if the members are equally divided,\nthey shall state the point or points on which they differ, and make a reference to the President who shall\neither hear the point or points himself or refer the case for hearing on such point or points by one or more\nof the other members and such point or points shall be decided according to the opinion of the majority of\nthe members who have heard the case, including those who first heard it:\nProvided that the President or the other member, as the case may be, shall give opinion on the point or\npoints so referred within a period of two months from the date of such reference.",
           "page": 26,
           "title": "Jurisdiction of National Commission"
         },

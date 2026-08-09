@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/2390/1/193003.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2390",
         "sha256": "069ff04276e3511062a4076c74de9971ca0e616b80eabc0849b4f379a04a5e82",
-        "fetched_on": "2026-07-29",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -26,9 +26,15 @@
         },
         {
           "num": "2",
-          "text": "Definitions.—In this Act, unless there is anything repugnant in the subject or context,—\n(1) “buyer” means a person who buys or agrees to buy goods;\n(2) “delivery” means voluntary transfer of possession from one person to another;\n(3) goods are said to be in a “deliverable state” when they are in such state that the buyer would\nunder the contract be bound to take delivery of them;\n(4) “document of title to goods” includes a bill of lading, dockwarrant, warehouse keeper’s\ncertificate, wharfingers’ certificate, railway receipt, 5[multimodal transport document,] warrant or\norder for the delivery of goods and any other document used in the ordinary course of business as\nproof of the possession or control of goods, or authorising or purporting to authorise, either by\nendorsement or by delivery, the possessor of the document to transfer or receive goods thereby\nrepresented;\n(5) “fault” means wrongful act or default;\n(6) “future goods” means goods to be manufactured or produced or acquired by the seller after the\nmaking of the contract of sale;\n(7) “goods” means every kind of moveable property other than actionable claims and money; and\nincludes stock and shares, growing crops, grass, and things attached to or forming part of the land\nwhich are agreed to be severed before sale or under the contract of sale;\n(8) a person is said to be “insolvent” who has ceased to pay his debts in the ordinary course of\nbusiness, or cannot pay his debts as they become due, whether he has committed an act of insolvency\nor not;\n(9) “mercantile agent” means a mercantile agent having in the customary course of business as\nsuch agent authority either to sell goods, or to consign goods for the purposes of sale, or to buy goods,\nor to raise money on the security of goods;\n(10) “price” means the money consideration for a sale of goods;\nSchedule (w.e.f. 1-7-1965); to Goa, Daman and Diu by Reg. 11 of 1963, s. 3 and the Schedule; to Pondicherry by the\nPondicherry (Extension of Laws) Act, 1968, s. 3 and Schedule; to Lakshadweep by Reg. 8 of 1965, s. 3 and the Schedule\n(w.e f. 1-10-1967); and to Sikkim on 1-91984 vide Notification No. S.O. 645 (E), dated 24-8-1984, Gazette of India,\nExtraordinary, Pt. II, Sec. 3(11).\n(w.e.f. 31-10-2019)..\n4\n(11) “property” means the general property in goods, and not merely a special property;\n(12) “quality of goods” includes their state or condition;\n(13) “seller” means a person who sells or agrees to sell goods;\n(14) “specific goods” means goods identified and agreed upon at the time a contract of sale is\nmade; and\n(15) expressions used but not defined in this Act and defined in the Indian Contract Act, 1872\n(9 of 1872), have the meaning assigned to them in that Act.\nAct, 1872, save in so far as they are inconsistent with the express provisions of this Act, shall continue to\napply to contracts for the sale of goods.\nCHAPTER II\nFORMATION OF THE CONTRACT\nContract of sale",
+          "text": "Definitions.—In this Act, unless there is anything repugnant in the subject or context,—\n(1) “buyer” means a person who buys or agrees to buy goods;\n(2) “delivery” means voluntary transfer of possession from one person to another;\n(3) goods are said to be in a “deliverable state” when they are in such state that the buyer would\nunder the contract be bound to take delivery of them;\n(4) “document of title to goods” includes a bill of lading, dockwarrant, warehouse keeper’s\ncertificate, wharfingers’ certificate, railway receipt, 5[multimodal transport document,] warrant or\norder for the delivery of goods and any other document used in the ordinary course of business as\nproof of the possession or control of goods, or authorising or purporting to authorise, either by\nendorsement or by delivery, the possessor of the document to transfer or receive goods thereby\nrepresented;\n(5) “fault” means wrongful act or default;\n(6) “future goods” means goods to be manufactured or produced or acquired by the seller after the\nmaking of the contract of sale;\n(7) “goods” means every kind of moveable property other than actionable claims and money; and\nincludes stock and shares, growing crops, grass, and things attached to or forming part of the land\nwhich are agreed to be severed before sale or under the contract of sale;\n(8) a person is said to be “insolvent” who has ceased to pay his debts in the ordinary course of\nbusiness, or cannot pay his debts as they become due, whether he has committed an act of insolvency\nor not;\n(9) “mercantile agent” means a mercantile agent having in the customary course of business as\nsuch agent authority either to sell goods, or to consign goods for the purposes of sale, or to buy goods,\nor to raise money on the security of goods;\n(10) “price” means the money consideration for a sale of goods;\nSchedule (w.e.f. 1-7-1965); to Goa, Daman and Diu by Reg. 11 of 1963, s. 3 and the Schedule; to Pondicherry by the\nPondicherry (Extension of Laws) Act, 1968, s. 3 and Schedule; to Lakshadweep by Reg. 8 of 1965, s. 3 and the Schedule\n(w.e f. 1-10-1967); and to Sikkim on 1-91984 vide Notification No. S.O. 645 (E), dated 24-8-1984, Gazette of India,\nExtraordinary, Pt. II, Sec. 3(11).\n(w.e.f. 31-10-2019)..\n4\n(11) “property” means the general property in goods, and not merely a special property;\n(12) “quality of goods” includes their state or condition;\n(13) “seller” means a person who sells or agrees to sell goods;\n(14) “specific goods” means goods identified and agreed upon at the time a contract of sale is\nmade; and\n(15) expressions used but not defined in this Act and defined in the Indian Contract Act, 1872\n(9 of 1872), have the meaning assigned to them in that Act.",
           "page": 4,
           "title": "Definitions"
+        },
+        {
+          "num": "3",
+          "text": "Application of provisions of Act 9 of 1872.—The unrepealed provisions of the Indian Contract\nAct, 1872, save in so far as they are inconsistent with the express provisions of this Act, shall continue to\napply to contracts for the sale of goods.\nCHAPTER II\nFORMATION OF THE CONTRACT\nContract of sale",
+          "page": 5,
+          "title": "Application of provisions of Act 9 of 1872"
         },
         {
           "num": "4",
@@ -140,9 +146,9 @@
         },
         {
           "num": "22",
-          "text": "Specific goods in a deliverable state, when the seller has to do anything thereto in order to\nascertain price.—Where there is a contract for the sale of specific goods in a deliverable state, but the\nseller is bound to weigh, measure, test or do some other act or thing with reference to the goods for the\npurpose of ascertaining the price, the property does not pass until such act or thing is done and the buyer\nhas notice thereof.",
+          "text": "Specific goods in a deliverable state, when the seller has to do anything thereto in order to ascertain price.—Where there is a contract for the sale of specific goods in a deliverable state, but the\nseller is bound to weigh, measure, test or do some other act or thing with reference to the goods for the\npurpose of ascertaining the price, the property does not pass until such act or thing is done and the buyer\nhas notice thereof.",
           "page": 8,
-          "title": "Specific goods in a deliverable state, when the seller has to do anything thereto in order to\nascertain price"
+          "title": "Specific goods in a deliverable state, when the seller has to do anything thereto in order to ascertain price"
         },
         {
           "num": "23",
@@ -401,12 +407,6 @@
           "text": "In contracts of sale, amount of increased or decreased taxes to be added or deducted.—\n(1) Unless a different intention appears from the terms of the contract, in the event of any tax of the nature\ndescribed in sub-section (2) being imposed, increased, decreased or remitted in respect of any goods after\nthe making of any contract for the sale or purchase of such goods without stipulation as to the payment of\ntax where tax was not chargeable at the time of the making of the contract, or for the sale or purchase of\nsuch goods tax-paid where tax was chargeable at that time,—\n(a) if such imposition or increase so takes effect that the tax or increased tax, as the case may be,\nor any part of such tax is paid or is payable, the seller may add so much to the contract price as will\nbe equivalent to the amount paid or payable in respect of such tax or increase of tax, and he shall be\nentitled to be paid and to sue for and recover such addition; and\n(b) if such decrease or remission so takes effect that the decreased tax only, or no tax, as the case\nmay be, is paid or is payable, the buyer may deduct so much from the contract price as will be\nequivalent to the decrease of tax or remitted tax, and he shall not be liable to pay, or be sued for, or in\nrespect of, such deduction.\n(2) The provisions of sub-section (1) apply to the following taxes, namely:—\n(a) any duty of customs or excise on goods;\n(b) any tax on the sale or purchase of goods.]",
           "page": 15,
           "title": "In contracts of sale, amount of increased or decreased taxes to be added or deducted"
-        },
-        {
-          "num": "65",
-          "text": "[Repeal.] Rep. by the Repealing Act, 1938 (1 of 1938), s. 2 and Sch.",
-          "page": 15,
-          "title": "[Repeal.] Rep. by the Repealing Act, 1938 (1 of 1938), s. 2 and Sch"
         },
         {
           "num": "66",

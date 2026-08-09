@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/20063/1/aa202347.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/20063",
         "sha256": "993882ad0ae7ded6ae8087351edd61caeb6faa1a2d6c8fff8c269a9cf149b9ac",
-        "fetched_on": "2026-07-29",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

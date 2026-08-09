@@ -138,6 +138,11 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # s.60 printed as "860." and s.92 as "392." — a bare amendment marker glued
         # to the number. Both provisions were complete but unreachable by citation.
         "strip_marker_digits": True,
+        # …and now the other side of that boundary. The First Schedule is where the CPC keeps
+        # the procedure practitioners actually cite — Order VII Rule 11, Order XXXIX Rules
+        # 1-2, the whole of Order XXI on execution — and it was cut away by
+        # `body_before_schedule` and never parsed by anything. Ord.<roman>.R.<rule>.
+        "orders_schedule": True,
     },
     "ipc_1860": {
         "title": "Indian Penal Code, 1860", "short": "IPC", "year": 1860,
@@ -650,6 +655,12 @@ STATUTE_REGISTRY: dict[str, dict] = {
         # settled…", the Civil Procedure Code's text, filed under the Mediation Act. Pre-dates
         # this sprint; a query for "Mediation Act s.89" returned another statute's provision.
         "max_section": 65,
+        # The First-Tenth Schedules are live law — Schedule I lists the disputes NOT fit for
+        # mediation and Schedule II the enactments s.55 is subject to. They used to sit inside
+        # s.65 (which is why s.65 measured 4,917 ch), so they were unusable AND made s.65
+        # wrong. Now in their own Sch.<label>.<entry> namespace, where an entry can never
+        # occupy a section number.
+        "schedules": True,
         "glued_starts": True,
     },
     "registration_1908": {
@@ -875,7 +886,11 @@ _SEC1_RE  = re.compile(r"^\s*(?:\d{1,3}\[)?1\.\s+[\"'A-Z(]")   # body's "1. ..."
 # s.53A (part performance), which is heavily litigated. Safe to apply everywhere: a
 # footnote marker followed by "[" is unambiguous.
 _START_RE = re.compile(
-    r"^\s*(?:\d{1,3}\s*\[)?(\d{1,3})([A-Z]{0,2})\.\s+(\S.*)$")  # "318. Heading.—body"
+    # The `\s*` INSIDE the optional amendment bracket matters: India Code prints the CPC's
+    # Order XX Rule 1 as "1[ 21. Judgment when pronounced.—…", with a space between the
+    # marker and the number. Without it the line matched nothing at all, so the first rule
+    # of the Order on judgments never opened and its text was absorbed by the heading above.
+    r"^\s*(?:\d{1,3}\s*\[\s*)?(\d{1,3})([A-Z]{0,2})\.\s+(\S.*)$")  # "318. Heading.—body"
 
 # GLUED section starts — "73.Compensation for loss…" with no space after the period. India
 # Code prints the same provision spaced in the table of contents and glued in the body, so
@@ -964,9 +979,27 @@ _SECTION_HEADING_RE = re.compile(r"^\s*\d{1,3}[A-Z]{0,2}\s*\.\s*\S.{0,160}?\.\s*
 
 
 def _drop_footnotes(lines: list[tuple[str, int]]) -> list[tuple[str, int]]:
+    """Drop editorial amendment notes, but never a real section heading.
+
+    The heading guard applies to BOTH patterns. It used to guard only _FOOTNOTE_RE2, on the
+    reasoning that _FOOTNOTE_RE is keyed to an editorial first word and so cannot false-
+    positive. It can: some sections genuinely OPEN with those words.
+
+      Indian Succession Act s.30  "As to what property deceased considered to have died
+                                   intestate.—…"      (opener "As to")
+      Indian Succession Act s.90  "Words describing subject refer to property answering
+                                   description at testator's death.—…"  (opener "Words")
+
+    Both were dropped before segmentation ever saw them, so their text was swallowed by
+    ss.29 and 89 and neither was addressable by its own number.
+
+    A heading is distinguishable from a footnote by SHAPE, not by first word: "N. <marginal
+    heading>.—<body>". No India Code footnote is written that way — "1. Subs. by Act 3 of
+    1951, s. 3 and the Schedule." has no ".—" separator at all.
+    """
     return [(ln, pg) for (ln, pg) in lines
-            if not (_FOOTNOTE_RE.match(ln)
-                    or (_FOOTNOTE_RE2.match(ln) and not _SECTION_HEADING_RE.match(ln)))]
+            if not ((_FOOTNOTE_RE.match(ln) or _FOOTNOTE_RE2.match(ln))
+                    and not _SECTION_HEADING_RE.match(ln))]
 
 
 def _derive_title(text: str) -> str:
@@ -1086,12 +1119,27 @@ _MARKER_MAX_GAP = 30
 
 def _strip_marker_digit(n: int, last: int) -> int:
     """Return the section number with a glued footnote marker removed, or `n` unchanged."""
-    if not _STRIP_MARKER_DIGITS or last <= 0 or n <= last + _MARKER_MAX_GAP:
+    if not _STRIP_MARKER_DIGITS:
         return n
     tail = str(n)[1:]
     if not tail:
         return n
     stripped = int(tail)
+    # Exact-successor test, BEFORE the size guard. The guard only fires on a big jump
+    # (>30), so it could not see the CPC's Order X rule 3, printed "1[3." and extracted as
+    # "13." — a jump of 11 from rule 2, small enough to look like an ordinary gap. But
+    # dropping the leading digit yields exactly the next rule in sequence, and reading it
+    # as 13 leaves rules 3-12 missing from an Order that has only four. That is not a gap,
+    # it is a marker. ("Substance of examination to be written" is Order X Rule 3; nobody
+    # citing it would find it filed as rule 13.)
+    # `last` is 0 at the top of a run, so the expected successor there is 1 — which is how
+    # the CPC's Order XX Rule 1 was lost. It is printed with TWO stacked markers, "1[ 21.",
+    # and the parser consumed one bracket and read the rest as rule 21. "Judgment when
+    # pronounced" is the first rule of the Order on judgments; it was filed as its 21st.
+    if stripped == last + 1 and n != last + 1:
+        return stripped
+    if last <= 0 or n <= last + _MARKER_MAX_GAP:
+        return n
     return stripped if last < stripped <= last + _MARKER_MAX_GAP else n
 
 
@@ -1153,6 +1201,34 @@ def _seg_score(sections: list[dict]) -> float:
     return median * coverage
 
 
+def _seg_page_order(sections: list[dict]) -> float:
+    """Fraction of consecutive sections (ordered by number) that do not jump BACKWARDS.
+
+    A tiebreak for _seg_score, never an override. Candidates tie on median × coverage more
+    often than one would guess, and `max()` then keeps whichever came first in the list —
+    which is a coin toss, not a judgement.
+
+    It landed wrong for NDPS. With the schedule pages cut away from the body, four
+    candidates tied exactly at 67,313; the winner by list order had taken s.83 from the
+    ARRANGEMENT OF SECTIONS on page 4 instead of the enacted text on page 45, so
+    "Power to remove difficulties" entered the corpus as its own marginal note followed by
+    the act's title page. The other three tied candidates all had it right.
+
+    An act's sections advance through its PDF, so the parse that advances is the parse that
+    read the act rather than its table of contents. Same metric the corpus-integrity suite
+    scores acts on (tests/test_corpus_integrity.py::page_order_scores) — applied here, where
+    it can prevent the defect instead of reporting it.
+    """
+    pts = [(int(m.group()), int(s["page"]))
+           for s in sections
+           if (m := re.match(r"\d+", s["num"])) and s.get("page")]
+    if len(pts) < 2:
+        return 0.0
+    pts.sort(key=lambda t: t[0])
+    inversions = sum(1 for i in range(1, len(pts)) if pts[i][1] < pts[i - 1][1])
+    return 1 - inversions / (len(pts) - 1)
+
+
 def _segment_sections(pages: list[str], *, wrapped: bool = False) -> list[dict]:
     """
     Deterministically split into sections. Candidates come from two strategies (em-dash
@@ -1188,7 +1264,7 @@ def _segment_sections(pages: list[str], *, wrapped: bool = False) -> list[dict]:
         if wrapped and wrapped != "replace":
             candidates.append(_seg_dash_wrapped(tail))
 
-    chosen = max(candidates, key=_seg_score)
+    chosen = max(candidates, key=lambda c: (_seg_score(c), _seg_page_order(c)))
     if not _seg_score(chosen):                # degenerate PDF — keep the old behaviour
         a, b = candidates[0], candidates[1]
         chosen = a if len(a) >= len(b) else b
@@ -1325,24 +1401,86 @@ _SCHEDULE_ORDINALS = {
 _SCHEDULE_MIN_PAGE_FRACTION = 0.25
 _SCHEDULE_MIN_CHARS = 300
 
+# What follows the last schedule in an India Code PDF is the BILL's paperwork, not the Act.
+# It is not law: it was written to explain the bill to Parliament, it is signed by the
+# minister who moved it, and it describes what the bill "seeks to" do — often in terms the
+# enacted text then changed. The Mediation Act's Statement of Objects and Reasons runs to a
+# page of numbered paragraphs, and because the LAST schedule region ran to end-of-document it
+# was ingested as Sch.X.2 / Sch.X.3 / Sch.X.4 — retrievable, citable, and not the statute.
+# Sch.X.4 was literally "The Bill seeks to achieve the above objectives. KIREN RIJIJU."
+_BACK_MATTER_RE = re.compile(
+    r"^\s*(?:STATEMENT\s+OF\s+OBJECTS\s+AND\s+REASONS"
+    r"|NOTES?\s+ON\s+CLAUSES"
+    r"|FINANCIAL\s+MEMORANDUM"
+    r"|MEMORANDUM\s+REGARDING\s+DELEGATED\s+LEGISLATION"
+    r"|ANNEXURE\s+TO\s+THE\s+NOTES?\s+ON\s+CLAUSES)\s*$")
 
-def _schedule_regions(pages: list[str]) -> list[tuple[str, int, int]]:
-    """(label, start_page, end_page_exclusive) for each real schedule in the act."""
-    heads: list[tuple[str, int]] = []
-    floor = int(len(pages) * _SCHEDULE_MIN_PAGE_FRACTION)
+
+def _back_matter_page(pages: list[str], floor: int) -> int:
+    """First page at/after `floor` that begins the bill's non-statutory paperwork."""
     for pno in range(floor, len(pages)):
-        for line in pages[pno].splitlines()[:20]:
+        for ln in pages[pno].splitlines():
+            if _BACK_MATTER_RE.match(ln):
+                return pno
+    return len(pages)
+
+
+def _schedule_regions(pages: list[str]) -> list[tuple[str, int, int, int]]:
+    """(label, start_page, start_line, end_page_exclusive) for each real schedule.
+
+    `start_line` is the index of the heading line ON `start_page`. It matters when a schedule
+    does not begin at the top of a page: the Mediation Act runs out of s.65 straight into
+    "THE FIRST SCHEDULE" mid-page, so taking the whole page swept ss.55-65 into Schedule I and
+    re-emitted them as Sch.I.55, Sch.I.56 … — the act's own body, duplicated into the schedule
+    namespace.
+    """
+    heads: list[tuple[str, int, int]] = []
+    floor = int(len(pages) * _SCHEDULE_MIN_PAGE_FRACTION)
+    limit = _back_matter_page(pages, floor)   # the Act ends here; the rest is bill paperwork
+    for pno in range(floor, limit):
+        # The WHOLE page, not just its first 20 lines. A schedule heading does not have to sit
+        # at the top: the Mediation Act runs straight out of s.65 into "THE FIRST SCHEDULE" in
+        # the middle of page 22, so the 20-line window missed Schedule I entirely and the act
+        # was indexed from Schedule II onwards.
+        #
+        # Safe because _SCHEDULE_HEAD_RE is UPPERCASE-anchored and has no re.I: a prose
+        # mention ("Schedule I of the Act provides…") cannot match it, which is what the
+        # narrow window was really guarding against. Verified against the three acts already
+        # using this path — specific_relief_1963, partnership_1932, ndps_1985 — all detect
+        # exactly the same single region as before.
+        for lno, line in enumerate(pages[pno].splitlines()):
             m = _SCHEDULE_HEAD_RE.match(line)
             if m:
                 label = _SCHEDULE_ORDINALS.get((m.group(1) or "").upper(), "") or (m.group(2) or "")
-                heads.append((label.upper() or str(len(heads) + 1), pno))
+                heads.append((label.upper() or str(len(heads) + 1), pno, lno))
                 break
     out = []
-    for i, (label, start) in enumerate(heads):
-        end = heads[i + 1][1] if i + 1 < len(heads) else len(pages)
+    for i, (label, start, start_line) in enumerate(heads):
+        end = heads[i + 1][1] if i + 1 < len(heads) else limit
         if sum(len(pages[p]) for p in range(start, end)) >= _SCHEDULE_MIN_CHARS:
-            out.append((label, start, end))
+            out.append((label, start, start_line, end))
     return out
+
+
+def _pages_before_schedules(pages: list[str]) -> list[str]:
+    """The act's BODY: everything up to the first real schedule heading.
+
+    Cuts at LINE granularity, because a page-granular cut cannot express this boundary. The
+    Mediation Act runs out of s.65 straight into "THE FIRST SCHEDULE" mid-page, so cutting
+    before that page loses ss.55-65 and cutting after it lets the schedules into the body.
+
+    Letting them in was the live defect. The Sixth Schedule substitutes new sections 61 and
+    62 into the ARBITRATION AND CONCILIATION ACT 1996; the body segmenter took those as
+    Mediation ss.61 and 62, displacing the real provisions ("Amendment of Act 26 of 1996"
+    and "Amendment of Act 27 of 2006"). Both neighbours on either side — ss.58, 59, 60 and
+    ss.63, 64, 65 — were correct, which is exactly why it was invisible in a count.
+    """
+    regions = _schedule_regions(pages)
+    if not regions:
+        return pages
+    _, start, start_line, _ = regions[0]
+    head = "\n".join(pages[start].splitlines()[:start_line])
+    return pages[:start] + ([head] if head.strip() else [])
 
 
 def _segment_schedules(pages: list[str]) -> list[dict]:
@@ -1361,12 +1499,14 @@ def _segment_schedules(pages: list[str]) -> list[dict]:
     leaders, say) is emitted WHOLE rather than chopped on whatever digits appear in it.
     """
     out: list[dict] = []
-    for label, start, end in _schedule_regions(pages):
+    for label, start, start_line, end in _schedule_regions(pages):
         body_lines: list[tuple[str, int]] = []
         for pno in range(start, end):
             for i, line in enumerate(pages[pno].splitlines()):
-                if pno == start and i == 0 and _SCHEDULE_HEAD_RE.match(line):
-                    continue                       # drop the heading line itself
+                # Everything BEFORE the heading on the start page belongs to the body, not to
+                # this schedule. Skipping only line 0 assumed schedules begin at a page top.
+                if pno == start and i <= start_line:
+                    continue
                 if line.strip():
                     body_lines.append((line, pno))
         if not body_lines:
@@ -1411,6 +1551,130 @@ def _segment_schedules(pages: list[str]) -> list[dict]:
                 "title": f"Schedule {label} — Entry {e['num']}: {text[:60]}".strip(),
                 "text": text,
                 "page": e["page"],
+            })
+    return out
+
+
+# ---------------------------------------------------------------------------------------
+# CPC FIRST SCHEDULE — Orders and Rules
+#
+# The Code of Civil Procedure keeps its procedure in a First Schedule of 51 Orders, each
+# holding its own rules numbered from 1. That is most of the working law an advocate uses
+# daily: Order VII Rule 11 (rejection of plaint), Order XXXIX Rules 1-2 (temporary
+# injunctions), Order XXI (execution). None of it could be addressed before, because the
+# generic Sch.<label>.<entry> namespace has no place to put an Order: _schedule_regions saw
+# ONE region in the whole Code, labelled "II", and emitted pages 338-347 as a single
+# 34,998-character blob. Rules renumber from 1 in every Order, so flattening them into one
+# entry namespace would make 51 competing "entry 1"s — the duplicate-id collision that
+# silently dropped 12 acts on 2026-07-12.
+#
+# So Orders get their own two-level namespace, Ord.<roman>.R.<rule>.
+# ---------------------------------------------------------------------------------------
+
+# "ORDER XXXIX", and the inserted Orders which carry an amendment marker and a letter
+# suffix: "1[ORDER XVI A", "*[ORDER XV-A", "2[ORDER XXXII-A". Anchored and uppercase, so
+# a cross-reference in running prose ("as provided in Order XXI, rule 58") cannot match.
+_CPC_ORDER_RE = re.compile(
+    r"^\s*(?:\d{1,3}\s*\[|\*\s*\[)?\s*ORDER\s+([IVXL]+)\s*[-\s]?\s*([A-Z])?\s*\]?\s*$")
+
+# The Orders end where the forms begin. Appendices A-I are pleading/process PRECEDENTS, not
+# rules — model plaints with blanks to fill in — and their numbered paragraphs ("1. On the
+# ……… day of ………, he lent the defendant …… rupees") parse as rules perfectly well. Left in,
+# they would enter the corpus as law.
+_CPC_APPENDIX_RE = re.compile(r"^APPENDIX\s*[-–—]?\s*[A-I]\b")
+
+_CPC_MAX_RULE = 120        # Order XXI is the longest in the Code at 106 rules
+
+
+def _order_regions(pages: list[str]) -> list[tuple[str, int, int, int, int, str]]:
+    """(label, start_page, start_line, end_page, end_line, heading) per Order.
+
+    Labels are made unique. TWO different Orders XI are in force — the original, and the one
+    the Commercial Courts Act 2015 inserted for suits before a commercial division — and
+    they are different law under the same number. The second is suffixed rather than allowed
+    to overwrite the first.
+    """
+    first = [p for p, pg in enumerate(pages)
+             if any(ln.strip() == "THE FIRST SCHEDULE" for ln in pg.splitlines())]
+    if not first:
+        return []
+    start = first[-1]                       # the LAST one; earlier hits are the ToC
+    end = len(pages)
+    for p in range(start, len(pages)):
+        if any(_CPC_APPENDIX_RE.match(ln.strip()) for ln in pages[p].splitlines()):
+            end = p
+            break
+
+    heads: list[tuple[str, int, int]] = []
+    for p in range(start, end):
+        for i, ln in enumerate(pages[p].splitlines()):
+            m = _CPC_ORDER_RE.match(ln.strip())
+            if m:
+                heads.append((m.group(1) + ("-" + m.group(2) if m.group(2) else ""), p, i))
+
+    out, seen = [], {}
+    for k, (label, p0, l0) in enumerate(heads):
+        p1, l1 = (heads[k + 1][1], heads[k + 1][2]) if k + 1 < len(heads) else (end, 0)
+        heading = " ".join(ln.strip() for ln in pages[p0].splitlines()[l0 + 1:l0 + 3]
+                           if ln.strip())[:120]
+        seen[label] = seen.get(label, 0) + 1
+        if seen[label] > 1:
+            label += "-COM" if "commercial" in heading.lower() else f"-{seen[label]}"
+        out.append((label, p0, l0, p1, l1, heading))
+    return out
+
+
+def _rule_fitness(rules: list[dict]) -> tuple[int, int]:
+    """How well a candidate parse fits 'rules numbered 1..N with no holes'.
+
+    Not raw count, and not gap-count either. Counting alone prefers a parse that shatters
+    one rule into six; counting gaps alone prefers a parse that finds rules 1-3 and stops
+    (no gaps!) over one that finds 1-20 missing only rule 2. Rules found, MINUS twice the
+    holes they leave, prefers the complete parse in both directions.
+    """
+    nums = sorted({int(re.match(r"\d+", r["num"]).group()) for r in rules})
+    if not nums:
+        return (-999, 0)
+    holes = sum(1 for n in range(1, nums[-1] + 1) if n not in set(nums))
+    med = sorted(len(r["text"]) for r in rules)[len(rules) // 2]
+    return (len(nums) - 2 * holes, med)
+
+
+def _segment_orders(pages: list[str]) -> list[dict]:
+    """Parse the CPC First Schedule into ``Ord.<roman>.R.<rule>`` entries."""
+    out: list[dict] = []
+    for label, p0, l0, p1, l1, heading in _order_regions(pages):
+        lines: list[tuple[str, int]] = []
+        for p in range(p0, min(p1 + 1, len(pages))):
+            for i, ln in enumerate(pages[p].splitlines()):
+                if p == p0 and i <= l0:
+                    continue
+                if p == p1 and i >= l1:
+                    continue
+                if ln.strip():
+                    lines.append((ln, p + 1))      # absolute page, for provenance
+        lines = _drop_footnotes(lines)
+        if not lines:
+            continue
+
+        # No single strategy parses all 57 Orders. Plain-dash wins Order XI (23 rules vs 7);
+        # the wrapped variant wins Order I (16 vs 14) because its rule headings spill past
+        # the em-dash. Scored per Order rather than per act, since an Order is small enough
+        # that the wrong choice loses most of it.
+        candidates = [_seg_dash(lines), _seg_dash_wrapped(lines), _seg_monotonic(lines)]
+        best = max(candidates, key=_rule_fitness)
+
+        for r in best:
+            n = int(re.match(r"\d+", r["num"]).group())
+            if not 1 <= n <= _CPC_MAX_RULE:
+                continue        # a page number or stray marker, never a rule
+            text = r["text"].strip()
+            out.append({
+                "num": f"Ord.{label}.R.{r['num']}",
+                "title": f"Order {label}, Rule {r['num']} — {_derive_title(text)}",
+                "text": text,
+                "page": r.get("page"),
+                "order_heading": heading,
             })
     return out
 
@@ -1639,32 +1903,41 @@ def ingest(act_id: str) -> dict:
     # overwriting real ones. Cut the body at its own tail sections, like
     # `articles_before_schedule` does for the Constitution — but WITHOUT forcing
     # wrapped=True, so the act keeps whatever segmentation it was verified with.
+    #
+    # Narrows the BODY only. The schedule slices below are given the full `pages`, because
+    # they are the thing being cut away here — reassigning `pages` would truncate the
+    # schedules out of the very act that asked for them.
+    body_pages = pages
     if meta.get("body_before_schedule"):
         lo, hi = meta["body_before_schedule"]
         end = _last_article_page(pages, lo, hi)
         if end is not None:
-            pages = pages[: end + 1]
+            body_pages = pages[: end + 1]
+    elif meta.get("schedules"):
+        # Same cut, derived rather than hand-pinned: an act that parses its schedules into
+        # the Sch.* namespace must not also parse them as body sections.
+        body_pages = _pages_before_schedules(pages)
 
     if meta.get("chain_rules"):
-        sections = _segment_chain_rules(pages)
+        sections = _segment_chain_rules(body_pages)
     elif meta.get("article_schedule"):
         sections = _segment_with_schedule(
-            pages, wrapped="replace" if meta.get("wrapped_headings") else False)
+            body_pages, wrapped="replace" if meta.get("wrapped_headings") else False)
     elif meta.get("articles_before_schedule"):
         # Parse ARTICLES only from the pages before the Schedules begin, so Schedule
         # paragraphs (which renumber from 1) cannot overwrite low-numbered articles.
         # The tail articles marked by `articles_before_schedule` (a [lo, hi] window)
         # pin the boundary; Schedules/appendices are a separate later slice.
         lo, hi = meta["articles_before_schedule"]
-        end = _last_article_page(pages, lo, hi)
-        sub = pages[: end + 1] if end is not None else pages
+        end = _last_article_page(body_pages, lo, hi)
+        sub = body_pages[: end + 1] if end is not None else body_pages
         sections = _segment_sections(sub, wrapped=True)
     else:
         # `wrapped_headings`: opt-in for Acts whose long headings spill past the em-dash onto
         # a continuation line (PoCA s.17A, PMLA s.50 were silently merged into the previous
         # section without it). Same strategy the Constitution slice uses.
         sections = _segment_sections(
-            pages, wrapped="replace" if meta.get("wrapped_headings") else False)
+            body_pages, wrapped="replace" if meta.get("wrapped_headings") else False)
     if not sections:
         raise ValueError(f"No sections parsed from {pdf_path} — check the PDF layout.")
 
@@ -1686,6 +1959,11 @@ def ingest(act_id: str) -> dict:
     # are: the "Sch.*" ids must not be filtered by a numeric cap they cannot satisfy.
     if meta.get("schedules"):
         sections = sections + _segment_schedules(pages)
+    # The CPC's First Schedule of Orders and Rules, in its own two-level Ord.<roman>.R.<n>
+    # namespace. Same reasoning as above and the same placement — after the max_section cap,
+    # which no "Ord.*" id could satisfy.
+    if meta.get("orders_schedule"):
+        sections = sections + _segment_orders(pages)
 
     FULLTEXT_DIR.mkdir(parents=True, exist_ok=True)
     out = {

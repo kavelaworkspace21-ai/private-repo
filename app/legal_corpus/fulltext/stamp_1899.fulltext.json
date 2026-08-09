@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/20095/1/the_indian_stamp_act%2C_1899.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/15510",
         "sha256": "80fd54af33dc908e9659779f771a3156a5585df5a15ad930ec12c1a23a205888",
-        "fetched_on": "2026-08-06",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -44,9 +44,15 @@
         },
         {
           "num": "5",
-          "text": "Instruments relating to several distinct matters. — Any instrument comprising or relating to\nseveral distinct matters shall be chargeable with the aggregate amount of the duties with which separate\ninstruments, each comprising or relating to one of such matters, would be chargeable under this Act.\nthe last preceding section, an instrument so framed as to come within two or more of the descriptions in\nSchedule I, shall, where the duties chargeable thereunder are different, be chargeable only with the\nhighest of such duties:\nProvided that nothing in this Act contained shall render chargeable with duty exceeding one rupee a\ncounterpart or duplicate of any instrument chargeable with duty and in respect of which the proper duty\nhas been paid.",
+          "text": "Instruments relating to several distinct matters. — Any instrument comprising or relating to\nseveral distinct matters shall be chargeable with the aggregate amount of the duties with which separate\ninstruments, each comprising or relating to one of such matters, would be chargeable under this Act.",
           "page": 9,
           "title": "Instruments relating to several distinct matters"
+        },
+        {
+          "num": "6",
+          "text": "Instruments coming within several descriptions in Schedule I. — Subject to the provisions of\nthe last preceding section, an instrument so framed as to come within two or more of the descriptions in\nSchedule I, shall, where the duties chargeable thereunder are different, be chargeable only with the\nhighest of such duties:\nProvided that nothing in this Act contained shall render chargeable with duty exceeding one rupee a\ncounterpart or duplicate of any instrument chargeable with duty and in respect of which the proper duty\nhas been paid.",
+          "page": 9,
+          "title": "Instruments coming within several descriptions in Schedule I"
         },
         {
           "num": "7",

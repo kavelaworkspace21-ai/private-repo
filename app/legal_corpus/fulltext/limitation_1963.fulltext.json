@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/1565/1/a1963-36.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1565",
         "sha256": "1ad1f2964881272f5ae8769b238ea6ee2bb3e126edbae39dd6bb00794d9f2d82",
-        "fetched_on": "2026-07-28",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

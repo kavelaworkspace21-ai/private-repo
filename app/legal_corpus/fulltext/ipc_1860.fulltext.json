@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/handle/123456789/2263",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2263",
         "sha256": "ae8920ad726fbb6dfdec8d327c4bdda580ca175bcad1ef4212ca868fe4d1ea3a",
-        "fetched_on": "2026-07-29",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -200,9 +200,15 @@
         },
         {
           "num": "31",
-          "text": "“A will”.—The words “a will” denote any testamentary document.\ncontrary intention appears from the context, words which refer to acts done extend also to illegal\nomissions.",
+          "text": "“A will”.—The words “a will” denote any testamentary document.",
           "page": 19,
           "title": "“A will”"
+        },
+        {
+          "num": "32",
+          "text": "Words referring to acts include illegal omissions.—In every part of this Code, except where a\ncontrary intention appears from the context, words which refer to acts done extend also to illegal\nomissions.",
+          "page": 19,
+          "title": "Words referring to acts include illegal omissions"
         },
         {
           "num": "33",
@@ -350,7 +356,7 @@
         },
         {
           "num": "55",
-          "text": "Commutation of sentence of imprisonment for life.—In every case in which sentence of\n7[imprisonment] for life shall have been passed, 8[the appropriate Government] may, without the consent\nshall have been sentenced”. The words in italics were subs. by the A.O. 1937, for “the Government of India or the Government\nof the place”.\nThe words in italics were subs. by the A.O. 1937, for “the Government of India or the Government of the place”.\n21\nof the offender, commute the punishment for imprisonment of either description for a term not exceeding\nfourteen years.",
+          "text": "Commutation of sentence of imprisonment for life.—In every case in which sentence of\n7[imprisonment] for life shall have been passed, 8[the appropriate Government] may, without the consent\n2. Subs. by Act 26 of 1955, s. 117 and the Sch., for “Secondly.—Transportation” (w.e.f. 1-1-1956).\nshall have been sentenced”. The words in italics were subs. by the A.O. 1937, for “the Government of India or the Government\nof the place”.\nThe words in italics were subs. by the A.O. 1937, for “the Government of India or the Government of the place”.\n21\nof the offender, commute the punishment for imprisonment of either description for a term not exceeding\nfourteen years.",
           "page": 21,
           "title": "Commutation of sentence of imprisonment for life"
         },

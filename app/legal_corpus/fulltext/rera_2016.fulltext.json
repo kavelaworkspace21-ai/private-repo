@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/15131/1/the_real_estate_(regulation_and_development)_act,_2016.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2158",
         "sha256": "5840ece73e305b344ad0090fac2f9318ded6079dc33cbb1dc5fcd71a61ac7ac8",
-        "fetched_on": "2026-07-29",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -566,8 +566,8 @@
         },
         {
           "num": "92",
-          "text": "Repeal. 3 THE REAL ESTATE (REGULATION AND DEVELOPMENT) ACT, 2016 ACT NO. 16 OF 2016 [25th March, 2016.] An Act to establish the Real Estate Regulatory Authority for regulation and promotion of the real estate sector and to ensure sale of plot, apartment or building, as the case may be, or sale of real estate project, in an efficient and transparent manner and to protect the interest of consumers in the real estate sector and to establish an adjudicating mechanism for speedy dispute redressal and also to establish the Appellate Tribunal to hear appeals from the decisions, directions or orders of the Real Estate Regulatory Authority and the adjudicating officer and for matters connected therewith or incidental thereto. BE it enacted by Parliament in the Sixty-seventh Year of the Republic of India as follows:—\nCHAPTER I\nPRELIMINARY",
-          "page": 3,
+          "text": "Repeal.—The Maharashtra Housing (Regulation and Development) Act, 2012 (Maharashtra Act\nNo. II of 2014) is hereby repealed.\n(w.e.f. 28-10-2016).\n36",
+          "page": 36,
           "title": "Repeal"
         }
       ]

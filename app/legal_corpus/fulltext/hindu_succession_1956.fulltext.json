@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/1713/1/A1956-30.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1713",
         "sha256": "8ee27226825b90210a3c17646049cb3e73cb2e32fd92d7d8c857e8808adb3ca2",
-        "fetched_on": "2026-07-30",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/13116/1/it_act_2000_updated.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/13116",
         "sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
-        "fetched_on": "2026-07-28",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/19637/1/aA2023-32.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/19637",
         "sha256": "79efb88576ca94134bba0b3d64a1f7b48a053f49503515cd37f05266a0320a8d",
-        "fetched_on": "2026-08-07",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -32,9 +32,9 @@
         },
         {
           "num": "3",
-          "text": "The Bill covering the various aspects of mediation seeks to promote mediation as a preferred mode of ADR, inter alia, providing for—\n(i) subsuming conciliation under Part III of the Arbitration and Conciliation Act, 1996, in\nmediation as per international practice of using the terms “conciliation” and “mediation”\ninterchangeably;\n(ii) compulsory pre-litigation mediation in matters of civil or commercial dispute, before parties\napproach a court or a tribunal as provided;\n(iii) conduct of online mediation;\n(iv) an indicative list of matters which are not fit for mediation under the First Schedule;\n(v) mediation that will take place within the territorial jurisdiction of the court or tribunal of\ncompetent jurisdiction, unless parties agree otherwise or undertake mediation in online mode;\n(vi) a period of one hundred and eighty days, for completing the mediation process which is further\nextendable to a maximum period of one hundred and eighty days with the mutual consent of the\nparties;\n(vii) the mediated settlement agreement resulting from mediation which will be final and binding\nand will be enforceable in accordance with the provisions of Code of Civil Procedure, 1908, in the\nsame manner as if it were a judgment or decree of a Court;\n(viii) establishment of Mediation Council of India, objects of which would be, inter alia, to promote\nmediation and to develop India as a robust centre for domestic and international mediation, make\nregulations for registration of mediators, grade mediation service providers, specify criteria for\nrecognition of mediation institutes and mediation service providers, to hold training workshops and\ncourses in the area of mediation, etc.; and\n(ix) conduct of community mediation with consent of parties for disputes which are likely to affect\npeace, harmony and tranquility amongst the residents or families of any area or locality.",
-          "page": 33,
-          "title": "The Bill covering the various aspects of mediation seeks to promote mediation as a preferred mode of ADR, inter alia, providing for"
+          "text": "Definitions.—In this Act, unless the context otherwise requires, ––\n(a) “commercial dispute” means a dispute defined in clause (c) of sub-section (1) of section 2 of the\nCommercial Courts Act, 2015 (4 of 2016);",
+          "page": 6,
+          "title": "Definitions"
         },
         {
           "num": "4",
@@ -68,9 +68,9 @@
         },
         {
           "num": "9",
-          "text": "The Industrial Relations Code, 2020 (35 of 2020). 24 THE THIRD SCHEDULE (See section 58) In section 28 of the Indian Contract Act, 1872 (9 of 1872), for Exception 1 and Exception 2, the following shall be substituted, namely: —\n“Exception 1.—Saving of contract to refer to arbitration or mediation dispute that may arise.—\nThis section shall not render illegal a contract, by which two or more persons agree that any dispute\nwhich may arise between them in respect of any subject or class of subjects shall be referred to resolution\nthrough arbitration or mediation.\nException 2.—Saving of contract to refer questions that have already arisen.—Nor shall this\nsection render illegal any contract in writing, by which two or more persons agree to refer to arbitration or\nmediation any question between them which has already arisen, or affect any provision of any law in\nforce for the time being as to references to arbitration or mediation.”.\n25\nTHE FOURTH SCHEDULE\n(See section 59)\nIn the Code of Civil Procedure, 1908 (5 of 1908),—\n(i) under Part V, under the heading SPECIAL PROCEEDINGS, the sub-heading “ARBITRATION”\nshall be omitted;\n(ii) for section 89, the following section shall be substituted, namely:—",
-          "page": 24,
-          "title": "The Industrial Relations Code, 2020 (35 of 2020)"
+          "text": "Preference of parties.—The mediation service provider shall, while appointing any person from\nthe panel of mediators maintained by it, consider his suitability and the preference of the parties for\nresolving the dispute.",
+          "page": 10,
+          "title": "Preference of parties"
         },
         {
           "num": "10",
@@ -89,12 +89,6 @@
           "text": "Replacement of mediator.—Upon termination of the mandate of mediator—\n(i) in case of mediation other than institutional mediation under clause (ii) of sub-section (4) of\nsection 10, the parties may, appoint another mediator within a period of seven days from such\ntermination; and\n(ii) under section 11, the mediation service provider shall appoint another mediator from the panel\nmaintained by it within a period of seven days from such termination.\nCHAPTER V\nMEDIATION PROCEEDINGS",
           "page": 11,
           "title": "Replacement of mediator"
-        },
-        {
-          "num": "12A",
-          "text": "Pre-litigation Mediation and Settlement.—(1) A suit, which does not contemplate any urgent\ninterim relief under this Act, shall not be instituted unless the plaintiff exhausts the remedy of pre-\nlitigation mediation in accordance with such manner and procedure as may be prescribed by rules made\nby the Central Government.\n(2) For the purposes of pre-litigation mediation, the Central Government may, by notification,\nauthorise—\n(i) the Authority, constituted under the Legal Services Authorities Act, 1987 (39 of 1987); or\n(ii) a mediation service provider as defined under clause (m) of section 3 of the Mediation\nAct, 2023.\n(3) Notwithstanding anything contained in the Legal Services Authorities Act, 1987 (39 of 1987), the\nAuthority or mediation service provider authorised by the Central Government under sub-\nsection (2) shall complete the process of mediation within a period of one hundred and twenty days from\nthe date of application made by the plaintiff under sub-section (1):\nProvided that the period of mediation may be extended for a further period of sixty days with the\nconsent of the parties:\nProvided further that, the period during which the parties spent for pre-litigation mediation shall not be\ncomputed for the purposes of limitation under the Limitation Act, 1963 (36 of 1963).\n(4) If the parties to the commercial dispute arrive at a settlement, the same shall be reduced into writing\nand shall be signed by the parties and the mediator.\n(5) The mediated settlement agreement arrived at under this section shall be dealt with in accordance\nwith the provisions of sections 27 and 28 of the Mediation Act, 2023.”;\n(b) in section 21A, in sub-section (2), for clause (a), the following clause shall be substituted,\nnamely:—\n“(a) the manner and procedure of pre-litigation mediation under sub-section (1) of section\n12A;”.\n31\nTHE TENTH SCHEDULE\n(See section 65)\nIn the Consumer Protection Act, 2019 (35 of 2019),—\n(a) in section 2, clauses (25) and (26) shall be omitted;\n(b) for section 37, the following sections shall be substituted, namely:—\n“37. Reference to mediation.—The District Commission or State Commission or the National\nCommission, as the case may be, 1[may] at any stage of proceedings refer the disputes for settlement\nby mediation under the Mediation Act, 2023.",
-          "page": 31,
-          "title": "Pre-litigation Mediation and Settlement"
         },
         {
           "num": "13",
@@ -247,18 +241,6 @@
           "title": "Secretariat and Chief Executive Officer of Council"
         },
         {
-          "num": "37A",
-          "text": "Settlement through mediation.—(1) Pursuant to mediation, if an agreement is reached\nbetween the parties with respect to all of the issues involved in the consumer dispute or with respect to\nonly some of the issues, the terms of such agreement shall be reduced to writing accordingly, and\nsigned by the parties to such dispute or their authorised representatives.\n(2) The mediator shall prepare a settlement report of the settlement and forward the signed\nagreement along with such report to the concerned Commission.\n(3) Where no agreement is reached between the parties within the specified time or the mediator is\nof the opinion that settlement is not possible, he shall prepare his report accordingly and submit the\nsame to the concerned Commission.",
-          "page": 32,
-          "title": "Settlement through mediation"
-        },
-        {
-          "num": "37B",
-          "text": "Recording settlement and passing of order.—(1) The District Commission or the State\nCommission or the National Commission, as the case may be, shall, within seven days of the receipt of\nthe settlement report, pass suitable order recording such settlement of consumer dispute and dispose of\nthe matter accordingly.\n(2) Where the consumer dispute is settled only in part, the District Commission or the State\nCommission or the National Commission, as the case may be, shall record settlement of the issues\nwhich have been so settled and continue to hear other issues involved in such consumer dispute.\n(3) Where the consumer dispute could not be settled by mediation, the District Commission or the\nState Commission or the National Commission, as the case may be, shall continue to hear all the\nissues involved in such consumer dispute.\";\n(c) in section 38, in sub-section (1), the words “or in respect of cases referred for mediation on failure\nof settlement by mediation,” shall be omitted;\n(d) in section 41, the third proviso shall be omitted;\n(e) Chapter V shall be omitted;\n(f) in section 101, in sub-section (2),—\n(i) clause (r) shall be omitted;\n(ii) clause (zf) shall be omitted;\n(g) in section 102, in sub-section (2), clause (p) shall be omitted;\n(h) in section 103, in sub-section (2), clauses (c) to (h) shall be omitted.\n————\n32\nSTATEMENT OF OBJECTS AND REASONS\nAn effective dispute resolution process has a significant impact on the economy and doing business in\nthe country, thereby promoting ease of living for citizens, access to justice and rule of law. The rapidly\nchanging society and progress in various areas not limited to economic, industrial or financial sectors,\ndemand commensurate expeditious settlement of dispute between the parties, which at present is time\nconsuming. Thus, there is a need to further promote Alternative Dispute Resolution (ADR), inter alia, by\ninstitutional mediation. The ADR mechanism of mediation though finds mention in various existing laws,\nbut as on date, there is no comprehensive law governing the various aspects of mediation.",
-          "page": 32,
-          "title": "Recording settlement and passing of order"
-        },
-        {
           "num": "38",
           "text": "Duties and functions of Council.—The Council shall—\n(a) endeavour to promote domestic and international mediation in India through appropriate\nguidelines;\n(b) endeavour to develop India to be a robust centre for domestic and international mediation;\n(c) lay down the guidelines for the continuous education, certification and assessment of mediators\nby the recognised mediation institutes;\n(d) provide for the manner of conduct of mediation proceedings, under sub-section (1) of\nsection 15;\n(e) provide for manner of registration of mediators and renew, withdraw, suspend or cancel\nregistration on the basis of conditions as may be specified;\n(f) lay down standards for professional and ethical conduct of mediators under sub-section (3) of\nsection 15;\n(g) hold trainings, workshops and courses in the area of mediation in collaboration with mediation\nservice providers, law firms and universities and other stakeholders, both Indian and international, and\nany other mediation institutes;\n(h) enter into memoranda of understanding or agreements with domestic and international bodies\nor organisations or institutions;\n(i) recognise mediation institutes and mediation service providers and renew, withdraw, suspend or\ncancel such recognition;\n(j) specify the criteria for recognition of mediation institutes and mediation service providers;\n(k) call for any information or record of mediation institutes and mediation service providers;\n(l) lay down standards for professional and ethical conduct of the mediation institutes and\nmediation service providers;\n(m) publish such information, data, research studies and such other information as may be required;\n(n) maintain an electronic depository of the mediated settlement agreements made in India and for\nsuch other records related thereto in such manner as may be specified; and\n(o) perform any other function as may be assigned to it by the Central Government.",
           "page": 17,
@@ -398,15 +380,15 @@
         },
         {
           "num": "61",
-          "text": "Reference of conciliation in enactments.—(1) Any provision, in any other enactment for the time\nbeing in force, providing for resolution of disputes through conciliation in accordance with the provisions\nof this Act, shall be construed as reference to mediation as provided under the Mediation Act, 2023.\n(2) Conciliation as provided under this Act and the Code of Civil Procedure, 1908 (5 of 1908), shall\nbe construed as mediation referred to in clause (h) of section 3 of the Mediation Act, 2023.",
-          "page": 28,
-          "title": "Reference of conciliation in enactments"
+          "text": "Amendment of 26 of 1996.—The Arbitration and Conciliation Act, 1996, shall be amended in the\nmanner specified in the Sixth Schedule.",
+          "page": 22,
+          "title": "Amendment of 26 of 1996"
         },
         {
           "num": "62",
-          "text": "Saving.—Notwithstanding anything contained in section 61, any conciliation proceeding initiated\nin pursuance of sections 61 to 81 of this Act as in force before the commencement of the Mediation Act,\n2023, shall be continued as such, as if the Mediation Act, 2023, had not been enacted.\n28\nTHE SEVENTH SCHEDULE\n(See section 62)\nIn the Micro, Small and Medium Enterprises Development Act, 2006 (27 of 2006), for section 18, the\nfollowing section shall be substituted, namely:—\n\"18. Reference to Micro and Small Enterprises Facilitation Council.—(1) Notwithstanding anything\ncontained in any other law for the time being in force, any party to a dispute may, with regard to any\namount due under section 17, make a reference to the Micro and Small Enterprises Facilitation Council.\n(2) On receipt of a reference under sub-section (1), the Council shall either conduct mediation itself or\nrefer the matter to any mediation service provider as provided under the Mediation Act, 2023.\n(3) The conduct of mediation under this section shall be as per the provisions of the Mediation\nAct, 2023.\n(4) Where the mediation initiated under sub-section (3) is not successful and stands terminated without\nany settlement between the parties, the Council shall either itself take up the dispute for arbitration or\nrefer it to any institution or centre providing alternative dispute resolution services for such arbitration\nand the provisions of the Arbitration and Conciliation Act, 1996 (26 of 1996), shall, then apply to the\ndispute as if the arbitration was in pursuance of an arbitration agreement referred to in sub-section (1) of\nsection 7 of that Act.\n(5) Notwithstanding anything contained in any other law for the time being in force, the Micro and\nSmall Enterprises Facilitation Council or the centre providing alternative dispute resolution services shall\nhave jurisdiction to act as an Arbitrator or mediator under this section in a dispute between the supplier\nlocated within its jurisdiction and a buyer located anywhere in India.\".\n29\nTHE EIGHTH SCHEDULE\n(See section 63)\nIn the Companies Act, 20l3 (18 of 2013), for section 442, the following section shall be substituted,\nnamely:—\n“442. Reference to mediation.—(1) Any of the parties to a proceedings before the Central\nGovernment, Tribunal or the Appellate Tribunal may, at any time apply to the Central Government,\nTribunal or the Appellate Tribunal, as the case may be, in such form along with such fees, if any, as may\nbe prescribed, for referring the matter pertaining to such proceedings for mediation and the Central\nGovernment, Tribunal or the Appellate Tribunal, as the case may be, shall refer the matter to mediation to\nbe conducted under the provisions of the Mediation Act, 2023.\n(2) Nothing in this section shall prevent the Central Government, Tribunal or the Appellate Tribunal\nbefore which any proceeding is pending from referring any matter pertaining to such proceeding suo motu\nto mediation to be conducted under the provisions of the Mediation Act, 2023 as the Central Government,\nTribunal or the Appellate Tribunal, deems fit.\n(3) The mediator or mediation service provider shall file the mediated settlement agreement arrived at\nbetween the parties with the Central Government or the Tribunal or the Appellate Tribunal under the Act.\n(4) The Central Government or the Tribunal or the Appellate Tribunal shall pass an order or judgment\nmaking the said mediated settlement agreement as part thereof.\n(5) The fee of the mediator shall be such as may be prescribed.”\n30\nTHE NINTH SCHEDULE\n(See section 64)\nIn the Commercial Courts Act, 2015 (4 of 2016),—\n(a) for Chapter IIIA, the following Chapter shall be substituted, namely:—\n\"CHAPTER IIIA\nPRE-LITIGATION MEDIATION AND SETTLEMENT",
-          "page": 28,
-          "title": "Saving"
+          "text": "Amendment of 27 of 2006.—The Micro, Small and Medium Enterprises Development Act, 2006,\nshall be amended in the manner specified in the Seventh Schedule.",
+          "page": 22,
+          "title": "Amendment of 27 of 2006"
         },
         {
           "num": "63",
@@ -422,9 +404,195 @@
         },
         {
           "num": "65",
-          "text": "Amendment of 35 of 2019.— The Consumer Protection Act, 2019, shall be amended in the\nmanner specified in the Tenth Schedule.\nTHE FIRST SCHEDULE\n(See section 6)\nDISPUTES OR MATTERS NOT FIT FOR MEDIATION",
+          "text": "Amendment of 35 of 2019.— The Consumer Protection Act, 2019, shall be amended in the\nmanner specified in the Tenth Schedule.",
           "page": 22,
           "title": "Amendment of 35 of 2019"
+        },
+        {
+          "num": "Sch.I.1",
+          "title": "Schedule I — Entry 1: Disputes which by virtue of any law for the time being in fo",
+          "text": "Disputes which by virtue of any law for the time being in force may not be submitted for mediation.",
+          "page": 22
+        },
+        {
+          "num": "Sch.I.2",
+          "title": "Schedule I — Entry 2: Disputes relating to claims against minors, deities; persons",
+          "text": "Disputes relating to claims against minors, deities; persons with intellectual disabilities under paragraph 2 of the Schedule and person with disability having high support needs as defined in clause (t) of section 2 of the Rights of Persons with Disabilities Act, 2016 (49 of 2016); persons with mental illness as defined in clause (s) of sub-section (1) of section 2 of the Mental Healthcare Act, 2017 (10 of 2017); persons of unsound mind, in relation to whom proceedings are to be conducted under Order 22 XXXII of the Code of Civil Procedure, 1908 (5 of 1908); and suits for declaration of title against Government; declaration having effect of right in rem.",
+          "page": 22
+        },
+        {
+          "num": "Sch.I.3",
+          "title": "Schedule I — Entry 3: Disputes involving prosecution for criminal offences.",
+          "text": "Disputes involving prosecution for criminal offences.",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.4",
+          "title": "Schedule I — Entry 4: Complaints or proceedings, initiated before any statutory au",
+          "text": "Complaints or proceedings, initiated before any statutory authority or body in relation to registration, discipline, misconduct of any practitioner, or other registered professional, such as legal practitioner, medical practitioner, dentist, architect, chartered accountant, or in relation to any other profession of whatever description, which is regulated under any law for the time being in force.",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.5",
+          "title": "Schedule I — Entry 5: Disputes which have the effect on rights of a third party wh",
+          "text": "Disputes which have the effect on rights of a third party who are not a party to the mediation proceedings except only in matrimonial disputes where the interest of a child is involved.",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.6",
+          "title": "Schedule I — Entry 6: Any proceeding in relation to any subject matter, falling wi",
+          "text": "Any proceeding in relation to any subject matter, falling within any enactment, over which the Tribunal constituted under the National Green Tribunal Act, 2010 (19 of 2010), has jurisdiction.",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.7",
+          "title": "Schedule I — Entry 7: Any dispute relating to levy, collection, penalties or offen",
+          "text": "Any dispute relating to levy, collection, penalties or offences, in relation to any direct or indirect tax or refunds, enacted by any State legislature or the Parliament.",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.8",
+          "title": "Schedule I — Entry 8: Any investigation, inquiry or proceeding, under the Competit",
+          "text": "Any investigation, inquiry or proceeding, under the Competition Act, 2002 (12 of 2003), including proceedings before the Director General, under the Act; proceedings before the Telecom Regulatory Authority of India, under the Telecom Regulatory Authority of India Act, 1997 (24 of 1997) or the Telecom Disputes Settlement and Appellate Tribunal established under section 14 of that Act.",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.9",
+          "title": "Schedule I — Entry 9: Proceedings before appropriate Commissions, and the Appellat",
+          "text": "Proceedings before appropriate Commissions, and the Appellate Tribunal for Electricity, under the Electricity Act, 2003 (36 of 2003).",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.10",
+          "title": "Schedule I — Entry 10: Proceedings before the Petroleum and Natural Gas Regulatory",
+          "text": "Proceedings before the Petroleum and Natural Gas Regulatory Board, and appeals therefrom before the Appellate Tribunal under the Petroleum and Natural Gas Regulatory Board Act, 2006 (19 of 2006).",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.11",
+          "title": "Schedule I — Entry 11: Proceedings before the Securities and Exchange Board of Indi",
+          "text": "Proceedings before the Securities and Exchange Board of India, and the Securities Appellate Tribunal, under the Securities and Exchange Board of India Act, 1992 (15 of 1992).",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.12",
+          "title": "Schedule I — Entry 12: Land acquisition and determination of compensation under lan",
+          "text": "Land acquisition and determination of compensation under land acquisition laws, or any provision of law providing for land acquisition.",
+          "page": 23
+        },
+        {
+          "num": "Sch.I.13",
+          "title": "Schedule I — Entry 13: Any other subject matter of dispute which may be notified by",
+          "text": "Any other subject matter of dispute which may be notified by the Central Government. 23",
+          "page": 23
+        },
+        {
+          "num": "Sch.II.1",
+          "title": "Schedule II — Entry 1: The Industrial Disputes Act, 1947 (14 of 1947).",
+          "text": "The Industrial Disputes Act, 1947 (14 of 1947).",
+          "page": 24
+        },
+        {
+          "num": "Sch.II.2",
+          "title": "Schedule II — Entry 2: The Brahmaputra Board Act, 1980 (46 of 1980).",
+          "text": "The Brahmaputra Board Act, 1980 (46 of 1980).",
+          "page": 24
+        },
+        {
+          "num": "Sch.II.3",
+          "title": "Schedule II — Entry 3: The Cine-workers and Cinema Theatre Workers (Regulation of E",
+          "text": "The Cine-workers and Cinema Theatre Workers (Regulation of Employment) Act, 1981 (50 of 1981).",
+          "page": 24
+        },
+        {
+          "num": "Sch.II.4",
+          "title": "Schedule II — Entry 4: The Family Courts Act, 1984 (66 of 1984).",
+          "text": "The Family Courts Act, 1984 (66 of 1984).",
+          "page": 24
+        },
+        {
+          "num": "Sch.II.5",
+          "title": "Schedule II — Entry 5: The Legal Services Authorities Act, 1987 (39 of 1987).",
+          "text": "The Legal Services Authorities Act, 1987 (39 of 1987).",
+          "page": 24
+        },
+        {
+          "num": "Sch.II.6",
+          "title": "Schedule II — Entry 6: The Maintenance and Welfare of Parents and Senior Citizens A",
+          "text": "The Maintenance and Welfare of Parents and Senior Citizens Act, 2007 (56 of 2007).",
+          "page": 24
+        },
+        {
+          "num": "Sch.II.7",
+          "title": "Schedule II — Entry 7: The Sexual Harassment of Women at Workplace (Prevention, Pro",
+          "text": "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013 (14 of 2013).",
+          "page": 24
+        },
+        {
+          "num": "Sch.II.8",
+          "title": "Schedule II — Entry 8: The Finance Act, 20l6 (28 of 2016).",
+          "text": "The Finance Act, 20l6 (28 of 2016).",
+          "page": 24
+        },
+        {
+          "num": "Sch.II.9",
+          "title": "Schedule II — Entry 9: The Industrial Relations Code, 2020 (35 of 2020). 24",
+          "text": "The Industrial Relations Code, 2020 (35 of 2020). 24",
+          "page": 24
+        },
+        {
+          "num": "Sch.III",
+          "title": "Schedule III",
+          "text": "(See section 58) In section 28 of the Indian Contract Act, 1872 (9 of 1872), for Exception 1 and Exception 2, the following shall be substituted, namely: — “Exception 1.—Saving of contract to refer to arbitration or mediation dispute that may arise.— This section shall not render illegal a contract, by which two or more persons agree that any dispute which may arise between them in respect of any subject or class of subjects shall be referred to resolution through arbitration or mediation. Exception 2.—Saving of contract to refer questions that have already arisen.—Nor shall this section render illegal any contract in writing, by which two or more persons agree to refer to arbitration or mediation any question between them which has already arisen, or affect any provision of any law in force for the time being as to references to arbitration or mediation.”. 25",
+          "page": 25
+        },
+        {
+          "num": "Sch.IV",
+          "title": "Schedule IV",
+          "text": "(See section 59) In the Code of Civil Procedure, 1908 (5 of 1908),— (i) under Part V, under the heading SPECIAL PROCEEDINGS, the sub-heading “ARBITRATION” shall be omitted; (ii) for section 89, the following section shall be substituted, namely:— 89. Settlement of disputes outside the Court.—Where it appears to the Court that the dispute between the parties may be settled and there exists elements of settlement which may be acceptable to the parties, the Court may— (a) refer the dispute to arbitration, and thereafter, the provisions of the Arbitration and Conciliation Act, 1996 (26 of 1996) shall apply as if the proceedings for arbitration were referred for settlement under the provisions of that Act; or (b) refer the parties to mediation, to the court-annexed mediation centre or any other mediation service provider or any mediator, as per the option of the parties, and thereafter the provisions of the Mediation Act, 2023 shall apply as if the proceedings for mediation were referred for settlement under the provisions of that Act; or (c) refer the dispute to Lok Adalat, in accordance with the provisions of sub-section (1) of section 20 of the Legal Services Authorities Act, 1987 (39 of 1987) and thereafter, all other provisions of that Act shall apply in respect of the dispute; (d) effect compromise between the parties and shall follow such procedure as deemed fit for judicial settlement. 26",
+          "page": 26
+        },
+        {
+          "num": "Sch.V",
+          "title": "Schedule V",
+          "text": "(See section 60) In the Legal Services Authorities Act, 1987 (39 of 1987), in section 4, for clause (f), the following clause shall be substituted, namely:— “(f) encourage the settlement of disputes, including online by way of negotiations, arbitration, mediation and conciliation;”. 27",
+          "page": 27
+        },
+        {
+          "num": "Sch.VI.61",
+          "title": "Schedule VI — Entry 61: Reference of conciliation in enactments.—(1) Any provision,",
+          "text": "Reference of conciliation in enactments.—(1) Any provision, in any other enactment for the time being in force, providing for resolution of disputes through conciliation in accordance with the provisions of this Act, shall be construed as reference to mediation as provided under the Mediation Act, 2023. (2) Conciliation as provided under this Act and the Code of Civil Procedure, 1908 (5 of 1908), shall be construed as mediation referred to in clause (h) of section 3 of the Mediation Act, 2023.",
+          "page": 28
+        },
+        {
+          "num": "Sch.VI.62",
+          "title": "Schedule VI — Entry 62: Saving.—Notwithstanding anything contained in section 61, an",
+          "text": "Saving.—Notwithstanding anything contained in section 61, any conciliation proceeding initiated in pursuance of sections 61 to 81 of this Act as in force before the commencement of the Mediation Act, 2023, shall be continued as such, as if the Mediation Act, 2023, had not been enacted. 28",
+          "page": 28
+        },
+        {
+          "num": "Sch.VII",
+          "title": "Schedule VII",
+          "text": "(See section 62) In the Micro, Small and Medium Enterprises Development Act, 2006 (27 of 2006), for section 18, the following section shall be substituted, namely:— \"18. Reference to Micro and Small Enterprises Facilitation Council.—(1) Notwithstanding anything contained in any other law for the time being in force, any party to a dispute may, with regard to any amount due under section 17, make a reference to the Micro and Small Enterprises Facilitation Council. (2) On receipt of a reference under sub-section (1), the Council shall either conduct mediation itself or refer the matter to any mediation service provider as provided under the Mediation Act, 2023. (3) The conduct of mediation under this section shall be as per the provisions of the Mediation Act, 2023. (4) Where the mediation initiated under sub-section (3) is not successful and stands terminated without any settlement between the parties, the Council shall either itself take up the dispute for arbitration or refer it to any institution or centre providing alternative dispute resolution services for such arbitration and the provisions of the Arbitration and Conciliation Act, 1996 (26 of 1996), shall, then apply to the dispute as if the arbitration was in pursuance of an arbitration agreement referred to in sub-section (1) of section 7 of that Act. (5) Notwithstanding anything contained in any other law for the time being in force, the Micro and Small Enterprises Facilitation Council or the centre providing alternative dispute resolution services shall have jurisdiction to act as an Arbitrator or mediator under this section in a dispute between the supplier located within its jurisdiction and a buyer located anywhere in India.\". 29",
+          "page": 29
+        },
+        {
+          "num": "Sch.VIII",
+          "title": "Schedule VIII",
+          "text": "(See section 63) In the Companies Act, 20l3 (18 of 2013), for section 442, the following section shall be substituted, namely:— “442. Reference to mediation.—(1) Any of the parties to a proceedings before the Central Government, Tribunal or the Appellate Tribunal may, at any time apply to the Central Government, Tribunal or the Appellate Tribunal, as the case may be, in such form along with such fees, if any, as may be prescribed, for referring the matter pertaining to such proceedings for mediation and the Central Government, Tribunal or the Appellate Tribunal, as the case may be, shall refer the matter to mediation to be conducted under the provisions of the Mediation Act, 2023. (2) Nothing in this section shall prevent the Central Government, Tribunal or the Appellate Tribunal before which any proceeding is pending from referring any matter pertaining to such proceeding suo motu to mediation to be conducted under the provisions of the Mediation Act, 2023 as the Central Government, Tribunal or the Appellate Tribunal, deems fit. (3) The mediator or mediation service provider shall file the mediated settlement agreement arrived at between the parties with the Central Government or the Tribunal or the Appellate Tribunal under the Act. (4) The Central Government or the Tribunal or the Appellate Tribunal shall pass an order or judgment making the said mediated settlement agreement as part thereof. (5) The fee of the mediator shall be such as may be prescribed.” 30",
+          "page": 30
+        },
+        {
+          "num": "Sch.IX",
+          "title": "Schedule IX",
+          "text": "(See section 64) In the Commercial Courts Act, 2015 (4 of 2016),— (a) for Chapter IIIA, the following Chapter shall be substituted, namely:— \"CHAPTER IIIA PRE-LITIGATION MEDIATION AND SETTLEMENT 12A. Pre-litigation Mediation and Settlement.—(1) A suit, which does not contemplate any urgent interim relief under this Act, shall not be instituted unless the plaintiff exhausts the remedy of pre- litigation mediation in accordance with such manner and procedure as may be prescribed by rules made by the Central Government. (2) For the purposes of pre-litigation mediation, the Central Government may, by notification, authorise— (i) the Authority, constituted under the Legal Services Authorities Act, 1987 (39 of 1987); or (ii) a mediation service provider as defined under clause (m) of section 3 of the Mediation Act, 2023. (3) Notwithstanding anything contained in the Legal Services Authorities Act, 1987 (39 of 1987), the Authority or mediation service provider authorised by the Central Government under sub- section (2) shall complete the process of mediation within a period of one hundred and twenty days from the date of application made by the plaintiff under sub-section (1): Provided that the period of mediation may be extended for a further period of sixty days with the consent of the parties: Provided further that, the period during which the parties spent for pre-litigation mediation shall not be computed for the purposes of limitation under the Limitation Act, 1963 (36 of 1963). (4) If the parties to the commercial dispute arrive at a settlement, the same shall be reduced into writing and shall be signed by the parties and the mediator. (5) The mediated settlement agreement arrived at under this section shall be dealt with in accordance with the provisions of sections 27 and 28 of the Mediation Act, 2023.”; (b) in section 21A, in sub-section (2), for clause (a), the following clause shall be substituted, namely:— “(a) the manner and procedure of pre-litigation mediation under sub-section (1) of section 12A;”. 31",
+          "page": 31
+        },
+        {
+          "num": "Sch.X",
+          "title": "Schedule X",
+          "text": "(See section 65) In the Consumer Protection Act, 2019 (35 of 2019),— (a) in section 2, clauses (25) and (26) shall be omitted; (b) for section 37, the following sections shall be substituted, namely:— “37. Reference to mediation.—The District Commission or State Commission or the National Commission, as the case may be, 1[may] at any stage of proceedings refer the disputes for settlement by mediation under the Mediation Act, 2023. 37A. Settlement through mediation.—(1) Pursuant to mediation, if an agreement is reached between the parties with respect to all of the issues involved in the consumer dispute or with respect to only some of the issues, the terms of such agreement shall be reduced to writing accordingly, and signed by the parties to such dispute or their authorised representatives. (2) The mediator shall prepare a settlement report of the settlement and forward the signed agreement along with such report to the concerned Commission. (3) Where no agreement is reached between the parties within the specified time or the mediator is of the opinion that settlement is not possible, he shall prepare his report accordingly and submit the same to the concerned Commission. 37B. Recording settlement and passing of order.—(1) The District Commission or the State Commission or the National Commission, as the case may be, shall, within seven days of the receipt of the settlement report, pass suitable order recording such settlement of consumer dispute and dispose of the matter accordingly. (2) Where the consumer dispute is settled only in part, the District Commission or the State Commission or the National Commission, as the case may be, shall record settlement of the issues which have been so settled and continue to hear other issues involved in such consumer dispute. (3) Where the consumer dispute could not be settled by mediation, the District Commission or the State Commission or the National Commission, as the case may be, shall continue to hear all the issues involved in such consumer dispute.\"; (c) in section 38, in sub-section (1), the words “or in respect of cases referred for mediation on failure of settlement by mediation,” shall be omitted; (d) in section 41, the third proviso shall be omitted; (e) Chapter V shall be omitted; (f) in section 101, in sub-section (2),— (i) clause (r) shall be omitted; (ii) clause (zf) shall be omitted; (g) in section 102, in sub-section (2), clause (p) shall be omitted; (h) in section 103, in sub-section (2), clauses (c) to (h) shall be omitted. ———— 32",
+          "page": 32
         }
       ]
     }

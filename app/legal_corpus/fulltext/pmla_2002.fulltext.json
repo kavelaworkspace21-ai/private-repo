@@ -6,13 +6,15 @@
       "short": "PMLA",
       "year": 2002,
       "status": "in_force",
+      "repealed_by": "",
+      "note": "",
       "source_verified": true,
       "source": {
         "name": "India Code (indiacode.nic.in)",
         "url": "https://www.indiacode.nic.in/bitstream/123456789/2036/5/A2003-15.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2036",
         "sha256": "d3699f0228f7b9cdf8311f9e8998032fb15e6570070b99a578eca3cb8fcd6413",
-        "fetched_on": "2026-07-16",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

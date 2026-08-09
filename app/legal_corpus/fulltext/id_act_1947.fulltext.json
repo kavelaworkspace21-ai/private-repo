@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/20352/1/the_industrial_disputes_act.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/15191",
         "sha256": "0af99b73ac2b39cea7e5f48c77f67ca4a9b93baa6ba0ff2d12b66f0d5e44597b",
-        "fetched_on": "2026-07-17",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/handle/123456789/11799",
         "landing": "https://www.indiacode.nic.in/handle/123456789/11799",
         "sha256": "2a4e9f2d5e3ab4adf8ddbb35ada724673b4d5bb2161888e60755f8e62a3462b8",
-        "fetched_on": "2026-07-30",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

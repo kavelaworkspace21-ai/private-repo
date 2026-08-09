@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/2154/5/A2016-31.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2154",
         "sha256": "ee251f9934e9de996c25fca949e99c1eff12e6e77c3970cc96f96c18bc20d85d",
-        "fetched_on": "2026-07-30",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

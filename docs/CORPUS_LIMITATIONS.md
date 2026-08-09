@@ -12,6 +12,136 @@ Live anomaly report: `python -c "import json,app.ai.corpus_updates as c; print(j
 
 ---
 
+## ✅ RESOLVED 2026-08-08 — a footnote filter was deleting real section headings
+
+**Indian Succession Act ss.30 and 90 were absent, and 65 sections across the corpus were
+recovered by the same fix.** Found by rebuilding all 50 acts from source — not by any test.
+
+`_FOOTNOTE_RE` drops a line whose first word after the number is an editorial opener
+(`Subs.`, `Ins.`, `See`, `As to`, `Words`, …). Two ISA sections genuinely OPEN with those
+words:
+
+| Section | Opens with | Absorbed into |
+|---|---|---|
+| s.30 *As to what property deceased considered to have died intestate* | "As to" | s.29 |
+| s.90 *Words describing subject refer to property answering description at testator's death* | "Words" | s.89 |
+
+Both were removed before segmentation ever ran, so neither was addressable by its own number
+and each one's text silently extended its predecessor.
+
+**Fix:** the section-heading guard now applies to BOTH footnote patterns, not only
+`_FOOTNOTE_RE2`. A heading is distinguishable from a footnote by SHAPE — `N. <marginal
+heading>.—<body>` — not by first word. No India Code footnote has that form; "1. Subs. by Act
+3 of 1951, s. 3 and the Schedule." has no `.—` separator at all.
+
+### Why no test caught it, and what that means
+
+This defect was **not introduced by the change that exposed it**. It had been live in the
+parser since those openers were added; HEAD's committed corpus file predated that change and
+was never rebuilt. **The artifact on disk was correct while the code that generates it was
+not.**
+
+No test in this repository could have seen it. Every corpus test reads the shipped JSON. The
+only thing that surfaces this class of drift is re-deriving the corpus from source, and that
+happened here by accident, because an unrelated `_START_RE` fix forced a full rebuild.
+
+> **OPEN — recommended CI job:** reparse all 50 acts from `data/source_pdfs/` and fail if any
+> act's output differs from the committed fulltext. Until that exists, parser fixes and corpus
+> artifacts can diverge again without any signal.
+
+### Recovered as a side effect (verified as real provisions, not fragments)
+
+The same rebuild — with the `_START_RE` fix for amendment markers followed by a space — added
+sections across the corpus, every sampled one a complete provision with heading and body:
+
+| Act | Was → now | Notable recoveries |
+|---|---|---|
+| `cgst_2017` | 126 → 190 | s.20 ISD credit distribution, s.44 annual return, s.68 inspection of goods in movement |
+| `indian_succession_1925` | 327 → 392 | ss.30, 90, plus ss.46, 56, 145, 234 |
+| `negotiable_instruments_1881` | 142 → 154 | **s.6 — the definition of "cheque"** |
+| `hindu_marriage_1955` | 30 → 37 | **s.16 legitimacy of children of void marriages**, s.13A, s.21A, s.28 |
+| `registration_1908` | 92 → 96 | repealed-section stubs |
+
+---
+
+## ✅ RESOLVED 2026-08-08 — the CPC First Schedule (Orders I–LI) is in the corpus
+
+**708 rules across 58 Orders, in a two-level `Ord.<roman>.R.<rule>` namespace.** This closes
+the gap opened on 2026-08-05, when `body_before_schedule` correctly cut the Schedule away
+from the Code's 158 sections and nothing picked it back up (see "What is still missing"
+below, now superseded).
+
+This is most of the civil procedure an advocate cites daily. Order VII Rule 11 (rejection of
+plaint), Order VI Rule 17 (amendment of pleadings), Order XXXIX Rules 1–2 (temporary
+injunctions), Order IX Rule 13 (setting aside an *ex parte* decree), and the whole of Order
+XXI (execution, 114 rules) were **absent from the corpus entirely** until this change.
+
+**Why the generic `Sch.*` machinery could not do it.** `_schedule_regions` finds exactly ONE
+region in the whole Code, mislabelled "II", and emits pages 338–347 as a single 34,998-char
+blob. Rules renumber from 1 inside every Order, so flattening 58 Orders into one entry
+namespace makes 58 competing "entry 1"s — the duplicate-id collision that aborted the seed
+and silently dropped 12 acts on 2026-07-12. Hence a dedicated segmenter.
+
+**Four print pathologies had to be handled to get the rules out intact:**
+
+| Symptom | Cause | Effect if unfixed |
+|---|---|---|
+| Order XV, XV-A, XVI-A, XX-A, XXVII-A, XXXII-A missing | headings carry amendment markers — `*[ORDER XV`, `1[ORDER XVI A` | six Orders absent |
+| Order X Rule 3 filed as rule 13 | `1[3.` extracted as `13.` | "Substance of examination to be written" unreachable by citation |
+| Order XX Rule 1 missing entirely | printed `1[ 21.` — a space after the marker bracket, which `_START_RE` did not allow | "Judgment when pronounced" absorbed into the heading above it |
+| Appendices A–I nearly ingested as rules | specimen plaints are numbered `1.`, `2.`, `3.` | model pleading forms would enter the corpus as law |
+
+The `1[ 21.` fix (one `\s*` in `_START_RE`) also recovered Order XVIII rules 5 and 13.
+
+**Two Orders XI are in force and both are kept.** The Commercial Courts Act 2015 inserted a
+separate Order XI (disclosure and discovery before a commercial division) carrying the same
+number as the original. They are different law; the second is filed as `Ord.XI-COM.*` so it
+cannot overwrite the first.
+
+**Remaining absences are correct**, and asserted as such so a future "fix" cannot re-insert
+repealed text as live law: Order XXI rules 60–63 and 70 (omitted by the CPC (Amendment) Act
+1976, s. 72) and Order XLI rule 7 (repealed). Every other Order numbers 1..N with no holes.
+
+**Not ingested, and deliberately:** Appendices A–I (pleading, process and decree *forms*) and
+the Second Schedule (repealed in 1940). Forms are drafting precedents, not law.
+
+Body sections are **byte-identical** across this change (171 entries, 0 changed).
+Pinned by `tests/test_cpc_orders.py` (18 tests, content-based).
+
+---
+
+## ✅ RESOLVED 2026-08-08 — Mediation Act schedules, and three defects found doing it
+
+Enabling the `Sch.*` namespace for `mediation_2023` surfaced three further defects. Each one
+**passed a section count**, which is why none was caught earlier.
+
+1. **Schedule I was absent.** `_schedule_regions` scanned only the first 20 lines of each
+   page; the Act runs out of s.65 straight into "THE FIRST SCHEDULE" mid-page, so the heading
+   was never seen and the act was indexed from Schedule II onwards. Schedule I is the Act's
+   own list of **disputes not fit for mediation** — 13 entries, now present.
+2. **Widening that scan swept the body INTO the schedule.** Because the heading sits mid-page,
+   taking the whole page put ss.55–65 inside Schedule I and re-emitted them as `Sch.I.55` …
+   `Sch.I.58`. Fixed by carrying the heading's *line* offset, not just its page.
+3. **ss.61 and 62 held the Arbitration Act's text.** The Sixth Schedule substitutes new
+   ss.61–62 into the Arbitration and Conciliation Act 1996; the body segmenter reached into
+   the schedule and took those as the Mediation Act's own, displacing "Amendment of Act 26 of
+   1996" and "Amendment of Act 27 of 2006". **Both neighbours on either side (ss.58–60 and
+   ss.63–65) were correct** — the signature of a defect no count can see.
+4. **The Statement of Objects and Reasons was ingested as `Sch.X`.** The last schedule region
+   ran to end-of-document, so the bill's explanatory note — signed by the minister who moved
+   it, describing what the bill "seeks to" do — became `Sch.X.2/3/4`. `Sch.X.4` read "The Bill
+   seeks to achieve the above objectives. KIREN RIJIJU." Now excluded by a back-matter
+   terminator, and `Sch.X` is the real Tenth Schedule (Consumer Protection Act 2019).
+
+**Caught in passing:** the same back-matter and body-boundary fixes removed two chemical-name
+rows that NDPS was carrying as "sections 110H and 110K" (the NDPS Act ends at s.83), and
+recovered Partnership Act s.3 ("Application of provisions of Act 9 of 1872"), which had been
+glued onto s.2.
+
+Pinned by four content tests in `tests/test_schedule_parsing.py`.
+
+---
+
 ## ✅ RESOLVED 2026-08-07 (S7 Workstream D) — Mediation Act: ss.49, 55, 58, 59 recovered
 
 **Every section of ss.1–65 is now present.** Four were absent, from two unrelated causes.
@@ -80,12 +210,17 @@ with `max_section: 65`.
 
 **Net:** 65 → 68 entries. Gained 49, 55, 58, 59; lost only the bogus s.89.
 
-### Still open
+### ~~Still open~~ — CLOSED 2026-08-08
 
 The Act's **First–Tenth Schedules are no longer in the corpus**. They were previously inside
 s.65, which made them unusable (and made s.65 wrong); they are now absent, which is honest but
 still a gap. They need the `Sch.*` namespace treatment, as other acts have. Same shape as the
 CPC First Schedule Orders.
+
+**Both are now done** — see the two entries at the top of this file. The Mediation schedules
+are in the `Sch.*` namespace (31 entries across Schedules I–X) and the CPC Orders in
+`Ord.<roman>.R.<rule>`. Doing the Mediation half turned up three further defects that the
+section count had hidden, including ss.61–62 holding the Arbitration Act's text.
 
 ---
 
@@ -237,11 +372,12 @@ own numbering. It is the same failure mode as the IBC Schedules, and the existin
   and sale in execution of decree") and `s.392` ("Public charities"). A footnote marker is
   glued to the section number (`8`+`60`, `3`+`92`). This is the `glued_starts` class and is the
   obvious next fix.
-* **The First Schedule Orders and Rules are now NOT INGESTED AT ALL.** They were never usable
-  before — they were masquerading as sections — but a litigation tool without CPC Orders is a
-  real coverage gap. They need proper namespacing (`Ord.XXI.R.46B`, as the `Sch.*` work did for
-  schedules) before they can be reinstated. **Do not simply remove the boundary flag**: that
-  restores the corruption.
+* ~~**The First Schedule Orders and Rules are now NOT INGESTED AT ALL.**~~ **SUPERSEDED
+  2026-08-08** — done, as `Ord.<roman>.R.<rule>`; see the entry at the top of this file. 708
+  rules across 58 Orders. The warning it carried still stands and is worth keeping: **do not
+  simply remove the boundary flag** to get the Orders back. That restores the corruption. The
+  Orders are parsed by their own segmenter from the full page range, on the far side of the
+  boundary that `body_before_schedule` draws.
 
 ---
 

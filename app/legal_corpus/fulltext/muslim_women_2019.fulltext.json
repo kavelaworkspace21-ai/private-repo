@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/11564/1/a2019-20.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/11564",
         "sha256": "e90491fbe24c40e81f22939cd4fff0b2e5933d8697a2810800281ad752697f78",
-        "fetched_on": "2026-07-17",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

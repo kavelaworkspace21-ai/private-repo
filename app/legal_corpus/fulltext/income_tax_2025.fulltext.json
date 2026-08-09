@@ -14,7 +14,7 @@
         "url": "https://www.incometaxindia.gov.in/documents/20117/43006/Income-tax-Act-2025_2026_2026-06-10_03-46-08_691051_en.pdf/b6240d88-c54c-d2b6-04ee-5703d0bcde4f?version=6.0",
         "landing": "https://www.incometaxindia.gov.in/income-tax-act-2025",
         "sha256": "7db7feb6fa5493c74febd1548020f126acb837e874677c4f889545aff958f8b7",
-        "fetched_on": "2026-08-06",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
