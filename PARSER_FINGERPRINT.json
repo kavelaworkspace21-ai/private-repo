@@ -1,0 +1,8 @@
+{
+  "parser_path": "app/ai/ingest_statutes.py",
+  "parser_sha256": "73a66485fc3129b9f5b7518b8e886707af7a6150893f77cd7e1d365508e6249c",
+  "stamped_on": "2026-08-11",
+  "act_count": 50,
+  "verified_by": "full rebuild + provision-level diff of all 50 acts, 2026-08-09 (commit 30904e6); zero unexplained differences",
+  "note": "Which parser built the committed corpus. tests/test_corpus_freshness.py fails if app/ai/ingest_statutes.py no longer hashes to this, which means a parser change landed without the corpus being rebuilt. Re-stamp only after running scripts/verify_corpus_rebuild.py --all on a machine that has data/source_pdfs/."
+}
