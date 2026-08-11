@@ -45,9 +45,47 @@ No test in this repository could have seen it. Every corpus test reads the shipp
 only thing that surfaces this class of drift is re-deriving the corpus from source, and that
 happened here by accident, because an unrelated `_START_RE` fix forced a full rebuild.
 
-> **OPEN — recommended CI job:** reparse all 50 acts from `data/source_pdfs/` and fail if any
-> act's output differs from the committed fulltext. Until that exists, parser fixes and corpus
-> artifacts can diverge again without any signal.
+> **✅ ADDRESSED 2026-08-09 — in two parts, because the obvious version cannot run.**
+>
+> The obvious fix is a CI job that reparses all 50 acts and diffs against the committed
+> fulltext. **That cannot run on a GitHub-hosted runner.** It needs `data/source_pdfs/`, which
+> is 154 MB across 51 files and gitignored — and `income_tax_2025.pdf` alone is **106 MB**,
+> past GitHub's 100 MB per-file limit, so it cannot be committed even if that were wanted.
+> Re-downloading in CI is not an option either: some sources are WAF-protected (§6 below).
+>
+> So the protection is split:
+>
+> **1. `scripts/verify_corpus_rebuild.py` — the real check.** Re-derives each act from its
+> source PDF and compares provision by provision: number, title, text, source page. Runs
+> wherever the PDFs live. Restores the working tree on exit, ignores the `fetched_on` stamp
+> (nested inside `source`, and it changes every run), and shards for parallelism.
+>
+> ```bash
+> python scripts/verify_corpus_rebuild.py --all --stamp    # ~2 hours
+> python scripts/verify_corpus_rebuild.py --skip-slow      # ~33 min, omits income_tax_2025
+> ```
+>
+> Timing is dominated by one act: `income_tax_2025` takes **75–95 minutes**, roughly three
+> quarters of a full rebuild, because its source PDF is 106 MB. Sharding does not help — it is
+> one indivisible act — hence `--skip-slow` for a fast pass.
+>
+> **2. `tests/test_corpus_freshness.py` — the part CI enforces, in milliseconds.**
+> `PARSER_FINGERPRINT.json` (repo root) records the sha256 of the parser that built the
+> committed corpus; the test fails if `app/ai/ingest_statutes.py` no longer matches.
+>
+> **What each does and does not prove.** The fingerprint proves the corpus was produced by a
+> parser with that exact hash. It does **not** prove the parse is correct, and it will not
+> notice a source PDF being replaced — only a real rebuild shows that. Its narrower job is to
+> make *"someone changed the parser and forgot to rebuild"* impossible to miss, which is
+> precisely the failure that hid ss.30 and 90.
+>
+> The test is deliberately strict: **any** edit to the parser trips it, including a comment.
+> That is the honest position — you cannot know a change is semantically inert without
+> rebuilding, and being wrong here means shipping text that is not the law.
+>
+> **Still open:** no automated full rebuild. It requires either a self-hosted runner with the
+> PDFs, or durable object storage for them (owner action — agent AWS access is revoked). Until
+> then the full rebuild is a documented manual step, run before re-stamping.
 
 ### Recovered as a side effect (verified as real provisions, not fragments)
 

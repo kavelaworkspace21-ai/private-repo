@@ -114,6 +114,39 @@ python -c "from app.ai.vector_store import reseed; reseed(force=True)"
 Admin HTTP equivalents (firm-admin auth): `POST /api/admin/ingest-statutes`,
 `POST /api/admin/reseed-corpus`.
 
+### If you change the parser, you MUST rebuild and re-stamp
+
+`app/ai/ingest_statutes.py` and the committed corpus are two halves of one artifact. Changing
+the parser without rebuilding leaves them disagreeing, and nothing in the ordinary test suite
+notices — every corpus test reads the shipped JSON rather than re-running the parser. That is
+how Indian Succession ss.30 and 90 stayed lost while the suite was green (see
+`docs/CORPUS_LIMITATIONS.md`).
+
+`tests/test_corpus_freshness.py` fails as soon as the parser's sha256 stops matching
+`PARSER_FINGERPRINT.json` (repo root), so CI will stop you. To clear it:
+
+```bash
+# 1. Re-derive every act from source and diff it, provision by provision (~2 hours).
+#    Needs data/source_pdfs/ — 154 MB, gitignored, NOT available on a GitHub runner.
+python scripts/verify_corpus_rebuild.py --all --stamp
+
+# 2. If any act changed, the script prints exactly what. Decide whether the parser
+#    regressed or the corpus was stale, then rebuild the affected acts:
+python -m app.ai.ingest_statutes <act_id>
+
+# 3. Re-derive the index and re-pin the release identity.
+python -c "from app.ai.vector_store import reseed; reseed(force=True)"
+python -m app.ops.release freeze
+```
+
+For a faster pass while iterating, `--skip-slow` omits `income_tax_2025` and finishes in about
+33 minutes instead of two hours. That one act is **75–95 minutes** on its own because its
+source PDF is 106 MB; sharding cannot split it. Anything you skip is unverified — run `--all`
+before stamping, and the script refuses to stamp a partial run.
+
+**There is no automated full rebuild.** It needs either a self-hosted runner holding the PDFs
+or durable object storage for them; both are owner actions. Until then this is a manual step.
+
 ### What `reseed()` guarantees
 
 It is crash-safe by construction — build into a temporary collection, then swap by rename:
