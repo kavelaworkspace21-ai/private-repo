@@ -1,6 +1,6 @@
 {
   "parser_path": "app/ai/ingest_statutes.py",
-  "parser_sha256": "73a66485fc3129b9f5b7518b8e886707af7a6150893f77cd7e1d365508e6249c",
+  "parser_sha256": "927e4adeadac16f57dbbd7fa16e1067a7643113cc2658db23c5730c1087a212d",
   "stamped_on": "2026-08-11",
   "act_count": 50,
   "verified_by": "full rebuild + provision-level diff of all 50 acts, 2026-08-09 (commit 30904e6); zero unexplained differences",

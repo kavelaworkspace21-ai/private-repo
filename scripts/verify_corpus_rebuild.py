@@ -88,10 +88,16 @@ PARSER_PATH = ROOT / "app" / "ai" / "ingest_statutes.py"
 
 
 def parser_sha256() -> str:
+    """sha256 of the parser with line endings normalised to LF.
+
+    NOT the raw bytes. This repo is developed on Windows with core.autocrlf=true, so the
+    working copy has CRLF while the git blob — and therefore every Linux CI checkout — has LF.
+    Hashing raw bytes produced two different fingerprints for the same file and failed all
+    three CI jobs on a stamp made locally. A fingerprint that depends on which platform
+    checked the file out is not an invariant at all.
+    """
     import hashlib
-    return hashlib.sha256(PARSER_PATH.read_bytes()).hexdigest()
-
-
+    return hashlib.sha256(PARSER_PATH.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 def write_fingerprint(note: str) -> dict:
     import datetime
     data = {

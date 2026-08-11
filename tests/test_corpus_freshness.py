@@ -54,7 +54,9 @@ def fingerprint() -> dict:
 
 
 def test_the_corpus_was_built_by_the_committed_parser(fingerprint):
-    actual = hashlib.sha256(PARSER.read_bytes()).hexdigest()
+    # LF-normalised, not raw bytes: with core.autocrlf=true a Windows working copy has CRLF
+    # and every Linux CI checkout has LF, so raw bytes give two hashes for the same file.
+    actual = hashlib.sha256(PARSER.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     recorded = fingerprint["parser_sha256"]
     assert actual == recorded, (
         "app/ai/ingest_statutes.py has changed since the corpus was last rebuilt.\n"
@@ -92,7 +94,8 @@ def test_the_check_would_actually_fail(fingerprint):
     Cheap, but this file exists BECAUSE a whole category of defect hid behind tests that
     could not fail. Prove this one can.
     """
-    tampered = hashlib.sha256(PARSER.read_bytes() + b"\n# an edit\n").hexdigest()
+    normalised = PARSER.read_bytes().replace(b"\r\n", b"\n")
+    tampered = hashlib.sha256(normalised + b"\n# an edit\n").hexdigest()
     assert tampered != fingerprint["parser_sha256"], (
         "modifying the parser did not change its hash — the comparison is not measuring "
         "the file")
