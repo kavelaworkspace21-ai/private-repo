@@ -103,7 +103,7 @@ pydantic_core==2.46.4
 Pygments==2.20.0
 PyOTP==2.10.0
 pyparsing==3.3.2
-pypdf==6.14.2
+pypdf==6.15.0
 pypdfium2==5.12.1
 PyPika==0.51.1
 pyproject_hooks==1.2.0
