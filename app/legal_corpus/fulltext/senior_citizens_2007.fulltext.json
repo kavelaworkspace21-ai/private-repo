@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/8865/1/200756senior_citizenact.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2033",
         "sha256": "677f1b996d348c664dfa5fc708db31cb1bf9aae625bf190e662ed03ac1193804",
-        "fetched_on": "2026-07-17",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

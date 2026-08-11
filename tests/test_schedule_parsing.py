@@ -26,7 +26,7 @@ import pytest
 from app.ai import ingest_statutes as ing
 
 FULLTEXT = pathlib.Path(__file__).parent.parent / "app" / "legal_corpus" / "fulltext"
-SCHEDULED_ACTS = ["ndps_1985", "specific_relief_1963", "partnership_1932"]
+SCHEDULED_ACTS = ["ndps_1985", "specific_relief_1963", "partnership_1932", "mediation_2023"]
 
 
 def _sections(stem):
@@ -156,3 +156,84 @@ def test_nested_numbering_does_not_create_duplicate_ids():
     # the same shape the NDPS and Specific Relief schedules produce.
     assert nums == ["Sch.1.1", "Sch.1.2", "Sch.1.3"], nums
     assert "Nested rule" in out[1]["text"], "nested text should stay with its parent entry"
+
+
+# ---------------------------------------------------------------------------------------
+# The Mediation Act 2023 — four defects found when its schedules were brought in on
+# 2026-08-08. Each is pinned by CONTENT, because each one passed a count.
+# ---------------------------------------------------------------------------------------
+
+def _mediation() -> dict[str, dict]:
+    data = json.loads((FULLTEXT / "mediation_2023.fulltext.json").read_text(encoding="utf-8"))
+    return {str(s["num"]): s for s in data["acts"][0]["sections"]}
+
+
+def test_mediation_first_schedule_is_present():
+    """Schedule I lists the disputes NOT fit for mediation — the Act's own exclusion list.
+
+    It was absent entirely. `_schedule_regions` only scanned the first 20 lines of each
+    page, and the Mediation Act runs straight out of s.65 into "THE FIRST SCHEDULE" in the
+    MIDDLE of a page, so the heading was never seen and the act was indexed from Schedule
+    II onwards.
+    """
+    secs = _mediation()
+    entries = {n: s for n, s in secs.items() if n.startswith("Sch.I.")}
+    assert len(entries) >= 13, f"Schedule I has only {len(entries)} entries"
+    joined = " ".join(s["text"].lower() for s in entries.values())
+    for phrase in ("prosecution for criminal offences",
+                   "land acquisition",
+                   "notified by the Central Government".lower()):
+        assert phrase in joined, f"Schedule I does not mention {phrase!r}"
+
+
+def test_no_schedule_entry_duplicates_a_body_section():
+    """Widening that scan then swept the body INTO the schedule.
+
+    The heading sits mid-page, so taking the whole page put ss.55-65 inside Schedule I and
+    re-emitted them as Sch.I.55 … Sch.I.58 — the act's own provisions, duplicated into the
+    schedule namespace under numbers that are not theirs.
+    """
+    secs = _mediation()
+    body = {n: s["text"] for n, s in secs.items() if not n.startswith("Sch")}
+    for num, sec in secs.items():
+        if not num.startswith("Sch."):
+            continue
+        for bnum, btext in body.items():
+            assert sec["text"] != btext, f"{num} is a verbatim copy of body s.{bnum}"
+
+
+def test_the_amendment_sections_are_the_act_s_own_not_the_schedule_s():
+    """ss.61 and 62 held the ARBITRATION ACT's substituted sections.
+
+    The Sixth Schedule substitutes new ss.61 and 62 into the Arbitration and Conciliation
+    Act 1996. The body segmenter reached into that schedule and took them as the Mediation
+    Act's own ss.61-62, displacing "Amendment of Act 26 of 1996" and "Amendment of Act 27
+    of 2006". Both neighbours on either side were correct, so nothing in a count showed it.
+    """
+    secs = _mediation()
+    for num, act_no in (("61", "26 of 1996"), ("62", "27 of 2006")):
+        text = secs[num]["text"]
+        assert "Amendment of" in text and act_no in text, (
+            f"s.{num} is not the amendment section for Act {act_no}:\n{text[:200]}")
+        assert "Reference of conciliation in enactments" not in text, (
+            f"s.{num} still holds the Sixth Schedule's substituted text")
+    # ...and the schedule keeps its own copy, in its own namespace.
+    assert "Reference of conciliation in enactments" in secs["Sch.VI.61"]["text"]
+
+
+def test_the_statement_of_objects_and_reasons_is_not_in_the_corpus():
+    """A bill's explanatory note is not law, and must not be retrievable as a schedule.
+
+    The last schedule region ran to end-of-document, so the Statement of Objects and
+    Reasons — signed by the minister who moved the bill, describing what it "seeks to" do —
+    was ingested as Sch.X.2 / Sch.X.3 / Sch.X.4. Sch.X.4 was "The Bill seeks to achieve the
+    above objectives. KIREN RIJIJU."
+    """
+    secs = _mediation()
+    for num, sec in secs.items():
+        low = sec["text"].lower()
+        assert "the bill seeks to achieve" not in low, f"{num} is bill paperwork, not law"
+        assert "statement of objects and reasons" not in low, f"{num} is the SOR"
+    # Schedule X must be the real Tenth Schedule instead.
+    tenth = " ".join(s["text"] for n, s in secs.items() if n.startswith("Sch.X"))
+    assert "Consumer Protection Act, 2019" in tenth, "the Tenth Schedule is missing"

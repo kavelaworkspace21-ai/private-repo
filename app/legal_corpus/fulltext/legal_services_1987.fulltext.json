@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/1925/1/198739.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1925",
         "sha256": "3aae5d5c9f8c2ad100c0553c351af559e35fb36c3fc68a921fd1e64dd4a9318f",
-        "fetched_on": "2026-07-17",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

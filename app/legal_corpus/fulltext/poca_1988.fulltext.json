@@ -6,13 +6,15 @@
       "short": "PC Act",
       "year": 1988,
       "status": "in_force",
+      "repealed_by": "",
+      "note": "",
       "source_verified": true,
       "source": {
         "name": "India Code (indiacode.nic.in)",
         "url": "https://www.indiacode.nic.in/bitstream/123456789/1558/1/A1988-49.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1558",
         "sha256": "57a0d7960125d42dd392480b18a3fc2ea2ef5d7b134faa9171d82a79ed7c5aaf",
-        "fetched_on": "2026-07-16",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -246,9 +248,15 @@
         },
         {
           "num": "30",
-          "text": "Repeal and saving.—(1) The Prevention of Corruption Act, 1947 (2 of 1947) and the Criminal\nLaw Amendment Act, 1952 (46 of 1952) are hereby repealed.\n(2) Notwithstanding such repeal, but without prejudice to the application of section 6 of the General\nClauses Act, 1897 (10 of 1897), anything done or any action taken or purported to have been done or\ntaken under or in pursuance of the Acts so repealed shall, in so far as it is not inconsistent with the\nprovisions of this Act, be deemed to have been done or taken under or in pursuance of the corresponding\nprovision of this Act.\nAct, 2001(30 of 2001), s. 2 and the First Schedule (w.e.f. 3-9-2001).\n19\nSTATEMENT OF OBJECTS AND REASONS\nThe Bill is intended to make the existing anti-corruption laws more effective by widening their\ncoverage and by strengthening the provisions.\n2. The Prevention of Corruption Act, 1947, was amended in 1964 based on the recommendations of\nthe Santhanam Committee. There are provisions in Chapter IX of the Indian Penal Code to deal with\npublic servants and those who abet them by way of criminal misconduct. There are also provisions in the\nCriminal Law Amendment Ordinance, 1944, to enable attachment of ill-gotton wealth obtained through\ncorrupt means, including from transferees of such wealth. The Bill seeks to incorporate all these\nprovisions with modifications so as to make the provisions more effective in combating corruption among\npublic servants.\n3. The Bill, inter alia, envisages widening the scope of the definition of the expression “public\nservant”. incorporation of offences under sections 161 to 163A of the Indian Penal Code, enhancement of\npenalties provided for these offences and incorporation of a provision that the order of the trial court\nupholding the grant of sanction for prosecution would be final if it has not already been challenged and\nthe trial has commenced. In order to expedite the proceedings, provisions for day-to-day trial of cases and\nprohibitory provisions with regard to grant of stay and exercise of powers of revision on interlocutory\norders have also been included.\n4. Since the provisions of sections 161 to 165A are incorporated in the proposed legislation with an\nenhanced punishment, it is not necessary to retain those sections in the Indian Penal Code. Consequently,\nit is proposed to delete those sections with the necessary saving provision.\n5. The notes on clauses explain in detail the provisions of the Bill.\nP. CHIDAMBARAM.\nNEW DELHI;\nThe 20th February, 1987\n20",
+          "text": "Repeal and saving.—(1) The Prevention of Corruption Act, 1947 (2 of 1947) and the Criminal\nLaw Amendment Act, 1952 (46 of 1952) are hereby repealed.\n(2) Notwithstanding such repeal, but without prejudice to the application of section 6 of the General\nClauses Act, 1897 (10 of 1897), anything done or any action taken or purported to have been done or\ntaken under or in pursuance of the Acts so repealed shall, in so far as it is not inconsistent with the\nprovisions of this Act, be deemed to have been done or taken under or in pursuance of the corresponding\nprovision of this Act.",
           "page": 19,
           "title": "Repeal and saving"
+        },
+        {
+          "num": "31",
+          "text": "[Omission of certain sections of Act 45 of 1860.] Rep. by the Repealing and Amending\nAct, 2001(30 of 2001), s. 2 and the First Schedule (w.e.f. 3-9-2001).\n19\nSTATEMENT OF OBJECTS AND REASONS\nThe Bill is intended to make the existing anti-corruption laws more effective by widening their\ncoverage and by strengthening the provisions.\n2. The Prevention of Corruption Act, 1947, was amended in 1964 based on the recommendations of\nthe Santhanam Committee. There are provisions in Chapter IX of the Indian Penal Code to deal with\npublic servants and those who abet them by way of criminal misconduct. There are also provisions in the\nCriminal Law Amendment Ordinance, 1944, to enable attachment of ill-gotton wealth obtained through\ncorrupt means, including from transferees of such wealth. The Bill seeks to incorporate all these\nprovisions with modifications so as to make the provisions more effective in combating corruption among\npublic servants.\n3. The Bill, inter alia, envisages widening the scope of the definition of the expression “public\nservant”. incorporation of offences under sections 161 to 163A of the Indian Penal Code, enhancement of\npenalties provided for these offences and incorporation of a provision that the order of the trial court\nupholding the grant of sanction for prosecution would be final if it has not already been challenged and\nthe trial has commenced. In order to expedite the proceedings, provisions for day-to-day trial of cases and\nprohibitory provisions with regard to grant of stay and exercise of powers of revision on interlocutory\norders have also been included.\n4. Since the provisions of sections 161 to 165A are incorporated in the proposed legislation with an\nenhanced punishment, it is not necessary to retain those sections in the Indian Penal Code. Consequently,\nit is proposed to delete those sections with the necessary saving provision.\n5. The notes on clauses explain in detail the provisions of the Bill.\nP. CHIDAMBARAM.\nNEW DELHI;\nThe 20th February, 1987\n20",
+          "page": 19,
+          "title": "[Omission of certain sections of Act 45 of 1860"
         }
       ]
     }

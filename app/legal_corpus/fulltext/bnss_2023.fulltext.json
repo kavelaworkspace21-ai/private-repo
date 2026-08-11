@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/21544/1/the_bharatiya_nagarik_suraksha_sanhita,_2023.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/20099",
         "sha256": "8047fe1de6092e23240d059b45cab8d4d93a1b77fa5de7f91ec12ac662c56512",
-        "fetched_on": "2026-07-28",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

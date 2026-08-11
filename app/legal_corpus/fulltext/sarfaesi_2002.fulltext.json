@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/2006/1/A2002-54.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2006",
         "sha256": "e7213c51ab3d7d24718f84c4278871eac231e6f0000631b6a1ae7a2544fe6019",
-        "fetched_on": "2026-07-29",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [

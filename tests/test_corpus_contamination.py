@@ -41,12 +41,38 @@ AMENDING_TEXT = re.compile(
 KNOWN_CONTAMINATED: set[tuple[str, str]] = set()
 
 
+# Ids in a SCHEDULE or ORDER namespace, which this detector deliberately does not scan.
+#
+# The harm being detected is stated in this module's first line: amending text occupying a
+# principal Act's SECTION. A section number is a citation — "arbitration s.16" has to resolve
+# to competence-competence, and when it resolved to an amendment clause the genuine provision
+# was gone and nothing said so.
+#
+# A schedule is not a section number, and several schedules ARE amendments as their actual,
+# correct content. The Mediation Act 2023 amends eight enactments through its Third to Tenth
+# Schedules — the Third rewrites s.28 of the Contract Act, the Ninth rewrites Chapter IIIA of
+# the Commercial Courts Act. An advocate looking up "Mediation Act, Third Schedule" should get
+# exactly that amending text. Nothing is displaced and no citation resolves wrongly.
+#
+# Scanning them flagged six true readings of the text with a false conclusion. Excluding them
+# would blind the detector, so the exclusion is checked from both sides below:
+# test_the_detector_still_flags_a_bare_numbered_section proves the harm class is still caught,
+# and test_amending_schedules_are_what_they_claim_to_be proves the excluded entries hold the
+# amendments they are supposed to hold rather than being unexamined.
+#
+# `\b` will not do here: the Constitution's Seventh Schedule ids are "Sch7.L1.1", and there is
+# no word boundary between "h" and "7", so a `^Sch\b` form silently fails to match them.
+NAMESPACED_ID = re.compile(r"^(?:Sch|Ord)\d*(?:\.|$)", re.I)
+
+
 def _contaminated():
     found = set()
     for f in sorted(FULLTEXT.glob("*.fulltext.json")):
         data = json.loads(f.read_text(encoding="utf-8"))
         for act in data.get("acts", []):
             for sec in act.get("sections", []):
+                if NAMESPACED_ID.match(str(sec["num"])):
+                    continue
                 text = re.sub(r"\s+", " ", sec.get("text", "") or "")
                 # Only the OPENING matters: a provision may legitimately mention amendments
                 # further in, but a section that BEGINS this way is the amending clause.
@@ -107,3 +133,45 @@ def test_restored_provisions_are_actually_the_provisions():
         assert num in secs, f"{act_id} s.{num} missing"
         assert secs[num][:80].lower().startswith(opening), (
             f"{act_id} s.{num} should open with {opening!r}, got {secs[num][:80]!r}")
+
+
+def test_the_detector_still_flags_a_bare_numbered_section():
+    """Negative control for the Sch./Ord. exclusion.
+
+    An exclusion that quietly swallows the real harm class is worse than no detector. The
+    corpus should contain no bare-numbered section holding amending text — and this asserts
+    the SCAN, not just the corpus, by proving a planted section would still be caught.
+    """
+    amending = ("In section 31 of the principal Act,— (i) in sub-section (1), for the words "
+                "'arbitral award', the following shall be substituted, namely:—")
+    assert not NAMESPACED_ID.match("16"), "a plain section number must be scanned"
+    assert AMENDING_TEXT.search(amending[:200]), "the pattern must still match amending text"
+    # ...and the namespaced forms are the only thing skipped.
+    for skipped in ("Sch.III", "Sch.X", "Sch7.L1.1", "Ord.XXI.R.46B"):
+        assert NAMESPACED_ID.match(skipped), f"{skipped} should be treated as namespaced"
+
+
+def test_amending_schedules_are_what_they_claim_to_be():
+    """The excluded entries are checked, not merely skipped.
+
+    Each of the Mediation Act's amending schedules must carry its own "(See section N)"
+    pointer and name the enactment it amends. If one of these ever held something else, the
+    exclusion above would be hiding it.
+    """
+    data = json.loads((FULLTEXT / "mediation_2023.fulltext.json").read_text(encoding="utf-8"))
+    secs = {str(s["num"]): s.get("text", "") for s in data["acts"][0]["sections"]}
+    expected = {
+        "Sch.III":  ("58", "Indian Contract Act, 1872"),
+        "Sch.IV":   ("59", "Code of Civil Procedure, 1908"),
+        "Sch.V":    ("60", "Legal Services Authorities Act, 1987"),
+        "Sch.VII":  ("62", "Micro, Small and Medium Enterprises Development Act, 2006"),
+        "Sch.VIII": ("63", "Companies Act"),
+        "Sch.IX":   ("64", "Commercial Courts Act, 2015"),
+        "Sch.X":    ("65", "Consumer Protection Act, 2019"),
+    }
+    for num, (section, enactment) in expected.items():
+        assert num in secs, f"{num} missing from the Mediation Act"
+        text = re.sub(r"\s+", " ", secs[num])
+        assert f"See section {section}" in text, (
+            f"{num} should point at s.{section}; got {text[:120]!r}")
+        assert enactment in text, f"{num} should amend the {enactment}; got {text[:160]!r}"

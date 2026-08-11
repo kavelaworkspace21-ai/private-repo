@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/15937/1/the_registration_act%2C1908.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/2190",
         "sha256": "be32e7165b817441a08bd3d2f8acf80d72ec1c1dfa2839adbbdd56781f68bec0",
-        "fetched_on": "2026-07-17",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
@@ -32,9 +32,15 @@
         },
         {
           "num": "3",
-          "text": "Inspector-General of Registration.—(1) The 2[State Government] shall appoint an officer to be\nthe Inspector-General of Registration for the territories subject to such Government:\nProvided that the 2[State Government] may, instead of making such appointment, direct that all or any\nof the powers and duties hereinafter conferred and imposed upon the Inspector-General shall be exercised\nand performed by such officer or officers, and within such local limits, as the 2[State Government]\nappoints in this behalf.\n(2) Any Inspector-General may hold simultaneously any other office under the 3[Government].\nIndian Laws) Order, 1937.",
+          "text": "Inspector-General of Registration.—(1) The 2[State Government] shall appoint an officer to be\nthe Inspector-General of Registration for the territories subject to such Government:\nProvided that the 2[State Government] may, instead of making such appointment, direct that all or any\nof the powers and duties hereinafter conferred and imposed upon the Inspector-General shall be exercised\nand performed by such officer or officers, and within such local limits, as the 2[State Government]\nappoints in this behalf.\n(2) Any Inspector-General may hold simultaneously any other office under the 3[Government].",
           "page": 5,
           "title": "Inspector-General of Registration"
+        },
+        {
+          "num": "4",
+          "text": "[Branch Inspector-General of Sindh (Repealed).]—Rep. by the Government of India (Adaptation of\nIndian Laws) Order, 1937.",
+          "page": 5,
+          "title": "[Branch Inspector-General of Sindh (Repealed).]"
         },
         {
           "num": "5",
@@ -56,9 +62,15 @@
         },
         {
           "num": "8",
-          "text": "Inspectors of Registration offices.—(1) The 2[State Government] may also appoint officers to be\ncalled Inspector of Registration offices, and may prescribe the duties of such officers.\n(2) Every such Inspector shall be subordinate to the Inspector-General.\n5\nand Amending Act, 1927 (10 of 1927), s. 3 and Second Schedule.]",
+          "text": "Inspectors of Registration offices.—(1) The 2[State Government] may also appoint officers to be\ncalled Inspector of Registration offices, and may prescribe the duties of such officers.\n(2) Every such Inspector shall be subordinate to the Inspector-General.\n5",
           "page": 5,
           "title": "Inspectors of Registration offices"
+        },
+        {
+          "num": "9",
+          "text": "[Military cantonments may be declared sub-districts or districts (Repealed).] Rep. by the Repealing\nand Amending Act, 1927 (10 of 1927), s. 3 and Second Schedule.]",
+          "page": 6,
+          "title": "[Military cantonments may be declared sub-districts or districts (Repealed)"
         },
         {
           "num": "10",
@@ -566,9 +578,21 @@
         },
         {
           "num": "91",
-          "text": "Inspection and copies of such documents.—1[(1)] Subject to such rules and the previous\npayment of such fees as the 2[ 3[State Government], by notification in the Official Gazette, prescribes in\nthis behalf], all documents and maps mentioned in section 90, clauses (a), (b), (c), and (e), and all\nregisters of the documents mentioned in clause (d), shall be open to the inspection of any person applying\nto inspect the same, and, subject as aforesaid, copies of such documents shall be given to all persons\napplying for such copies.\n4[(2) Every rule prescribed under this sub-section or made under section 69 shall be laid, as soon as it\nis made, before the State Legislature.]\nLaws) Order, 1937.\nTHE SCHEDULE. [Repeal of Enactments]. Rep. by s. 2 and the Schedule, ibid.\n________\n24",
+          "text": "Inspection and copies of such documents.—1[(1)] Subject to such rules and the previous\npayment of such fees as the 2[ 3[State Government], by notification in the Official Gazette, prescribes in\nthis behalf], all documents and maps mentioned in section 90, clauses (a), (b), (c), and (e), and all\nregisters of the documents mentioned in clause (d), shall be open to the inspection of any person applying\nto inspect the same, and, subject as aforesaid, copies of such documents shall be given to all persons\napplying for such copies.\n4[(2) Every rule prescribed under this sub-section or made under section 69 shall be laid, as soon as it\nis made, before the State Legislature.]",
           "page": 24,
           "title": "Inspection and copies of such documents"
+        },
+        {
+          "num": "92",
+          "text": "[Burmese registration-rules confirmed] Rep. by the Government of India (Adaptation of Indian\nLaws) Order, 1937.",
+          "page": 24,
+          "title": "[Burmese registration-rules confirmed] Rep. by the Government of India (Adaptation of Indian\nLaws) Order, 1937"
+        },
+        {
+          "num": "93",
+          "text": "[Repeals] Rep. by the Repealing Act, 1938 (1 of 1938), s. 2 and Schedule.\nTHE SCHEDULE. [Repeal of Enactments]. Rep. by s. 2 and the Schedule, ibid.\n________\n24",
+          "page": 24,
+          "title": "[Repeals] Rep"
         }
       ]
     }

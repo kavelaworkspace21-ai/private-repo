@@ -14,7 +14,7 @@
         "url": "https://www.indiacode.nic.in/bitstream/123456789/16127/1/a1984__66.pdf",
         "landing": "https://www.indiacode.nic.in/handle/123456789/1844",
         "sha256": "b78062bf192adf208cc244d7b1ff84cb236d957b796d80f28d8af1b3ae4ddc3c",
-        "fetched_on": "2026-07-17",
+        "fetched_on": "2026-08-08",
         "extractor": "pdfplumber (deterministic, no AI)"
       },
       "sections": [
